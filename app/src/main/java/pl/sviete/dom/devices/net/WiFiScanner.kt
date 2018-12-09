@@ -81,6 +81,11 @@ class WiFiScanner (context: Context) {
         return info.networkId
     }
 
+    fun getCurrentNetworkName(): String{
+        val info = wiFiManager.connectionInfo
+        return info.ssid.replace("\"", "")
+    }
+
     fun removeSsid(ssid: String){
         val list = wiFiManager.configuredNetworks
         for (i in list) {

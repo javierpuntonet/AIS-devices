@@ -20,6 +20,7 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
     private var mWifi: WiFiScanner? = null
     private var mAisAdapter: APAdapter? = null
     private val mAisList = ArrayList<AccessPointInfo>()
+    private var mAPList: List<AccessPointInfo> = mutableListOf()
 
     companion object {
         fun newInstance() = AplistCreatorFragment()
@@ -41,7 +42,7 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
         mAisAdapter = APAdapter(mAisList, context!!, object : APAdapter.OnItemClickListener {
             override fun onItemClick(item: AccessPointInfo) {
                 mWifi?.stopScan()
-                mApSelectedListener?.onAPSelected(item, mAisList)
+                mApSelectedListener?.onAPSelected(item, mAPList)
             }
         })
         rv_ap_list.adapter = mAisAdapter
@@ -69,14 +70,25 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
     }
 
     override fun onScanResults(scanResult: List<AccessPointInfo>) {
-        setData(scanResult)
+        mAPList = scanResult
+        val list = scanResult.toMutableList()
+        if (list.count() > 0){
+            val currentWifi = mWifi!!.getCurrentNetworkName()
+            val el = list.filter { x -> x.ssid == currentWifi }.firstOrNull()
+            if (el != null) {
+                val idx = list.indexOf(el)
+                if (idx >= 0)
+                    list.remove(el)
+            }
+        }
+        setData(list)
     }
 
     private fun setData(list: List<AccessPointInfo>){
         val masks = resources.getStringArray(R.array.ais_device_masks)
         mAisList.clear()
         list.forEach {
-            if ((masks.filter { m -> it.ssid.contains(m, true)}).any()) {
+            if ((masks.filter { m -> it.ssid.toLowerCase().contains(m, true)}).any()) {
                 it.isAis = true
             }
             mAisList.add(it)

@@ -3,6 +3,8 @@ package pl.sviete.dom.devices.ui.adddevicecreator
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +33,9 @@ class NameCreatorFragment : Fragment() {
             txt_device_name.setText(defName)
 
         btn_accept_name.setOnClickListener{
-            listener?.onNameAccept(txt_device_name.text.toString())
+            val name = txt_device_name.text.toString()
+            if (!name.isNullOrEmpty())
+                listener?.onNameAccept(name)
         }
         btn_cancel_name.setOnClickListener{
             listener?.onNameCancel(txt_device_name.text.toString())
