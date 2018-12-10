@@ -15,10 +15,6 @@ import android.support.v4.os.HandlerCompat.postDelayed
 class AisDeviceController(context: Context): WiFiScanner.OnWiFiConnectedListener {
     private val TAG = AisDeviceController::class.java.simpleName
 
-    companion object {
-        var lastId: Int = 0
-    }
-
     //private val mContext: Context = context
     private val mWiFiScanner: WiFiScanner = WiFiScanner(context)
     private var mFriendlyName: String? = null
@@ -86,7 +82,6 @@ class AisDeviceController(context: Context): WiFiScanner.OnWiFiConnectedListener
         try {
             val url = URLEncoder.encode("Backlog FriendlyName1 $mFriendlyName; SSId1 $mAPName; Password1 $mAPPassword","UTF-8")
             if (connectAndConfiguraDevice(url)) {
-                lastId += 1
                 mListener?.onAddDeviceFinished(true)
                 return
             }
