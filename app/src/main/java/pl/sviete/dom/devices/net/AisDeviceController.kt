@@ -7,9 +7,6 @@ import java.io.UnsupportedEncodingException
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
-import android.support.v4.os.HandlerCompat.postDelayed
-
-
 
 
 class AisDeviceController(context: Context): WiFiScanner.OnWiFiConnectedListener {
@@ -21,8 +18,8 @@ class AisDeviceController(context: Context): WiFiScanner.OnWiFiConnectedListener
     private var mDeviceSsid: String? = null
     private var mAPName: String? = null
     private var mAPPassword: String? = null
-    private var mDeviceNetworkId: Int? = null
-    private var mCurrentNetworkId: Int? = null
+    private var mDeviceNetworkId: Int = -1
+    private var mCurrentNetworkId: Int = -1
     private var mListener: OnAddDeviceFinishedListener? = null
     private var mHandlerTimeout = Handler()
     private var mConnectingCanceled: Boolean = true
@@ -54,13 +51,19 @@ class AisDeviceController(context: Context): WiFiScanner.OnWiFiConnectedListener
         mWiFiScanner.disconnect()
 
         mConnectingCanceled = false
-        mWiFiScanner.registerOnConncted(this, ssid)
-
         // create new connection
         mDeviceNetworkId = mWiFiScanner.addNewNetwork(ssid)
-        mWiFiScanner.connectToNetwork(mDeviceNetworkId!!)
-        if (!mConnectingCanceled)
-            mHandlerTimeout.postDelayed(timeout, 5000)
+        if (mDeviceNetworkId != -1) {
+            mWiFiScanner.registerOnConncted(this, ssid)
+
+            mWiFiScanner.connectToNetwork(mDeviceNetworkId)
+            if (!mConnectingCanceled)
+                mHandlerTimeout.postDelayed(timeout, 5000)
+        }
+        else {
+            reconnect()
+            mListener?.onAddDeviceFinished(false)
+        }
     }
 
     private val timeout = object : Runnable {
@@ -106,9 +109,7 @@ class AisDeviceController(context: Context): WiFiScanner.OnWiFiConnectedListener
                 con.setRequestProperty("User-Agent", "Mozilla/5.0")
 
                 if (con.responseCode == HttpURLConnection.HTTP_OK) {
-                    mWiFiScanner.removeSsid(mDeviceNetworkId!!)
-                    mWiFiScanner.enableAllNetworks()
-                    mWiFiScanner.connectToNetwork(mCurrentNetworkId!!)
+                    reconnect()
                     return true
                 }
             } catch (e: Exception) {
@@ -116,6 +117,12 @@ class AisDeviceController(context: Context): WiFiScanner.OnWiFiConnectedListener
             }
         }
         return false
+    }
+
+    private fun reconnect(){
+        mWiFiScanner.removeNetwork(mDeviceNetworkId)
+        mWiFiScanner.enableAllNetworks()
+        mWiFiScanner.connectToNetwork(mCurrentNetworkId)
     }
 
     interface  OnAddDeviceFinishedListener {

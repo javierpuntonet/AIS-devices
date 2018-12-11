@@ -69,9 +69,9 @@ class ApDataCreatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
     }
 
-    override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
+    override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
         txt_ap_password.setText("")
-        if (mAPName == spinner_ap.selectedItem.toString())
+        if (mPassword != null && spinner_ap.selectedItem != null && mAPName == spinner_ap.selectedItem.toString())
         {
             txt_ap_password.setText(mPassword)
         }

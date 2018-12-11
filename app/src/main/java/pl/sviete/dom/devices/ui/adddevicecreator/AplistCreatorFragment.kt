@@ -72,20 +72,24 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
     override fun onScanResults(scanResult: List<AccessPointInfo>) {
         val list = scanResult.toMutableList()
         val currentWifi = mWifi!!.getCurrentAccessPointInfo()
-        val el = list.filter { x -> x == currentWifi }.firstOrNull()
-        if (el != null) {
-            val idx = list.indexOf(el)
-            if (idx >= 0)
-                list.remove(el)
-            setData(list)
-            mAPList = scanResult
+        if (currentWifi != null) {
+            val el = list.filter { x -> x == currentWifi }.firstOrNull()
+            if (el != null) {
+                val idx = list.indexOf(el)
+                if (idx >= 0)
+                    list.remove(el)
+                setData(list)
+                mAPList = scanResult
+            } else {
+                setData(list)
+                val list2 = scanResult.toMutableList()
+                list2.add(currentWifi)
+                mAPList = list2
+            }
         }
-        else
-        {
-            setData(list)
-            val list2 = scanResult.toMutableList()
-            list2.add(currentWifi)
-            mAPList = list2
+        else{
+            setData(scanResult)
+            mAPList = scanResult
         }
     }
 

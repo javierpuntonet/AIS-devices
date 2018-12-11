@@ -81,9 +81,11 @@ class WiFiScanner (context: Context) {
         return info.networkId
     }
 
-    fun getCurrentAccessPointInfo(): AccessPointInfo{
+    fun getCurrentAccessPointInfo(): AccessPointInfo? {
         val info = wiFiManager.connectionInfo
-        return AccessPointInfo(info.ssid.replace("\"",""), info.bssid)
+        if (info.bssid != null)
+            return AccessPointInfo(info.ssid.replace("\"",""), info.bssid)
+        return null
     }
 
     fun removeSsid(ssid: String){
@@ -96,10 +98,11 @@ class WiFiScanner (context: Context) {
         }
     }
 
-    fun removeSsid(netwrokId: Int){
+    fun removeNetwork(networkId: Int){
+        if (networkId == -1) return
         val list = wiFiManager.configuredNetworks
         for (i in list) {
-            if (i.networkId == netwrokId) {
+            if (i.networkId == networkId) {
                 wiFiManager.disableNetwork(i.networkId)
                 wiFiManager.removeNetwork(i.networkId)
             }
@@ -135,6 +138,7 @@ class WiFiScanner (context: Context) {
     }
 
     fun connectToNetwork(networkId: Int) {
+        if (networkId == -1) return
         wiFiManager.disconnect()
         wiFiManager.enableNetwork(networkId, true)
         wiFiManager.reconnect()
