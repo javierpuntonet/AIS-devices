@@ -21,7 +21,6 @@ class MainCreatorActivity : AppCompatActivity(), StartCreatorFragment.OnNextStep
 
     private var mAPInfo: AccessPointInfo? = null
     private var mAccessibleAP: List<AccessPointInfo>? = null
-    private val mIntentResult = Intent()
     private val mAisCtrl = AisDeviceController(this)
     private var mCurrentFragment: Fragment? = null
     private var mNewDeviceName: String? = null
@@ -44,6 +43,17 @@ class MainCreatorActivity : AppCompatActivity(), StartCreatorFragment.OnNextStep
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_container, firstFragment)
             .commit()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        // Save the user's current game state
+        outState?.run {
+           // put(STATE_SCORE, currentScore)
+            //putInt(STATE_LEVEL, currentLevel)
+        }
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(outState)
     }
 
     override fun onPause() {
@@ -86,9 +96,10 @@ class MainCreatorActivity : AppCompatActivity(), StartCreatorFragment.OnNextStep
     override fun onAddDeviceFinished(result: Boolean) {
         if (result) {
             val ais = AisDevice(mAPInfo!!.mac)
-            mIntentResult.putExtra("aisdevice", ais)
-            mIntentResult.putExtra("name", mNewDeviceName)
-            setResult(CREATOR_REQUEST_CODE, mIntentResult)
+            val intentResult = Intent()
+            intentResult.putExtra("aisdevice", ais)
+            intentResult.putExtra("name", mNewDeviceName)
+            setResult(CREATOR_REQUEST_CODE, intentResult)
         }
         else{
             runOnUiThread {
