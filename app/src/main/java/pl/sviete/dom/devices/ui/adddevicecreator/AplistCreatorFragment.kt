@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import java.util.*
 class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
 
     private var mApSelectedListener: OnAPSelectedListener? = null
+    private var mProgressBarManager: ProgressBarManager? = null
     private var mWifi: WiFiScanner? = null
     private var mAisAdapter: APAdapter? = null
     private val mAisList = ArrayList<AccessPointInfo>()
@@ -48,48 +50,58 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
         rv_ap_list.adapter = mAisAdapter
 
         swiperefresh.setOnRefreshListener {
-            mWifi!!.startScan(this)
+            refreshAPList()
             swiperefresh.isRefreshing = false
         }
     }
 
     override fun onStart() {
         super.onStart()
-        mWifi!!.startScan(this)
+        refreshAPList()
     }
 
     override fun onStop() {
         super.onStop()
         mWifi!!.stopScan()
+        mProgressBarManager!!.hide()
     }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context is OnAPSelectedListener)
             mApSelectedListener = context
+        if (context is ProgressBarManager)
+            mProgressBarManager = context
     }
 
     override fun onScanResults(scanResult: List<AccessPointInfo>) {
-        val list = scanResult.toMutableList()
-        val currentWifi = mWifi!!.getCurrentAccessPointInfo()
-        if (currentWifi != null) {
-            val el = list.filter { x -> x == currentWifi }.firstOrNull()
-            if (el != null) {
-                val idx = list.indexOf(el)
-                if (idx >= 0)
-                    list.remove(el)
-                setData(list)
-                mAPList = scanResult
+        try {
+            val list = scanResult.toMutableList()
+            val currentWifi = mWifi!!.getCurrentAccessPointInfo()
+            if (currentWifi != null) {
+                val el = list.filter { x -> x == currentWifi }.firstOrNull()
+                if (el != null) {
+                    val idx = list.indexOf(el)
+                    if (idx >= 0)
+                        list.remove(el)
+                    setData(list)
+                    mAPList = scanResult
+                } else {
+                    setData(list)
+                    val list2 = scanResult.toMutableList()
+                    list2.add(currentWifi)
+                    mAPList = list2
+                }
             } else {
-                setData(list)
-                val list2 = scanResult.toMutableList()
-                list2.add(currentWifi)
-                mAPList = list2
+                setData(scanResult)
+                mAPList = scanResult
             }
         }
-        else{
-            setData(scanResult)
-            mAPList = scanResult
+        catch (ex: Exception){
+            Log.e("AplistCreatorFragment","onScanResults", ex)
+        }
+        finally {
+            mProgressBarManager!!.hide()
         }
     }
 
@@ -108,5 +120,10 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
 
     interface OnAPSelectedListener{
         fun onAPSelected(selectedAP: AccessPointInfo, accessibleAP: List<AccessPointInfo>)
+    }
+
+    private fun refreshAPList() {
+        mProgressBarManager!!.show()
+        mWifi!!.startScan(this)
     }
 }

@@ -72,17 +72,20 @@ class AisDeviceController(context: Context): WiFiScanner.OnWiFiConnectedListener
                 if (!mConnectingCanceled) {
                     mWiFiScanner.unregisterOnConnected()
                     mListener?.onAddDeviceFinished(false)
+                    reconnect()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                reconnect()
             }
         }
     }
 
     override fun onConnected() {
-        mConnectingCanceled = true
-        mHandlerTimeout.removeCallbacksAndMessages(timeout)
         try {
+            mConnectingCanceled = true
+            mHandlerTimeout.removeCallbacksAndMessages(timeout)
+
             val url = URLEncoder.encode("Backlog FriendlyName1 $mFriendlyName; SSId1 $mAPName; Password1 $mAPPassword","UTF-8")
             if (connectAndConfiguraDevice(url)) {
                 mListener?.onAddDeviceFinished(true)
@@ -90,6 +93,9 @@ class AisDeviceController(context: Context): WiFiScanner.OnWiFiConnectedListener
             }
         } catch (e: UnsupportedEncodingException) {
             Log.e(TAG, "onConnected", e)
+        }
+        finally {
+            reconnect()
         }
         mListener?.onAddDeviceFinished(false)
     }
@@ -109,7 +115,7 @@ class AisDeviceController(context: Context): WiFiScanner.OnWiFiConnectedListener
                 con.setRequestProperty("User-Agent", "Mozilla/5.0")
 
                 if (con.responseCode == HttpURLConnection.HTTP_OK) {
-                    reconnect()
+
                     return true
                 }
             } catch (e: Exception) {

@@ -16,8 +16,7 @@ import pl.sviete.dom.devices.models.AisDevice
 
 class MainCreatorActivity : AppCompatActivity(), StartCreatorFragment.OnNextStepListener, AplistCreatorFragment.OnAPSelectedListener
                             , ApDataCreatorFragment.OnAPDataAcceptListener, NameCreatorFragment.OnNameAcceptListener
-                            , AisDeviceController.OnAddDeviceFinishedListener{
-
+                            , AisDeviceController.OnAddDeviceFinishedListener, ProgressBarManager{
 
     private var mAPInfo: AccessPointInfo? = null
     private var mAccessibleAP: List<AccessPointInfo>? = null
@@ -156,4 +155,17 @@ class MainCreatorActivity : AppCompatActivity(), StartCreatorFragment.OnNextStep
         }
         throw Exception("Not implemented")
     }
+
+    override fun show() {
+        progressBar.visibility = View.VISIBLE
+    }
+
+    override fun hide(){
+        progressBar.visibility = View.GONE
+    }
+}
+
+interface ProgressBarManager {
+    fun show()
+    fun hide()
 }

@@ -124,13 +124,18 @@ class WiFiScanner (context: Context) {
     }
 
     fun addNewNetwork(ssid: String): Int {
-        // create new connection
-        val conf = WifiConfiguration()
-        conf.SSID = "\"" + ssid + "\""   // Please note the quotes. String should contain ssid in quotes
-        // For Open network you need to do this:
-        conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE)
-        // Then, you need to add it to Android wifi manager settings:
-        return wiFiManager.addNetwork(conf)
+        val confSsid = "\"" + ssid + "\""   // Please note the quotes. String should contain ssid in quotes
+        var conf = wiFiManager.configuredNetworks.filter { x -> x.SSID == confSsid }.firstOrNull()
+        if (conf == null) {
+            // create new connection
+            conf = WifiConfiguration()
+            conf.SSID = confSsid
+            // For Open network you need to do this:
+            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE)
+            // Then, you need to add it to Android wifi manager settings:
+            return wiFiManager.addNetwork(conf)
+        }
+        return conf.networkId
     }
 
     fun disconnect(){
