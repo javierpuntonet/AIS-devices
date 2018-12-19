@@ -9,6 +9,7 @@ import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import android.util.Log
 import android.net.*
+import pl.sviete.dom.devices.BuildConfig
 import pl.sviete.dom.devices.net.models.AccessPointInfo
 
 class WiFiScanner (context: Context) {
@@ -59,6 +60,11 @@ class WiFiScanner (context: Context) {
                     val ap = AccessPointInfo(scan.SSID, scan.BSSID)
                     result.add(ap)
                 }
+            }
+            if (BuildConfig.DEBUG) {
+                result.add(AccessPointInfo("aaTest1_inDebug", "11:11:11:11:11:11"))
+                result.add(AccessPointInfo("kkTest2_inDebug", "22:22:22:22:22:22"))
+                result.add(AccessPointInfo("zzTest3_inDebug", "33:33:33:33:33:33"))
             }
         }
         return result

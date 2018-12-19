@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.fragment_creator_ap_data.*
-
 import pl.sviete.dom.devices.R
+import pl.sviete.dom.devices.net.WiFiScanner
 
 class ApDataCreatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
@@ -33,9 +33,14 @@ class ApDataCreatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
         mPassword = pref.getString("password", null)
 
         val aps = arguments!!.getStringArray("accessibleAP")
-        val adapter = ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, aps)
+        val adapter = ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, aps)
         spinner_ap.adapter = adapter
         spinner_ap.onItemSelectedListener = this
+
+        if (mAPName == null){
+            val wifi = WiFiScanner(context!!)
+            mAPName = wifi.getCurrentAccessPointInfo()?.ssid
+        }
 
         if (mAPName != null) {
             var idx = adapter.getPosition(mAPName)

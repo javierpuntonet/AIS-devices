@@ -3,6 +3,7 @@ package pl.sviete.dom.devices.net
 import android.content.Context
 import android.os.Handler
 import android.util.Log
+import pl.sviete.dom.devices.R
 import java.io.UnsupportedEncodingException
 import java.net.HttpURLConnection
 import java.net.URL
@@ -71,7 +72,7 @@ class AisDeviceController(context: Context): WiFiScanner.OnWiFiConnectedListener
             try {
                 if (!mConnectingCanceled) {
                     mWiFiScanner.unregisterOnConnected()
-                    mListener?.onAddDeviceFinished(false)
+                    mListener?.onAddDeviceFinished(false, ErrorCode.TIMEOUT)
                     reconnect()
                 }
             } catch (e: Exception) {
@@ -132,6 +133,11 @@ class AisDeviceController(context: Context): WiFiScanner.OnWiFiConnectedListener
     }
 
     interface  OnAddDeviceFinishedListener {
-        fun onAddDeviceFinished(result: Boolean)
+        fun onAddDeviceFinished(result: Boolean, errorReason: ErrorCode = ErrorCode.OK)
+    }
+
+    enum class ErrorCode{
+        OK,
+        TIMEOUT,
     }
 }

@@ -10,6 +10,7 @@ import pl.sviete.dom.devices.net.models.AccessPointInfo
 import java.lang.Exception
 import pl.sviete.dom.devices.net.AisDeviceController
 import android.content.Intent
+import android.content.res.Resources
 import android.widget.Toast
 import pl.sviete.dom.devices.models.AisDevice
 
@@ -92,7 +93,7 @@ class MainCreatorActivity : AppCompatActivity(), StartCreatorFragment.OnNextStep
         mAisCtrl.pairNewDevice(mAPInfo!!.ssid, name, password, mNewDeviceName!!)
     }
 
-    override fun onAddDeviceFinished(result: Boolean) {
+    override fun onAddDeviceFinished(result: Boolean, errorCode: AisDeviceController.ErrorCode) {
         if (result) {
             val ais = AisDevice(mAPInfo!!.mac)
             val intentResult = Intent()
@@ -104,7 +105,10 @@ class MainCreatorActivity : AppCompatActivity(), StartCreatorFragment.OnNextStep
             runOnUiThread {
                 val apFragment = mCurrentFragment as ApDataCreatorFragment?
                 apFragment?.activateForm()
-                Toast.makeText(this, R.string.unknown_error, Toast.LENGTH_LONG).show()
+                var text = resources.getString(R.string.unknown_error)
+                if (errorCode != AisDeviceController.ErrorCode.OK)
+                    text += errorCode.text(resources)
+                Toast.makeText(this, text, Toast.LENGTH_LONG).show()
             }
         }
         runOnUiThread {
@@ -168,4 +172,10 @@ class MainCreatorActivity : AppCompatActivity(), StartCreatorFragment.OnNextStep
 interface ProgressBarManager {
     fun show()
     fun hide()
+}
+
+fun AisDeviceController.ErrorCode.text(resources: Resources): String {
+    if (this == AisDeviceController.ErrorCode.TIMEOUT)
+        return System.getProperty("line.separator") + resources.getString(R.string.connect_ap_timeout)
+    return ""
 }

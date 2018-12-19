@@ -97,4 +97,5 @@
         WiFi. Podczas tego procesu konieczne jest rozłączenie tego urządzenia z sieci WiFi, zajmie to tylko chwilę.
     </string>
     <string name="save_password">Zapisz hasło</string>
+    <string name="connect_ap_timeout">Nie udało się połączyć z wybranym urządzeniem.</string>
 </resources>
