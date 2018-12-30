@@ -1,11 +1,12 @@
-package pl.sviete.dom.devices.bo
+package pl.sviete.dom.devices.db
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 
 @Dao
 interface AisDeviceDao {
     @Query("SELECT * from AisDevice")
-    fun getAll(): List<AisDeviceEntity>
+    fun getAll(): LiveData<List<AisDeviceEntity>>
 
     @Insert
     fun insert(vararg device: AisDeviceEntity)

@@ -12,6 +12,8 @@ import pl.sviete.dom.devices.net.AisDeviceController
 import android.content.Intent
 import android.content.res.Resources
 import android.widget.Toast
+import pl.sviete.dom.devices.db.AisDeviceEntity
+import pl.sviete.dom.devices.db.Repository
 import pl.sviete.dom.devices.models.AisDevice
 
 
@@ -111,6 +113,7 @@ class MainCreatorActivity : AppCompatActivity(), StartCreatorFragment.OnNextStep
                 Toast.makeText(this, text, Toast.LENGTH_LONG).show()
             }
         }
+
         runOnUiThread {
             progressBar.visibility = View.GONE
             if (result)
