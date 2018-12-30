@@ -23,4 +23,7 @@
 
     <include layout="@layout/content_main"/>
 
+    <include layout="@layout/add_device_main"
+             android:id="@+id/welcome_text" />
+
 </android.support.design.widget.CoordinatorLayout>

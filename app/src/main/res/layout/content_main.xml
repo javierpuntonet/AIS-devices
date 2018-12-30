@@ -9,14 +9,15 @@
         tools:showIn="@layout/app_bar_main"
         tools:context=".MainActivity">
 
+    <GridView
+        android:id="@+id/ais_device_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:gravity="center"
+        android:numColumns="2"
+        android:stretchMode="columnWidth"
+    />
 
-    <ListView
-            android:id="@+id/ais_device_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" android:layout_marginTop="8dp"
-            android:layout_marginStart="8dp" android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"/>
-    <include layout="@layout/add_device_main"
-            android:id="@+id/welcome_text"
-            />
 </FrameLayout>

@@ -30,11 +30,14 @@ import pl.sviete.dom.devices.db.Repository
 import pl.sviete.dom.devices.models.AisDevice
 import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.ui.adddevicecreator.MainCreatorActivity
+import android.widget.GridView
+import pl.sviete.dom.devices.ui.mainview.MainGridAdapter
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private val PERMISSIONS_REQUEST_LOCATION: Int = 111
-    private var mAisAdapter: ArrayAdapter<AisDeviceEntity>? = null
+    private lateinit var mAisAdapter: MainGridAdapter
     private var mAisList = ArrayList<AisDeviceEntity>()
     private lateinit var mAisDeviceViewModel: AisDeviceViewModel
 
@@ -49,7 +52,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             devices?.let {
                 mAisList.addAll(it)
             }
-            mAisAdapter!!.notifyDataSetChanged()
+            mAisAdapter.notifyDataSetChanged()
             showAddWelcomeButton()
         })
 
@@ -61,9 +64,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        mAisAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, mAisList)
-        val list = findViewById<ListView>(R.id.ais_device_list)
-        list.adapter = mAisAdapter
+        mAisAdapter = MainGridAdapter(this, mAisList)
+        ais_device_list.adapter = mAisAdapter
 
         findViewById<Button>(R.id.btn_welcome_add).setOnClickListener{
             showCreator()
