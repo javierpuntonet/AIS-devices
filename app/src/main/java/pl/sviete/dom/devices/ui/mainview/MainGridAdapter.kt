@@ -6,6 +6,8 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import android.view.ViewGroup
 import pl.sviete.dom.devices.db.AisDeviceEntity
+import android.view.LayoutInflater
+import pl.sviete.dom.devices.R
 
 class MainGridAdapter (
     val mContext: Context,
@@ -25,11 +27,19 @@ class MainGridAdapter (
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val dummyTextView = TextView(mContext)
         val device = mDevices[position]
-        if (device != null) {
-            dummyTextView.text = device.name
+
+        var view = convertView
+        if (view == null) {
+            val layoutInflater = LayoutInflater.from(mContext)
+            view = layoutInflater.inflate(R.layout.device_list_item, null)
         }
-        return dummyTextView
+
+        val nameTextView = view!!.findViewById(R.id.device_list_item_name) as TextView
+
+        nameTextView.text = device.name
+        //imageView.setImageResource(device.getImageResource())
+
+        return view
     }
 }

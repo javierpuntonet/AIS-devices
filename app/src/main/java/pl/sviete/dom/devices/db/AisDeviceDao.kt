@@ -8,6 +8,9 @@ interface AisDeviceDao {
     @Query("SELECT * from AisDevice")
     fun getAll(): LiveData<List<AisDeviceEntity>>
 
+    @Query("SELECT count(*) from AisDevice")
+    fun getCount(): Int
+
     @Insert
     fun insert(vararg device: AisDeviceEntity)
 

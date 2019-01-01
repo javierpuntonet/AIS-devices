@@ -13,11 +13,11 @@
         android:id="@+id/ais_device_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:verticalSpacing="10dp"
-        android:horizontalSpacing="10dp"
         android:gravity="center"
         android:numColumns="2"
         android:stretchMode="columnWidth"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
     />
 
 </FrameLayout>

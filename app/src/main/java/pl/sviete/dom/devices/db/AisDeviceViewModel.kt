@@ -19,7 +19,7 @@ class AisDeviceViewModel(application: Application) : AndroidViewModel(applicatio
     val allDevices: LiveData<List<AisDeviceEntity>>
 
     init {
-        val dao = DataBase.getInstance(application).dao()
+        val dao = DataBase.getInstance(application, scope).dao()
         repository = Repository(dao)
         allDevices = repository.allDevices
     }
