@@ -14,47 +14,30 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.LocaleList
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.ListView
 import kotlinx.android.synthetic.main.content_main.*
 import pl.sviete.dom.devices.db.AisDeviceEntity
 import pl.sviete.dom.devices.db.AisDeviceViewModel
-import pl.sviete.dom.devices.db.DataBase
-import pl.sviete.dom.devices.db.Repository
 import pl.sviete.dom.devices.models.AisDevice
-import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.ui.adddevicecreator.MainCreatorActivity
-import android.widget.GridView
 import pl.sviete.dom.devices.ui.mainview.MainGridAdapter
+import pl.sviete.dom.devices.ui.mainview.MainPresenter
+import pl.sviete.dom.devices.ui.mainview.MainView
 
+class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNavigationItemSelectedListener {
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-
-    private val PERMISSIONS_REQUEST_LOCATION: Int = 111
     private lateinit var mAisAdapter: MainGridAdapter
     private var mAisList = ArrayList<AisDeviceEntity>()
-    private lateinit var mAisDeviceViewModel: AisDeviceViewModel
+
+    override val presenter: MainView.Presenter = MainPresenter(this, this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-
-        mAisDeviceViewModel = ViewModelProviders.of(this).get(AisDeviceViewModel::class.java)
-        mAisDeviceViewModel.allDevices.observe(this, Observer { devices ->
-            // Update the cached copy of the words in the adapter.
-            devices?.let {
-                mAisList.addAll(it)
-            }
-            mAisAdapter.notifyDataSetChanged()
-            showAddWelcomeButton()
-        })
 
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -71,7 +54,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             showCreator()
         }
 
-        checkPermissions()
+        presenter.loadView()
     }
 
     override fun onBackPressed() {
@@ -117,18 +100,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == MainCreatorActivity.CREATOR_REQUEST_CODE){
-
             data?.let {
-                val ais = data?.getSerializableExtra("aisdevice")
-                val name = data?.getStringExtra("name")
-                if (ais != null && ais is AisDevice) {
-                    if (name != null)
-                        ais.name = name
-                    val newDevice = AisDeviceEntity(null, name, ais.mMac, null, null)
-                    mAisDeviceViewModel.insert(newDevice)
-                }
+                val ais = it.getSerializableExtra("aisdevice")
+                val name = it.getStringExtra("name")
+                presenter.addNewDevice(ais as AisDevice, name)
             }
         }
+    }
+
+    override fun refreshData(devices: List<AisDeviceEntity>?) {
+        devices?.let {
+            mAisList.addAll(it)
+        }
+        mAisAdapter.notifyDataSetChanged()
+        showAddWelcomeButton()
     }
 
     private fun showCreator() {
@@ -149,26 +134,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun checkPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
-                PERMISSIONS_REQUEST_LOCATION)
-        }
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
-        when (requestCode) {
-            PERMISSIONS_REQUEST_LOCATION -> {
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    // permission was granted
-                } else {
-                    finish()
-                }
-                return
-            }
-        }
+        presenter.checkPermissionsGranted(requestCode, grantResults)
     }
 }

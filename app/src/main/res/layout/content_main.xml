@@ -14,10 +14,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:numColumns="2"
+        android:numColumns="auto_fit"
         android:stretchMode="columnWidth"
         android:paddingRight="10dp"
         android:paddingLeft="10dp"
+        android:columnWidth="150dp"
     />
 
 </FrameLayout>
