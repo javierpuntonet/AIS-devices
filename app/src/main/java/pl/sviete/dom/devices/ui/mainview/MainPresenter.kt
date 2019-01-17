@@ -17,7 +17,6 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     private val PERMISSIONS_REQUEST_LOCATION: Int = 111
     private lateinit var mAisDeviceViewModel: AisDeviceViewModel
 
-
     override fun loadView() {
         mAisDeviceViewModel = ViewModelProviders.of(activity).get(AisDeviceViewModel::class.java)
         mAisDeviceViewModel.allDevices.observe(activity, Observer { devices ->
@@ -45,6 +44,10 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
                 return
             }
         }
+    }
+
+    override fun selectDeviceDetail(device: AisDeviceEntity) {
+        view.showDetail(device.uid!!)
     }
 
     private fun checkPermissions() {

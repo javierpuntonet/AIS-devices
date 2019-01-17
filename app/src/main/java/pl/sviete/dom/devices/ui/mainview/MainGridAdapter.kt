@@ -1,17 +1,15 @@
 package pl.sviete.dom.devices.ui.mainview
 
-import android.content.Context
 import android.view.View
-import android.widget.BaseAdapter
-import android.widget.TextView
 import android.view.ViewGroup
 import pl.sviete.dom.devices.db.AisDeviceEntity
 import android.view.LayoutInflater
+import android.widget.*
 import pl.sviete.dom.devices.R
 
 class MainGridAdapter (
-    val mContext: Context,
-    val mDevices: ArrayList<AisDeviceEntity>
+    val mDevices: ArrayList<AisDeviceEntity>,
+    private val onClick: (AisDeviceEntity) -> Unit
 ) : BaseAdapter() {
 
     override fun getCount(): Int {
@@ -31,10 +29,13 @@ class MainGridAdapter (
 
         var view = convertView
         if (view == null) {
-            val layoutInflater = LayoutInflater.from(mContext)
+            val layoutInflater = LayoutInflater.from(parent.context)
             view = layoutInflater.inflate(R.layout.device_list_item, null)
+            view.findViewById<ImageButton>(R.id.btnDeviceDetails).setOnClickListener {
+                onClick(mDevices[position])
+            }
         }
-
+        //view!!.findViewById<ImageButton>(R.id.btnDeviceDetails).tag = position
         val nameTextView = view!!.findViewById(R.id.device_list_item_name) as TextView
 
         nameTextView.text = device.name

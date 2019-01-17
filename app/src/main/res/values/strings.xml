@@ -47,20 +47,6 @@
         <item>-1</item>
     </string-array>
 
-    <string-array name="list_preference_entries">
-        <item>Entry 1</item>
-        <item>Entry 2</item>
-        <item>Entry 3</item>
-    </string-array>
-
-    <string-array name="list_preference_entry_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
-    <string-array name="multi_select_list_preference_default_value"/>
-
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
     <string name="pref_header_notifications">Notifications</string>
@@ -86,7 +72,6 @@
     <string name="new_device">Nowe urządzenie</string>
     <string name="connect">Połącz</string>
     <string name="back">Cofnij</string>
-    <string name="finish">Zakończ</string>
     <string name="unknown_error">Niestety coś poszło nie tak</string>
     <string name="welcome_add_new_device">Dodaj swoje pierwsze urządzenie</string>
     <string name="next">Dalej</string>
@@ -98,4 +83,6 @@
     </string>
     <string name="save_password">Zapisz hasło</string>
     <string name="connect_ap_timeout">Nie udało się połączyć z wybranym urządzeniem.</string>
+    <string name="details">Szczegóły</string>
+    <string name="ip_address">Adres IP</string>
 </resources>

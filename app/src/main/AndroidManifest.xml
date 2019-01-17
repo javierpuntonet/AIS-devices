@@ -33,11 +33,14 @@
                 android:name=".ui.adddevicecreator.MainCreatorActivity"
                 android:label="@string/title_activity_main_creator"
                 android:parentActivityName=".MainActivity"
-                android:theme="@style/AppTheme.NoActionBar"
-                android:screenOrientation="portrait">
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="pl.sviete.dom.devices.MainActivity"/>
+        </activity>
+        <activity android:name=".ui.devicedetails.DeviceDetailsActivity"
+                  android:parentActivityName=".MainActivity">
         </activity>
     </application>
 

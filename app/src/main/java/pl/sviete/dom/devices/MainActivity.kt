@@ -1,8 +1,5 @@
 package pl.sviete.dom.devices
 
-import android.Manifest
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -13,19 +10,14 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.Button
 import kotlinx.android.synthetic.main.content_main.*
 import pl.sviete.dom.devices.db.AisDeviceEntity
-import pl.sviete.dom.devices.db.AisDeviceViewModel
 import pl.sviete.dom.devices.models.AisDevice
 import pl.sviete.dom.devices.ui.adddevicecreator.MainCreatorActivity
-import pl.sviete.dom.devices.ui.mainview.MainGridAdapter
-import pl.sviete.dom.devices.ui.mainview.MainPresenter
-import pl.sviete.dom.devices.ui.mainview.MainView
+import pl.sviete.dom.devices.ui.devicedetails.DeviceDetailsActivity
+import pl.sviete.dom.devices.ui.mainview.*
 
 class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNavigationItemSelectedListener {
 
@@ -47,7 +39,7 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        mAisAdapter = MainGridAdapter(this, mAisList)
+        mAisAdapter = MainGridAdapter(mAisList, presenter::selectDeviceDetail)
         ais_device_list.adapter = mAisAdapter
 
         findViewById<Button>(R.id.btn_welcome_add).setOnClickListener{
@@ -116,6 +108,18 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         showAddWelcomeButton()
     }
 
+    override fun showDetail(id: Int) {
+        val intent = Intent(this, DeviceDetailsActivity::class.java).apply {
+            putExtra(DeviceDetailsActivity.ARG_DEVICE_ITEM_ID, id)
+        }
+        startActivity(intent)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
+        presenter.checkPermissionsGranted(requestCode, grantResults)
+    }
+
     private fun showCreator() {
         val intent = Intent(this, MainCreatorActivity::class.java)
         startActivityForResult(intent, MainCreatorActivity.CREATOR_REQUEST_CODE)
@@ -132,10 +136,5 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
             welcome_text.visibility = View.VISIBLE
             ais_device_list.visibility = View.GONE
         }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>, grantResults: IntArray) {
-        presenter.checkPermissionsGranted(requestCode, grantResults)
     }
 }
