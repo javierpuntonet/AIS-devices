@@ -85,4 +85,6 @@
     <string name="connect_ap_timeout">Nie udało się połączyć z wybranym urządzeniem.</string>
     <string name="details">Szczegóły</string>
     <string name="ip_address">Adres IP</string>
+    <string name="delete">Usuń</string>
+    <string name="save">Zapisz</string>
 </resources>

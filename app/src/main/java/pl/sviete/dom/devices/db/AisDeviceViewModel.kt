@@ -16,16 +16,30 @@ class AisDeviceViewModel(application: Application) : AndroidViewModel(applicatio
     private val scope = CoroutineScope(coroutineContext)
 
     private val repository: Repository
-    val allDevices: LiveData<List<AisDeviceEntity>>
 
     init {
         val dao = DataBase.getInstance(application, scope).dao()
         repository = Repository(dao)
-        allDevices = repository.allDevices
+    }
+
+    fun  getAll():LiveData<List<AisDeviceEntity>>{
+        return  repository.getAll()
+    }
+
+    fun getById(id: Int): LiveData<AisDeviceEntity>{
+        return repository.getById(id)
     }
 
     fun insert(device: AisDeviceEntity) = scope.launch(Dispatchers.IO) {
         repository.insert(device)
+    }
+
+    fun update(device: AisDeviceEntity) = scope.launch(Dispatchers.IO) {
+        repository.update(device)
+    }
+
+    fun delete(device: AisDeviceEntity) = scope.launch(Dispatchers.IO) {
+        repository.delete(device)
     }
 
     override fun onCleared() {

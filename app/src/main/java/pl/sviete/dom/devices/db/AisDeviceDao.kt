@@ -8,6 +8,9 @@ interface AisDeviceDao {
     @Query("SELECT * from AisDevice")
     fun getAll(): LiveData<List<AisDeviceEntity>>
 
+    @Query("SELECT * FROM AisDevice WHERE uid=:id")
+    fun getById(id: Int): LiveData<AisDeviceEntity>
+
     @Query("SELECT count(*) from AisDevice")
     fun getCount(): Int
 

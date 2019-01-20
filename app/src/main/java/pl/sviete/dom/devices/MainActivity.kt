@@ -102,6 +102,7 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
 
     override fun refreshData(devices: List<AisDeviceEntity>?) {
         devices?.let {
+            mAisList.clear()
             mAisList.addAll(it)
         }
         mAisAdapter.notifyDataSetChanged()

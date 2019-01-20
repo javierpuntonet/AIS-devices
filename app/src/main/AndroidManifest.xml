@@ -40,7 +40,8 @@
                     android:value="pl.sviete.dom.devices.MainActivity"/>
         </activity>
         <activity android:name=".ui.devicedetails.DeviceDetailsActivity"
-                  android:parentActivityName=".MainActivity">
+                  android:parentActivityName=".MainActivity"
+                  android:windowSoftInputMode="adjustPan">
         </activity>
     </application>
 

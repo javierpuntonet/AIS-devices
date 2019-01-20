@@ -19,7 +19,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
 
     override fun loadView() {
         mAisDeviceViewModel = ViewModelProviders.of(activity).get(AisDeviceViewModel::class.java)
-        mAisDeviceViewModel.allDevices.observe(activity, Observer { devices ->
+        mAisDeviceViewModel.getAll().observe(activity, Observer { devices ->
             view.refreshData(devices)
         })
 
