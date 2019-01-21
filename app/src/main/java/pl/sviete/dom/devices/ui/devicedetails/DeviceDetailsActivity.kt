@@ -1,18 +1,11 @@
 package pl.sviete.dom.devices.ui.devicedetails
 
+import android.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_device_details.*
 import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.db.AisDeviceEntity
-import android.content.Intent
-import android.view.MenuItem
-import pl.sviete.dom.devices.MainActivity
-import pl.sviete.dom.devices.R.id.toolbar
-
-
-
-
 
 class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
 
@@ -30,12 +23,10 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
         }
 
         btn_delete.setOnClickListener {
-            presenter.delete()
-            finish()
+            showQuestionForDelete()
         }
 
         val detailId = intent.getIntExtra(ARG_DEVICE_ITEM_ID, 0)
-
         presenter.loadView(detailId)
     }
 
@@ -44,6 +35,14 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
         txt_device_ip.setText(device.ip)
 
         webView.loadUrl("http://" + device.ip)
+    }
+
+    private fun showQuestionForDelete() {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage(R.string.delete_question)
+        builder.setPositiveButton(R.string.delete){_, _ -> presenter.delete() }
+        builder.setNegativeButton(R.string.no){_, _ -> }
+        builder.create().show()
     }
 
     companion object {

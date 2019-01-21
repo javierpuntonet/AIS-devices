@@ -30,5 +30,6 @@ class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: 
 
     override fun delete() {
         mAisDeviceViewModel.delete(mModel)
+        activity.finish()
     }
 }

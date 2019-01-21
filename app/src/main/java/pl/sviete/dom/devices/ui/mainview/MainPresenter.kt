@@ -7,10 +7,15 @@ import android.content.pm.PackageManager
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import pl.sviete.dom.devices.aiscontrollers.AisFactory
 import pl.sviete.dom.devices.db.AisDeviceEntity
 import pl.sviete.dom.devices.db.AisDeviceViewModel
 import pl.sviete.dom.devices.models.AisDevice
 import pl.sviete.dom.devices.mvp.*
+import retrofit2.HttpException
 
 class MainPresenter(val activity: FragmentActivity, override var view: MainView.View) : BasePresenter<MainView.View, MainView.Presenter>(), MainView.Presenter {
 
@@ -21,6 +26,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
         mAisDeviceViewModel = ViewModelProviders.of(activity).get(AisDeviceViewModel::class.java)
         mAisDeviceViewModel.getAll().observe(activity, Observer { devices ->
             view.refreshData(devices)
+            //checkDevicesStatus(devices)
         })
 
         checkPermissions()
@@ -59,5 +65,26 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
         }
     }
 
+    private fun checkDevicesStatus(devices: List<AisDeviceEntity>?){
+        devices?.forEach {
+            if (!it.ip.isNullOrEmpty()) {
+                val service = AisFactory.makeSocketService(it.ip!!)
+                GlobalScope.launch(Dispatchers.Main) {
+                    val request = service.getPowerStatus()
+                    try {
+                        val response = request.await()
+                        val a = response.POWER
+                        if (a != null)
+                        {
 
+                        }
+                    } catch (e: HttpException) {
+
+                    } catch (e: Throwable) {
+
+                    }
+                }
+            }
+        }
+    }
 }

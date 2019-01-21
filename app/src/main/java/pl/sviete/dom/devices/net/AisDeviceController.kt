@@ -13,7 +13,6 @@ import java.net.URLEncoder
 class AisDeviceController(context: Context): WiFiScanner.OnWiFiConnectedListener {
     private val TAG = AisDeviceController::class.java.simpleName
 
-    //private val mContext: Context = context
     private val mWiFiScanner: WiFiScanner = WiFiScanner(context)
     private var mFriendlyName: String? = null
     private var mDeviceSsid: String? = null

@@ -21,7 +21,7 @@ class MainGridAdapter (
     }
 
     override fun getItem(position: Int): Any? {
-        return null
+        return mDevices[position]
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {

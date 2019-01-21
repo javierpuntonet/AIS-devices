@@ -87,4 +87,6 @@
     <string name="ip_address">Adres IP</string>
     <string name="delete">Usuń</string>
     <string name="save">Zapisz</string>
+    <string name="delete_question">Usunąć urządzenie?</string>
+    <string name="no">Nie</string>
 </resources>
