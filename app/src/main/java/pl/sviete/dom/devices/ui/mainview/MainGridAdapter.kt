@@ -5,11 +5,17 @@ import android.view.ViewGroup
 import pl.sviete.dom.devices.db.AisDeviceEntity
 import android.view.LayoutInflater
 import android.widget.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import pl.sviete.dom.devices.R
+import pl.sviete.dom.devices.aiscontrollers.AisFactory
+import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
+import retrofit2.HttpException
 
 class MainGridAdapter (
-    val mDevices: ArrayList<AisDeviceEntity>,
-    private val onClick: (AisDeviceEntity) -> Unit
+    val mDevices: ArrayList<DeviceViewModel>,
+    private val onClick: (DeviceViewModel) -> Unit
 ) : BaseAdapter() {
 
     override fun getCount(): Int {
@@ -38,7 +44,7 @@ class MainGridAdapter (
         //view!!.findViewById<ImageButton>(R.id.btnDeviceDetails).tag = position
         val nameTextView = view!!.findViewById(R.id.device_list_item_name) as TextView
 
-        nameTextView.text = device.name
+        nameTextView.text = device.name + ":" + device.status
         //imageView.setImageResource(device.getImageResource())
 
         return view

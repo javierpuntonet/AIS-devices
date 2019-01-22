@@ -22,7 +22,7 @@ import pl.sviete.dom.devices.ui.mainview.*
 class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var mAisAdapter: MainGridAdapter
-    private var mAisList = ArrayList<AisDeviceEntity>()
+    private var mAisList = ArrayList<DeviceViewModel>()
 
     override val presenter: MainView.Presenter = MainPresenter(this, this)
 
@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         }
     }
 
-    override fun refreshData(devices: List<AisDeviceEntity>?) {
+    override fun refreshData(devices: List<DeviceViewModel>?) {
         devices?.let {
             mAisList.clear()
             mAisList.addAll(it)
