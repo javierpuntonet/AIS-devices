@@ -13,7 +13,6 @@ import android.content.Intent
 import android.view.View
 import android.widget.Button
 import kotlinx.android.synthetic.main.content_main.*
-import pl.sviete.dom.devices.db.AisDeviceEntity
 import pl.sviete.dom.devices.models.AisDevice
 import pl.sviete.dom.devices.ui.adddevicecreator.MainCreatorActivity
 import pl.sviete.dom.devices.ui.devicedetails.DeviceDetailsActivity

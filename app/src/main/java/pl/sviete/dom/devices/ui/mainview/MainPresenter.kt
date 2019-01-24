@@ -25,37 +25,27 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
 
     private val PERMISSIONS_REQUEST_LOCATION: Int = 111
     private lateinit var mAisDeviceViewModel: AisDeviceViewModel
-    private val viewModel = MutableLiveData<List<DeviceViewModel>>()
+    private var mAisList = ArrayList<DeviceViewModel>()
 
     override fun loadView() {
-        viewModel.observe(activity, Observer {
-            view.refreshData(it)
+        DeviceStatusRepository.getInstance().statuses.observe(activity, Observer {
+            refreshViewModel(null)
         })
 
         mAisDeviceViewModel = ViewModelProviders.of(activity).get(AisDeviceViewModel::class.java)
         mAisDeviceViewModel.getAll().observe(activity, Observer { devices ->
-            val list = mutableListOf<DeviceViewModel>()
-            devices?.forEach {
-                val nm= DeviceViewModel(it.uid!!, it.name, it.ip)
-                val m = viewModel.value?.firstOrNull { x -> x.uid == it.uid }
-                if (m != null)
-                    nm.status = m.status
-                list.add(nm)
+            refreshViewModel(devices)
+            devices?.filter { x -> !x.ip.isNullOrEmpty() }?.forEach {
+                DeviceStatusRepository.getInstance().add(it.ip!!)
             }
-            viewModel.postValue(list)
-
-            //view.refreshData(list.toList())
-            checkDevicesStatus(list)
         })
 
         checkPermissions()
     }
 
     override fun addNewDevice(device: AisDevice, name: String){
-        if (device != null) {
-            val newDevice = AisDeviceEntity(null, name, device.mMac, null, null)
-            mAisDeviceViewModel.insert(newDevice)
-        }
+        val newDevice = AisDeviceEntity(null, name, device.mMac, null, null)
+        mAisDeviceViewModel.insert(newDevice)
     }
 
     override fun checkPermissionsGranted(requestCode: Int, grantResults: IntArray){
@@ -84,28 +74,17 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
         }
     }
 
-    private fun checkDevicesStatus(devices: List<DeviceViewModel>){
-        devices?.forEach {
-            if (!it.ip.isNullOrEmpty()) {
-                val service = AisFactory.makeSocketService(it.ip!!)
-                GlobalScope.launch(Dispatchers.Main) {
-                    var status = PowerStatus.UNKNOWN
-                    val request = service.getPowerStatus()
-                    try {
-                        val response = request.await()
-                        status = response.POWER
-                    } catch (e: Exception) {
-                        val ee = e
-                    }
-                    if (viewModel.value != null) {
-                        val m = viewModel.value!!.first {x -> x.uid == it.uid }
-                        if (m.status != status) {
-                            m.status = status
-                            viewModel.postValue(viewModel.value!!)
-                        }
-                    }
-                }
+    private fun refreshViewModel(entities: List<AisDeviceEntity>?) {
+        if (entities != null) {
+            mAisList.clear()
+            entities.forEach {
+                mAisList.add(DeviceViewModel(it.uid!!, it.name, it.ip))
             }
         }
+        mAisList.forEach {
+            if (it.ip != null)
+                it.status = DeviceStatusRepository.getInstance().get(it.ip)
+        }
+        view.refreshData(mAisList)
     }
 }
