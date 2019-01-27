@@ -4,9 +4,8 @@ import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import pl.sviete.dom.devices.aiscontrollers.AisFactory
+import pl.sviete.dom.devices.aiscontrollers.AisDeviceController
 import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
-import java.lang.Exception
 
 class DeviceStatusRepository {
 
@@ -27,7 +26,7 @@ class DeviceStatusRepository {
 
     fun add(ip: String){
         if (!map.contains(ip)) {
-            map[ip] = PowerStatus.UNKNOWN
+            map[ip] = PowerStatus.Unknown
             refreshStatus(ip)
         }
     }
@@ -35,7 +34,7 @@ class DeviceStatusRepository {
     fun get(ip: String) : PowerStatus {
         if (map.containsKey(ip))
             return map[ip]!!
-        return PowerStatus.UNKNOWN
+        return PowerStatus.Unknown
     }
 
     fun set(ip: String, status: PowerStatus) {
@@ -45,15 +44,11 @@ class DeviceStatusRepository {
 
     private fun refreshStatus(ip: String){
         if (!ip.isNullOrEmpty()) {
-            val service = AisFactory.makeSocketService(ip)
             GlobalScope.launch(Dispatchers.Main) {
-                val request = service.getPowerStatus()
-                try {
-                    val response = request.await()
-                    map[ip] = response.POWER
+                val status = AisDeviceController.getPowerStatus(ip)
+                if (status != null) {
+                    map[ip] = status
                     statuses.postValue(map)
-                } catch (e: Exception) {
-
                 }
             }
         }

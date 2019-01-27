@@ -1,7 +1,9 @@
 package pl.sviete.dom.devices.aiscontrollers.models
 
+import com.google.gson.annotations.SerializedName
+
 
 data class Power (
-
-    val POWER: PowerStatus
+    @SerializedName("POWER")
+    val Power: PowerStatus
 )

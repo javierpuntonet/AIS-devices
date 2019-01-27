@@ -1,7 +1,6 @@
 package pl.sviete.dom.devices.ui.mainview
 
 import android.Manifest
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.pm.PackageManager
@@ -10,16 +9,12 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import pl.sviete.dom.devices.aiscontrollers.AisFactory
-import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
+import pl.sviete.dom.devices.aiscontrollers.AisDeviceController
 import pl.sviete.dom.devices.db.AisDeviceEntity
 import pl.sviete.dom.devices.db.AisDeviceViewModel
 import pl.sviete.dom.devices.models.AisDevice
 import pl.sviete.dom.devices.mvp.*
-import retrofit2.HttpException
-import java.lang.Exception
 
 class MainPresenter(val activity: FragmentActivity, override var view: MainView.View) : BasePresenter<MainView.View, MainView.Presenter>(), MainView.Presenter {
 
@@ -30,7 +25,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
 
     override fun loadView() {
         DeviceStatusRepository.getInstance().statuses.observe(activity, Observer {
-            refreshViewModel(null)
+            refreshViewModel()
         })
 
         mAisDeviceViewModel = ViewModelProviders.of(activity).get(AisDeviceViewModel::class.java)
@@ -68,16 +63,11 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
 
     override fun toggleDeviceState(device: DeviceViewModel) {
         if (!device.ip.isNullOrEmpty()) {
-            val service = AisFactory.makeSocketService(device.ip)
             GlobalScope.launch(Dispatchers.Main) {
-                val request = service.toggleStatus()
-                try {
-                    val response = request.await()
-                    val status = response.POWER
+                val status = AisDeviceController.toggleStatus(device.ip)
+                if (status != null) {
                     DeviceStatusRepository.getInstance().set(device.ip, status)
-                    refreshViewModel(null)
-                } catch (e: Exception) {
-
+                    refreshViewModel()
                 }
             }
         }
@@ -92,7 +82,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
         }
     }
 
-    private fun refreshViewModel(entities: List<AisDeviceEntity>?) {
+    private fun refreshViewModel(entities: List<AisDeviceEntity>? = null) {
         if (entities != null) {
             mAisList.clear()
             entities.forEach {

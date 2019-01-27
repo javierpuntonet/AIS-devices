@@ -17,12 +17,14 @@ class MainGridAdapter (
     }
 
     override fun getItemId(position: Int): Long {
-        return 0
+        return mDevices[position].uid.toLong()
     }
 
     override fun getItem(position: Int): Any? {
         return mDevices[position]
     }
+
+
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val device = mDevices[position]
@@ -60,8 +62,8 @@ class MainGridAdapter (
 
     private fun getResourceForStatus(status: PowerStatus): Int{
         return when (status) {
-            PowerStatus.ON ->  R.drawable.device_list_item_border_on
-            PowerStatus.OFF ->  R.drawable.device_list_item_border_off
+            PowerStatus.On -> R.drawable.device_list_item_border_on
+            PowerStatus.Off -> R.drawable.device_list_item_border_off
             else -> R.drawable.device_list_item_border_unknown
         }
     }

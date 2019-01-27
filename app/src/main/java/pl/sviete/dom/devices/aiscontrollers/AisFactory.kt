@@ -11,17 +11,11 @@ object AisFactory {
 
     fun makeSocketService(ip: String): AisSocketService {
         val gson = GsonBuilder()
-            //.registerTypeAdapter(Id::class.java, IdTypeAdapter())
-            //.enableComplexMapKeySerialization()
-            //.serializeNulls()
-            //.setDateFormat(DateFormat.LONG)
             .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
-            //.setPrettyPrinting()
-            //.setVersion(1.0)
             .create()
 
         return Retrofit.Builder()
-            .baseUrl("http://" + ip)
+            .baseUrl("http://$ip")
             //.addConverterFactory(MoshiConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
