@@ -38,6 +38,11 @@ class DeviceStatusRepository {
         return PowerStatus.UNKNOWN
     }
 
+    fun set(ip: String, status: PowerStatus) {
+        if (map.containsKey(ip))
+            map[ip] = status
+    }
+
     private fun refreshStatus(ip: String){
         if (!ip.isNullOrEmpty()) {
             val service = AisFactory.makeSocketService(ip)
@@ -52,16 +57,5 @@ class DeviceStatusRepository {
                 }
             }
         }
-    }
-
-    fun init(statuses: HashMap<String, PowerStatus>?) {
-        if (statuses != null)
-            map = statuses
-    }
-
-    fun getStatuses(): HashMap<String, Int>{
-        val s = HashMap<String, Int>(map.size)
-        s.put("test", 1)
-        return s
     }
 }

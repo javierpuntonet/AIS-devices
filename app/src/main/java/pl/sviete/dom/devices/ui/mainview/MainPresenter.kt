@@ -23,6 +23,7 @@ import java.lang.Exception
 
 class MainPresenter(val activity: FragmentActivity, override var view: MainView.View) : BasePresenter<MainView.View, MainView.Presenter>(), MainView.Presenter {
 
+
     private val PERMISSIONS_REQUEST_LOCATION: Int = 111
     private lateinit var mAisDeviceViewModel: AisDeviceViewModel
     private var mAisList = ArrayList<DeviceViewModel>()
@@ -61,8 +62,25 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
         }
     }
 
-    override fun selectDeviceDetail(device: DeviceViewModel) {
+    override fun showDeviceDetail(device: DeviceViewModel) {
         view.showDetail(device.uid)
+    }
+
+    override fun toggleDeviceState(device: DeviceViewModel) {
+        if (!device.ip.isNullOrEmpty()) {
+            val service = AisFactory.makeSocketService(device.ip)
+            GlobalScope.launch(Dispatchers.Main) {
+                val request = service.toggleStatus()
+                try {
+                    val response = request.await()
+                    val status = response.POWER
+                    DeviceStatusRepository.getInstance().set(device.ip, status)
+                    refreshViewModel(null)
+                } catch (e: Exception) {
+
+                }
+            }
+        }
     }
 
     private fun checkPermissions() {

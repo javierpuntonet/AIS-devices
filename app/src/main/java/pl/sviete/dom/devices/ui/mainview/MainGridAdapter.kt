@@ -2,20 +2,14 @@ package pl.sviete.dom.devices.ui.mainview
 
 import android.view.View
 import android.view.ViewGroup
-import pl.sviete.dom.devices.db.AisDeviceEntity
 import android.view.LayoutInflater
 import android.widget.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import pl.sviete.dom.devices.R
-import pl.sviete.dom.devices.aiscontrollers.AisFactory
 import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
-import retrofit2.HttpException
 
 class MainGridAdapter (
-    val mDevices: ArrayList<DeviceViewModel>,
-    private val onClick: (DeviceViewModel) -> Unit
+    private val mDevices: ArrayList<DeviceViewModel>,
+    private  val presenter: MainView.Presenter
 ) : BaseAdapter() {
 
     override fun getCount(): Int {
@@ -37,16 +31,38 @@ class MainGridAdapter (
         if (view == null) {
             val layoutInflater = LayoutInflater.from(parent.context)
             view = layoutInflater.inflate(R.layout.device_list_item, null)
+
             view.findViewById<ImageButton>(R.id.btnDeviceDetails).setOnClickListener {
-                onClick(mDevices[position])
+                presenter.showDeviceDetail(device)
+            }
+
+            view.setOnClickListener {
+                presenter.toggleDeviceState(device)
+            }
+            view.findViewById<ImageView>(R.id.img_device).setOnClickListener {
+                presenter.toggleDeviceState(device)
             }
         }
         //view!!.findViewById<ImageButton>(R.id.btnDeviceDetails).tag = position
         val nameTextView = view!!.findViewById(R.id.device_list_item_name) as TextView
 
-        nameTextView.text = device.name + ":" + device.status
+        nameTextView.text = device.name
+        nameTextView.setOnClickListener {
+            presenter.toggleDeviceState(device)
+        }
+
+        view.setBackgroundResource(getResourceForStatus(device.status))
+
         //imageView.setImageResource(device.getImageResource())
 
         return view
+    }
+
+    private fun getResourceForStatus(status: PowerStatus): Int{
+        return when (status) {
+            PowerStatus.ON ->  R.drawable.device_list_item_border_on
+            PowerStatus.OFF ->  R.drawable.device_list_item_border_off
+            else -> R.drawable.device_list_item_border_unknown
+        }
     }
 }

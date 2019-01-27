@@ -7,4 +7,7 @@ import retrofit2.http.GET
 interface AisSocketService {
     @GET("/cm?cmnd=Power")
     fun getPowerStatus(): Deferred<Power>
+
+    @GET("/cm?cmnd=Power Toggle")
+    fun toggleStatus(): Deferred<Power>
 }

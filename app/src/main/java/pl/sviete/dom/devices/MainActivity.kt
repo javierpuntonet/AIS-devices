@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        mAisAdapter = MainGridAdapter(mAisList, presenter::selectDeviceDetail)
+        mAisAdapter = MainGridAdapter(mAisList, presenter)
         ais_device_list.adapter = mAisAdapter
 
         findViewById<Button>(R.id.btn_welcome_add).setOnClickListener{

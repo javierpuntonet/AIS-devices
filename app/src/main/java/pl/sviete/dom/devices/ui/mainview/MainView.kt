@@ -15,6 +15,7 @@ interface MainView {
         fun loadView()
         fun addNewDevice(device: AisDevice, name: String)
         fun checkPermissionsGranted(requestCode: Int, grantResults: IntArray)
-        fun selectDeviceDetail(device: DeviceViewModel)
+        fun showDeviceDetail(device: DeviceViewModel)
+        fun toggleDeviceState(device: DeviceViewModel)
     }
 }
