@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.widget.*
 import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
+import android.widget.TextView
 
 class MainGridAdapter (
     private val mDevices: ArrayList<DeviceViewModel>,
@@ -24,32 +25,38 @@ class MainGridAdapter (
         return mDevices[position]
     }
 
-
-
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val device = mDevices[position]
-
+        val device = getItem(position) as DeviceViewModel
+        val holder: ViewHolder
         var view = convertView
         if (view == null) {
             val layoutInflater = LayoutInflater.from(parent.context)
             view = layoutInflater.inflate(R.layout.device_list_item, null)
 
-            view.findViewById<ImageButton>(R.id.btnDeviceDetails).setOnClickListener {
-                presenter.showDeviceDetail(device)
-            }
-
-            view.setOnClickListener {
-                presenter.toggleDeviceState(device)
-            }
-            view.findViewById<ImageView>(R.id.img_device).setOnClickListener {
-                presenter.toggleDeviceState(device)
-            }
+            holder = ViewHolder()
+            holder.detailsButton = view.findViewById(R.id.btnDeviceDetails)
+            holder.imageView = view.findViewById(R.id.img_device)
+            holder.nameText = view.findViewById(R.id.device_list_item_name)
+            view.tag = holder
         }
-        //view!!.findViewById<ImageButton>(R.id.btnDeviceDetails).tag = position
-        val nameTextView = view!!.findViewById(R.id.device_list_item_name) as TextView
+        else{
+            holder = view.tag as ViewHolder
+        }
 
-        nameTextView.text = device.name
-        nameTextView.setOnClickListener {
+        view!!.setOnClickListener {
+            presenter.toggleDeviceState(device)
+        }
+
+        holder.detailsButton!!.setOnClickListener {
+            presenter.showDeviceDetail(device)
+        }
+
+        holder.imageView!!.setOnClickListener {
+            presenter.toggleDeviceState(device)
+        }
+
+        holder.nameText!!.text = device.name
+        holder.nameText!!.setOnClickListener {
             presenter.toggleDeviceState(device)
         }
 
@@ -66,5 +73,11 @@ class MainGridAdapter (
             PowerStatus.Off -> R.drawable.device_list_item_border_off
             else -> R.drawable.device_list_item_border_unknown
         }
+    }
+
+    internal inner class ViewHolder {
+        var imageView: ImageView? = null
+        var nameText: TextView? = null
+        var detailsButton: ImageButton? = null
     }
 }
