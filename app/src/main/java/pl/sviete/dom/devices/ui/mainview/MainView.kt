@@ -13,7 +13,7 @@ interface MainView {
 
     interface Presenter : IPresenter<View> {
         fun loadView()
-        fun addNewDevice(device: AisDevice, name: String)
+        fun addNewDevice(device: AisDevice)
         fun checkPermissionsGranted(requestCode: Int, grantResults: IntArray)
         fun showDeviceDetail(device: DeviceViewModel)
         fun toggleDeviceState(device: DeviceViewModel)

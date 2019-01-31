@@ -39,8 +39,8 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
         checkPermissions()
     }
 
-    override fun addNewDevice(device: AisDevice, name: String){
-        val newDevice = AisDeviceEntity(null, name, device.mMac, null, null)
+    override fun addNewDevice(device: AisDevice){
+        val newDevice = AisDeviceEntity(null, device.name!!, device.mMac, null, device.type as Int?)
         mAisDeviceViewModel.insert(newDevice)
     }
 

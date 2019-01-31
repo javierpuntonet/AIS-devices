@@ -3,15 +3,15 @@ package pl.sviete.dom.devices.net
 import android.content.Context
 import android.os.Handler
 import android.util.Log
-import pl.sviete.dom.devices.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import pl.sviete.dom.devices.aiscontrollers.AisDeviceController
 import java.io.UnsupportedEncodingException
-import java.net.HttpURLConnection
-import java.net.URL
-import java.net.URLEncoder
 
 
-class AisDeviceController(context: Context): WiFiScanner.OnWiFiConnectedListener {
-    private val TAG = AisDeviceController::class.java.simpleName
+class AisDeviceConfigurator(context: Context): WiFiScanner.OnWiFiConnectedListener {
+    private val TAG = AisDeviceConfigurator::class.java.simpleName
 
     private val mWiFiScanner: WiFiScanner = WiFiScanner(context)
     private var mFriendlyName: String? = null
@@ -82,25 +82,25 @@ class AisDeviceController(context: Context): WiFiScanner.OnWiFiConnectedListener
     }
 
     override fun onConnected() {
-        try {
-            mConnectingCanceled = true
-            mHandlerTimeout.removeCallbacksAndMessages(timeout)
+        GlobalScope.launch(Dispatchers.IO) {
+            var result = false
+            try {
+                mConnectingCanceled = true
+                mHandlerTimeout.removeCallbacksAndMessages(timeout)
 
-            val url = URLEncoder.encode("Backlog FriendlyName1 $mFriendlyName; SSId1 $mAPName; Password1 $mAPPassword","UTF-8")
-            if (connectAndConfiguraDevice(url)) {
-                mListener?.onAddDeviceFinished(true)
-                return
+                if (connectAndConfiguraDevice()) {
+                    result = true
+                }
+            } catch (e: UnsupportedEncodingException) {
+                Log.e(TAG, "onConnected", e)
+            } finally {
+                reconnect()
+                mListener?.onAddDeviceFinished(result)
             }
-        } catch (e: UnsupportedEncodingException) {
-            Log.e(TAG, "onConnected", e)
         }
-        finally {
-            reconnect()
-        }
-        mListener?.onAddDeviceFinished(false)
     }
 
-    private fun connectAndConfiguraDevice(url: String): Boolean {
+    private suspend fun connectAndConfiguraDevice(): Boolean {
         // check if we have correct connection if not then exit
         val networkId = mWiFiScanner.getCurrentNetworkId()
         if (networkId != mDeviceNetworkId) {
@@ -108,16 +108,13 @@ class AisDeviceController(context: Context): WiFiScanner.OnWiFiConnectedListener
         }
         else {
             try {
-                val obj = URL("http://192.168.4.1/cm?cmnd=$url")
 
-                val con = obj.openConnection() as HttpURLConnection
-                con.requestMethod = "GET"
-                con.setRequestProperty("User-Agent", "Mozilla/5.0")
-
-                if (con.responseCode == HttpURLConnection.HTTP_OK) {
+                val result = AisDeviceController.setupNew(mFriendlyName!!, mAPName!!, mAPPassword!!)
+                if (result){
 
                     return true
                 }
+                return false
             } catch (e: Exception) {
                 Log.e(TAG, "ConnectAndConfiguraDevice", e)
             }

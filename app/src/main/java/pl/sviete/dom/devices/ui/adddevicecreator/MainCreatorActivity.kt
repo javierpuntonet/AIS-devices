@@ -8,22 +8,20 @@ import kotlinx.android.synthetic.main.activity_main_creator.*
 import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.net.models.AccessPointInfo
 import java.lang.Exception
-import pl.sviete.dom.devices.net.AisDeviceController
+import pl.sviete.dom.devices.net.AisDeviceConfigurator
 import android.content.Intent
 import android.content.res.Resources
 import android.widget.Toast
-import pl.sviete.dom.devices.db.AisDeviceEntity
-import pl.sviete.dom.devices.db.Repository
 import pl.sviete.dom.devices.models.AisDevice
 
 
 class MainCreatorActivity : AppCompatActivity(), StartCreatorFragment.OnNextStepListener, AplistCreatorFragment.OnAPSelectedListener
                             , ApDataCreatorFragment.OnAPDataAcceptListener, NameCreatorFragment.OnNameAcceptListener
-                            , AisDeviceController.OnAddDeviceFinishedListener, ProgressBarManager{
+                            , AisDeviceConfigurator.OnAddDeviceFinishedListener, ProgressBarManager{
 
     private var mAPInfo: AccessPointInfo? = null
     private var mAccessibleAP: List<AccessPointInfo>? = null
-    private val mAisCtrl = AisDeviceController(this)
+    private val mAisCtrl = AisDeviceConfigurator(this)
     private var mCurrentFragment: Fragment? = null
     private var mNewDeviceName: String? = null
 
@@ -95,12 +93,12 @@ class MainCreatorActivity : AppCompatActivity(), StartCreatorFragment.OnNextStep
         mAisCtrl.pairNewDevice(mAPInfo!!.ssid, name, password, mNewDeviceName!!)
     }
 
-    override fun onAddDeviceFinished(result: Boolean, errorCode: AisDeviceController.ErrorCode) {
+    override fun onAddDeviceFinished(result: Boolean, errorCode: AisDeviceConfigurator.ErrorCode) {
         if (result) {
             val ais = AisDevice(mAPInfo!!.mac)
+            ais.name = mNewDeviceName
             val intentResult = Intent()
             intentResult.putExtra("aisdevice", ais)
-            intentResult.putExtra("name", mNewDeviceName)
             setResult(CREATOR_REQUEST_CODE, intentResult)
         }
         else{
@@ -108,7 +106,7 @@ class MainCreatorActivity : AppCompatActivity(), StartCreatorFragment.OnNextStep
                 val apFragment = mCurrentFragment as ApDataCreatorFragment?
                 apFragment?.activateForm()
                 var text = resources.getString(R.string.unknown_error)
-                if (errorCode != AisDeviceController.ErrorCode.OK)
+                if (errorCode != AisDeviceConfigurator.ErrorCode.OK)
                     text += errorCode.text(resources)
                 Toast.makeText(this, text, Toast.LENGTH_LONG).show()
             }
@@ -177,8 +175,8 @@ interface ProgressBarManager {
     fun hide()
 }
 
-fun AisDeviceController.ErrorCode.text(resources: Resources): String {
-    if (this == AisDeviceController.ErrorCode.TIMEOUT)
+fun AisDeviceConfigurator.ErrorCode.text(resources: Resources): String {
+    if (this == AisDeviceConfigurator.ErrorCode.TIMEOUT)
         return System.getProperty("line.separator") + resources.getString(R.string.connect_ap_timeout)
     return ""
 }

@@ -93,8 +93,7 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         if (requestCode == MainCreatorActivity.CREATOR_REQUEST_CODE){
             data?.let {
                 val ais = it.getSerializableExtra("aisdevice")
-                val name = it.getStringExtra("name")
-                presenter.addNewDevice(ais as AisDevice, name)
+                presenter.addNewDevice(ais as AisDevice)
             }
         }
     }
