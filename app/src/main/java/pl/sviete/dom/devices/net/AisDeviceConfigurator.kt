@@ -32,6 +32,7 @@ class AisDeviceConfigurator(context: Context): WiFiScanner.OnWiFiConnectedListen
 
     fun cancelPair() {
         mWiFiScanner.unregisterOnConnected()
+        reconnect()
     }
 
     fun pairNewDevice(ssid: String, apName: String, apPassword: String, friendlyName: String){

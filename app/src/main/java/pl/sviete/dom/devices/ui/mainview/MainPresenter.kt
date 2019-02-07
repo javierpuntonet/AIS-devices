@@ -14,6 +14,7 @@ import pl.sviete.dom.devices.aiscontrollers.AisDeviceController
 import pl.sviete.dom.devices.db.AisDeviceEntity
 import pl.sviete.dom.devices.db.AisDeviceViewModel
 import pl.sviete.dom.devices.models.AisDevice
+import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.mvp.*
 
 class MainPresenter(val activity: FragmentActivity, override var view: MainView.View) : BasePresenter<MainView.View, MainView.Presenter>(), MainView.Presenter {
@@ -86,7 +87,10 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
         if (entities != null) {
             mAisList.clear()
             entities.forEach {
-                mAisList.add(DeviceViewModel(it.uid!!, it.name, it.ip))
+                val device = DeviceViewModel(it.uid!!, it.name, it.ip)
+                if (it.type != null)
+                    device.type = AisDeviceType.fromInt(it.type!!)
+                mAisList.add(device)
             }
         }
         mAisList.forEach {
