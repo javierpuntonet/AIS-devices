@@ -2,9 +2,8 @@ package pl.sviete.dom.devices.aiscontrollers
 
 import kotlinx.coroutines.Deferred
 import okhttp3.ResponseBody
-import pl.sviete.dom.devices.aiscontrollers.models.Power
-import retrofit2.http.GET
-import retrofit2.http.Query
+import pl.sviete.dom.devices.aiscontrollers.models.*
+import retrofit2.http.*
 
 interface AisSocketService {
     @GET("/cm?cmnd=Power")
@@ -15,4 +14,7 @@ interface AisSocketService {
 
     @GET("/cm")
     fun setup(@Query("cmnd") cmnd: String): Deferred<ResponseBody>
+
+    @GET("/cm?cmnd=Status")
+    fun getStatus(): Deferred<Status>
 }

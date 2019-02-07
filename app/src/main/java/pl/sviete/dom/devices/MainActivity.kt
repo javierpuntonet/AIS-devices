@@ -125,7 +125,7 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
     }
 
     private fun showAddWelcomeButton() {
-        if (mAisList != null && mAisList!!.count() > 0)
+        if (mAisList.count() > 0)
         {
             welcome_text.visibility = View.GONE
             ais_device_list.visibility = View.VISIBLE

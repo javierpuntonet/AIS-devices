@@ -40,7 +40,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     }
 
     override fun addNewDevice(device: AisDevice){
-        val newDevice = AisDeviceEntity(null, device.name!!, device.mMac, null, device.type as Int?)
+        val newDevice = AisDeviceEntity(null, device.name!!, device.mMac, null, device.type?.value)
         mAisDeviceViewModel.insert(newDevice)
     }
 

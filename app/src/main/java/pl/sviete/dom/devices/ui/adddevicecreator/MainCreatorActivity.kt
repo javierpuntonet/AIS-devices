@@ -93,10 +93,11 @@ class MainCreatorActivity : AppCompatActivity(), StartCreatorFragment.OnNextStep
         mAisCtrl.pairNewDevice(mAPInfo!!.ssid, name, password, mNewDeviceName!!)
     }
 
-    override fun onAddDeviceFinished(result: Boolean, errorCode: AisDeviceConfigurator.ErrorCode) {
-        if (result) {
+    override fun onAddDeviceFinished(result: AisDeviceConfigurator.AddDeviceArgs) {
+        if (result.result) {
             val ais = AisDevice(mAPInfo!!.mac)
             ais.name = mNewDeviceName
+            ais.type = result.deviceType
             val intentResult = Intent()
             intentResult.putExtra("aisdevice", ais)
             setResult(CREATOR_REQUEST_CODE, intentResult)
@@ -106,15 +107,15 @@ class MainCreatorActivity : AppCompatActivity(), StartCreatorFragment.OnNextStep
                 val apFragment = mCurrentFragment as ApDataCreatorFragment?
                 apFragment?.activateForm()
                 var text = resources.getString(R.string.unknown_error)
-                if (errorCode != AisDeviceConfigurator.ErrorCode.OK)
-                    text += errorCode.text(resources)
+                if (result.errorCode != AisDeviceConfigurator.ErrorCode.OK)
+                    text += result.errorCode.text(resources)
                 Toast.makeText(this, text, Toast.LENGTH_LONG).show()
             }
         }
 
         runOnUiThread {
             progressBar.visibility = View.GONE
-            if (result)
+            if (result.result)
                 finish()
         }
     }
