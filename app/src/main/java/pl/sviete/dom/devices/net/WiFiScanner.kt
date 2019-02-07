@@ -166,12 +166,13 @@ class WiFiScanner (context: Context) {
         networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 var info = connectivityManager.getNetworkInfo(network)
-                if (info != null && info.detailedState == NetworkInfo.DetailedState.CONNECTED
-                    &&  "\"" + ssid + "\"" == info.extraInfo)
-                {
-                    networkCallback = null
-                    connectivityManager.unregisterNetworkCallback(this)
-                    listener.onConnected()
+                if (info?.isConnected == true) {
+                    val currentConnection = wiFiManager.connectionInfo
+                    if (("\"" + ssid + "\"") == currentConnection?.ssid) {
+                        networkCallback = null
+                        connectivityManager.unregisterNetworkCallback(this)
+                        listener.onConnected()
+                    }
                 }
             }
         }
