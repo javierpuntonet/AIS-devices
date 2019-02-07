@@ -5,6 +5,6 @@ enum class AisDeviceType (val value: Int){
     Bulb(26);
 
     companion object {
-        fun fromInt(value: Int) = AisDeviceType.values().first { it.value == value }
+        fun fromInt(value: Int) = AisDeviceType.values().firstOrNull { it.value == value }
     }
 }
