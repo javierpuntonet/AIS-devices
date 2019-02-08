@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)
-        return true
+        return false
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
