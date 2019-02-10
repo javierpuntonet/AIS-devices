@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.fragment_creator_ap_data.*
 import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.net.WiFiScanner
+import android.text.method.PasswordTransformationMethod
 
 class ApDataCreatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
@@ -64,6 +65,13 @@ class ApDataCreatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
             btn_accept.isEnabled = false
             mAPDataAcceptListener?.onAPDataAccept(name, password)
+        }
+
+        chkShowPassword.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked)
+                txt_ap_password.transformationMethod = null
+            else
+                txt_ap_password.transformationMethod = PasswordTransformationMethod()
         }
     }
 

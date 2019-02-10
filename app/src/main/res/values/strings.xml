@@ -89,4 +89,5 @@
     <string name="save">Zapisz</string>
     <string name="delete_question">Usunąć urządzenie?</string>
     <string name="no">Nie</string>
+    <string name="show_password">Pokaż hasło</string>
 </resources>
