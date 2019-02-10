@@ -49,9 +49,9 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
         })
         rv_ap_list.adapter = mAisAdapter
 
-        swiperefresh.setOnRefreshListener {
+        ap_swipe.setOnRefreshListener {
             refreshAPList()
-            swiperefresh.isRefreshing = false
+            ap_swipe.isRefreshing = false
         }
     }
 

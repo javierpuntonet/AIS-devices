@@ -9,6 +9,8 @@ interface MainView {
     interface View : BaseView<Presenter> {
         fun refreshData(deviceEntity: List<DeviceViewModel>?)
         fun showDetail(id: Int)
+        fun showProgress()
+        fun hideProgress()
     }
 
     interface Presenter : IPresenter<View> {

@@ -9,16 +9,21 @@
         tools:showIn="@layout/app_bar_main"
         tools:context=".MainActivity">
 
-    <GridView
-        android:id="@+id/ais_device_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:numColumns="auto_fit"
-        android:stretchMode="columnWidth"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
-        android:columnWidth="150dp"
-    />
+    <android.support.v4.widget.SwipeRefreshLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/main_swipe"
+            android:layout_height="match_parent" android:layout_width="match_parent">
 
+        <GridView
+                android:id="@+id/ais_device_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:numColumns="auto_fit"
+                android:stretchMode="columnWidth"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:columnWidth="150dp"
+        />
+    </android.support.v4.widget.SwipeRefreshLayout>
 </FrameLayout>

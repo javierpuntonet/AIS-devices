@@ -8,10 +8,11 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_bar_main.*
 import android.content.Intent
 import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
+import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import pl.sviete.dom.devices.models.AisDevice
 import pl.sviete.dom.devices.ui.adddevicecreator.MainCreatorActivity
@@ -45,7 +46,14 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
             showCreator()
         }
 
+        showProgress()
         presenter.loadView()
+
+        main_swipe.setOnRefreshListener {
+            showProgress()
+            presenter.loadView()
+            main_swipe.isRefreshing = false
+        }
     }
 
     override fun onBackPressed() {
@@ -112,6 +120,14 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
             putExtra(DeviceDetailsActivity.ARG_DEVICE_ITEM_ID, id)
         }
         startActivity(intent)
+    }
+
+    override fun showProgress() {
+        progress_main.visibility = View.VISIBLE
+    }
+
+    override fun hideProgress() {
+        progress_main.visibility = View.GONE
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
