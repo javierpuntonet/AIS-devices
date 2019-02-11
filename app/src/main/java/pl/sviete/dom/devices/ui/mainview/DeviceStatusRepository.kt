@@ -1,11 +1,8 @@
 package pl.sviete.dom.devices.ui.mainview
 
 import android.arch.lifecycle.MutableLiveData
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import pl.sviete.dom.devices.aiscontrollers.AisDeviceController
 import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
+import java.util.concurrent.ConcurrentHashMap
 
 class DeviceStatusRepository {
 
@@ -20,15 +17,16 @@ class DeviceStatusRepository {
         }
     }
 
-    private var map = HashMap<String, PowerStatus>()
+    private var map = ConcurrentHashMap<String, PowerStatus>()
 
-    val statuses = MutableLiveData<HashMap<String, PowerStatus>>()
+    val statuses = MutableLiveData<ConcurrentHashMap<String, PowerStatus>>()
 
-    fun add(ip: String){
-        if (!map.contains(ip)) {
+    fun add(ip: String): Boolean{
+        if (!map.containsKey(ip)) {
             map[ip] = PowerStatus.Unknown
-            refreshStatus(ip)
+            return true
         }
+        return false
     }
 
     fun get(ip: String) : PowerStatus {
@@ -38,19 +36,13 @@ class DeviceStatusRepository {
     }
 
     fun set(ip: String, status: PowerStatus) {
-        if (map.containsKey(ip))
+        if (map.containsKey(ip)) {
             map[ip] = status
+            statuses.postValue(map)
+        }
     }
 
-    private fun refreshStatus(ip: String){
-        if (!ip.isNullOrEmpty()) {
-            GlobalScope.launch(Dispatchers.Main) {
-                val status = AisDeviceController.getPowerStatus(ip)
-                if (status != null) {
-                    map[ip] = status
-                    statuses.postValue(map)
-                }
-            }
-        }
+    fun clear(){
+        map.clear()
     }
 }

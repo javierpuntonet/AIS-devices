@@ -25,19 +25,24 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     private var mAisList = ArrayList<DeviceViewModel>()
 
     override fun loadView() {
-        DeviceStatusRepository.getInstance().statuses.observe(activity, Observer {
-            refreshViewModel()
-        })
+        view.showProgress()
+        try {
+            DeviceStatusRepository.getInstance().statuses.observe(activity, Observer {
+                refreshViewModel()
+            })
 
-        mAisDeviceViewModel = ViewModelProviders.of(activity).get(AisDeviceViewModel::class.java)
-        mAisDeviceViewModel.getAll().observe(activity, Observer { devices ->
-            refreshViewModel(devices)
-            devices?.filter { x -> !x.ip.isNullOrEmpty() }?.forEach {
-                DeviceStatusRepository.getInstance().add(it.ip!!)
-            }
-        })
-
-        checkPermissions()
+            mAisDeviceViewModel = ViewModelProviders.of(activity).get(AisDeviceViewModel::class.java)
+            mAisDeviceViewModel.getAll().observe(activity, Observer { devices ->
+                refreshViewModel(devices)
+                devices?.filter { x -> !x.ip.isNullOrEmpty() }?.forEach {
+                    if (DeviceStatusRepository.getInstance().add(it.ip!!))
+                        refreshDeviceStatus(it.ip!!)
+                }
+            })
+        }
+        finally {
+            view.hideProgress()
+        }
     }
 
     override fun addNewDevice(device: AisDevice){
@@ -68,13 +73,16 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
                 val status = AisDeviceController.toggleStatus(device.ip)
                 if (status != null) {
                     DeviceStatusRepository.getInstance().set(device.ip, status)
-                    refreshViewModel()
                 }
             }
         }
     }
 
-    private fun checkPermissions() {
+    override fun clearCache() {
+        DeviceStatusRepository.getInstance().clear()
+    }
+
+    override fun checkPermissions() {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
             != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity,
@@ -98,5 +106,23 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
                 it.status = DeviceStatusRepository.getInstance().get(it.ip)
         }
         view.refreshData(mAisList)
+    }
+
+    private fun refreshDeviceStatus(ip: String){
+        if (!ip.isNullOrEmpty()) {
+            GlobalScope.launch(Dispatchers.Main) {
+                try {
+                    view.showProgress()
+
+                    val status = AisDeviceController.getPowerStatus(ip)
+                    if (status != null) {
+                        DeviceStatusRepository.getInstance().set(ip, status)
+                    }
+
+                } finally {
+                    view.hideProgress()
+                }
+            }
+        }
     }
 }

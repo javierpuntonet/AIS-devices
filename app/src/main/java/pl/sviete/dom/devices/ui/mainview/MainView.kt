@@ -15,6 +15,8 @@ interface MainView {
 
     interface Presenter : IPresenter<View> {
         fun loadView()
+        fun clearCache()
+        fun checkPermissions()
         fun addNewDevice(device: AisDevice)
         fun checkPermissionsGranted(requestCode: Int, grantResults: IntArray)
         fun showDeviceDetail(device: DeviceViewModel)

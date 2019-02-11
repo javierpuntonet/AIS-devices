@@ -11,18 +11,21 @@ import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Intent
 import android.view.View
 import android.widget.Button
-import android.widget.ProgressBar
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import pl.sviete.dom.devices.models.AisDevice
 import pl.sviete.dom.devices.ui.adddevicecreator.MainCreatorActivity
 import pl.sviete.dom.devices.ui.devicedetails.DeviceDetailsActivity
 import pl.sviete.dom.devices.ui.mainview.*
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var mAisAdapter: MainGridAdapter
     private var mAisList = ArrayList<DeviceViewModel>()
+    private val mLock = ReentrantLock()
+    private var mProgressCounter = 0
 
     override val presenter: MainView.Presenter = MainPresenter(this, this)
 
@@ -42,15 +45,16 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         mAisAdapter = MainGridAdapter(mAisList, presenter)
         ais_device_list.adapter = mAisAdapter
 
+        presenter.checkPermissions()
+
         findViewById<Button>(R.id.btn_welcome_add).setOnClickListener{
             showCreator()
         }
 
-        showProgress()
         presenter.loadView()
 
         main_swipe.setOnRefreshListener {
-            showProgress()
+            presenter.clearCache()
             presenter.loadView()
             main_swipe.isRefreshing = false
         }
@@ -123,11 +127,24 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
     }
 
     override fun showProgress() {
-        progress_main.visibility = View.VISIBLE
+        mLock.withLock {
+            if (mProgressCounter <= 0) {
+                progress_main.visibility = View.VISIBLE
+                mProgressCounter = 1
+            } else {
+                mProgressCounter += 1
+            }
+        }
     }
 
     override fun hideProgress() {
-        progress_main.visibility = View.GONE
+         mLock.withLock {
+            mProgressCounter -= 1
+            if (mProgressCounter <= 0) {
+                progress_main.visibility = View.GONE
+                mProgressCounter = 0
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
