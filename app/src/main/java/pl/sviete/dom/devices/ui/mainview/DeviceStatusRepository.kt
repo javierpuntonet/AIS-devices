@@ -18,7 +18,6 @@ class DeviceStatusRepository {
     }
 
     private var map = ConcurrentHashMap<String, PowerStatus>()
-
     val statuses = MutableLiveData<ConcurrentHashMap<String, PowerStatus>>()
 
     fun add(ip: String): Boolean{

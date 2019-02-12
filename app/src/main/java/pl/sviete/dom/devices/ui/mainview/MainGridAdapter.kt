@@ -19,7 +19,8 @@ class MainGridAdapter (
     }
 
     override fun getItemId(position: Int): Long {
-        return mDevices[position].uid.toLong()
+        val device = mDevices[position]
+        return if (device.uid != null) device.uid.toLong() else -1
     }
 
     override fun getItem(position: Int): Any? {
@@ -48,6 +49,7 @@ class MainGridAdapter (
             presenter.toggleDeviceState(device)
         }
 
+        holder.detailsButton!!.setImageResource(getResourceForFounded(device.isFounded))
         holder.detailsButton!!.setOnClickListener {
             presenter.showDeviceDetail(device)
         }
@@ -82,6 +84,10 @@ class MainGridAdapter (
             AisDeviceType.Socket -> R.drawable.socket
             else -> R.drawable.logo
         }
+    }
+
+    private fun getResourceForFounded(isFounded: Boolean) : Int {
+        return if (isFounded) R.drawable.plus else R.drawable.dots_vertical
     }
 
     internal inner class ViewHolder {
