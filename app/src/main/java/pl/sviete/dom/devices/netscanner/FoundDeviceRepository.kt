@@ -1,4 +1,4 @@
-package pl.sviete.dom.devices.ui.mainview
+package pl.sviete.dom.devices.netscanner
 
 import android.arch.lifecycle.MutableLiveData
 import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
@@ -11,7 +11,8 @@ class FoundDeviceRepository {
 
         fun getInstance(): FoundDeviceRepository {
             if (instance == null) {
-                instance = FoundDeviceRepository()
+                instance =
+                    FoundDeviceRepository()
             }
             return instance!!
         }

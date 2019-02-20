@@ -1,4 +1,4 @@
-package pl.sviete.dom.devices.ui.mainview
+package pl.sviete.dom.devices.netscanner
 
 import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
 import pl.sviete.dom.devices.models.AisDeviceType
