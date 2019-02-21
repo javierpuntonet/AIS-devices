@@ -1,6 +1,7 @@
 package pl.sviete.dom.devices.aiscontrollers
 
 import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
+import pl.sviete.dom.devices.aiscontrollers.models.Status
 import pl.sviete.dom.devices.models.AisDeviceType
 import java.lang.Exception
 import java.net.URLEncoder
@@ -53,6 +54,17 @@ class AisDeviceController {
             try {
                 val response = request.await()
                 return AisDeviceType.fromInt(response.Status.Module)
+            } catch (e: Exception) {
+
+            }
+            return null
+        }
+
+        suspend fun getStatus(ip: String): Status? {
+            val service = AisFactory.makeSocketService(ip)
+            val request = service.getStatus()
+            try {
+                return request.await()
             } catch (e: Exception) {
 
             }

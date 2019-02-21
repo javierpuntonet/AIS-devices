@@ -46,6 +46,10 @@ class FoundDeviceRepository {
         }
     }
 
+    fun getFoundedAisDevices(): List<FoundDeviceModel> {
+        return map.values.filter { x -> x.isAisDevice == true }
+    }
+
     fun clear(){
         map.clear()
     }

@@ -12,19 +12,7 @@ public interface IpScannerResult {
      */
     void processFinish(Host h, AtomicInteger i);
 
-    /**
-     * Delegate to handle integer outputs
-     *
-     * @param output
-     */
-    void processFinish(int output);
-
-    /**
-     * Delegate to handle string outputs
-     *
-     * @param output
-     */
-    void processFinish(String output);
+    //void processFinish(int output);
 
     /**
      * Delegate to handle boolean outputs

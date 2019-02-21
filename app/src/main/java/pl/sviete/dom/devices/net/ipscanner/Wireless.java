@@ -113,6 +113,10 @@ public class Wireless {
     }
 
 
+    public Integer getInternalWifiIpAddress() throws UnknownHostException, NoWifiManagerException {
+        return getInternalWifiIpAddress(Integer.class);
+    }
+
     /**
      * Gets the device's internal LAN IP address associated with the WiFi network
      *

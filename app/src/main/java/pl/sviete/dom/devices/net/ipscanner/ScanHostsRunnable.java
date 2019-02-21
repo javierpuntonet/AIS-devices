@@ -49,10 +49,10 @@ public class ScanHostsRunnable implements Runnable {
                     // Something's really wrong if we can't close the socket...
                 }
 
-                IpScannerResult activity = delegate.get();
-                if (activity != null) {
-                    activity.processFinish(1);
-                }
+//                IpScannerResult activity = delegate.get();
+//                if (activity != null) {
+//                    activity.processFinish(1);
+//                }
             }
         }
     }

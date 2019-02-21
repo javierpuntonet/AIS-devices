@@ -5,5 +5,7 @@ data class Status (
 )
 
 data class StatusInternal(
-    val Module: Int
+    val Module: Int,
+    val Power: Int,
+    val FriendlyName: List<String>
 )
