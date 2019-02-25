@@ -12,7 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import pl.sviete.dom.devices.aiscontrollers.AisDeviceController
-import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
 import pl.sviete.dom.devices.db.AisDeviceEntity
 import pl.sviete.dom.devices.db.AisDeviceViewModel
 import pl.sviete.dom.devices.models.AisDevice
@@ -23,7 +22,8 @@ import pl.sviete.dom.devices.netscanner.FoundDeviceRepository
 import pl.sviete.dom.devices.netscanner.IScannerResult
 import pl.sviete.dom.devices.netscanner.Scanner
 
-class MainPresenter(val activity: FragmentActivity, override var view: MainView.View) : BasePresenter<MainView.View, MainView.Presenter>(), MainView.Presenter, IScannerResult {
+class MainPresenter(val activity: FragmentActivity, override var view: MainView.View) : BasePresenter<MainView.View, MainView.Presenter>(), MainView.Presenter
+    , IScannerResult {
 
     private val PERMISSIONS_REQUEST_LOCATION: Int = 111
     private lateinit var mAisDeviceViewModel: AisDeviceViewModel
