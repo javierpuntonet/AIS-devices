@@ -17,29 +17,30 @@ import pl.sviete.dom.devices.net.ipscanner.Wireless
 import java.util.concurrent.atomic.AtomicInteger
 
 class Scanner (val context: Context, private val delegate: IScannerResult): IpScannerResult, IBonjourResult {
-    override fun onFound(service: BonjourService?) {
-        if (service != null && service.inet4Address?.hostAddress != null) {
-            if (FoundDeviceRepository.getInstance().add("unknown", service.inet4Address!!.hostAddress))
-                refreshDeviceStatus("unknown", service.inet4Address!!.hostAddress)
-        }
-    }
-
-    override fun onLost(service: BonjourService?) {
-
-    }
 
     private val mWifi = Wireless(context)
-    var b: BonjourScanner? = null
+    private var mBonjour: BonjourScanner? = null
+
+    val repository : FoundDeviceRepository get() = FoundDeviceRepository.getInstance()
 
     fun scan(){
         runBonjourScanner()
         //runIpScanner()
     }
 
+    fun stop(){
+        mBonjour?.stopDiscovery()
+    }
+
+    fun add(ip: String, founded: Boolean){
+        if (FoundDeviceRepository.getInstance().add(ip, founded))
+            refreshDeviceStatus(ip)
+    }
+
     private fun runBonjourScanner() {
-        if (b == null)
-            b = BonjourScanner(context, this)
-        b!!.startDiscovery()
+        if (mBonjour == null)
+            mBonjour = BonjourScanner(context, this)
+        mBonjour!!.startDiscovery()
     }
 
     private fun runIpScanner() {
@@ -47,23 +48,31 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
         ScanHostsAsyncTask(this).execute(ip, mWifi.internalWifiSubnet, 150)
     }
 
-    private fun refreshDeviceStatus(mac: String, ip: String){
+    private fun refreshDeviceStatus(ip: String){
         GlobalScope.launch(Dispatchers.Main) {
             try {
                 val status = AisDeviceController.getStatus(ip)
                 if (status != null) {
-                    FoundDeviceRepository.getInstance().set(mac,
+                    FoundDeviceRepository.getInstance().set(ip,
                         true,
+                        status.StatusNET.Mac,
                         status.Status.FriendlyName.first(),
                         AisDeviceType.fromInt(status.Status.Module),
                         if (status.Status.Power == 0)  PowerStatus.Off else PowerStatus.On)
                 }
                 else {
-                    FoundDeviceRepository.getInstance().set(mac,false)
+                    FoundDeviceRepository.getInstance().set(ip,false)
                 }
             } finally {
 
             }
+        }
+    }
+
+    override fun onFound(service: BonjourService?) {
+        val ip = service?.inet4Address?.hostAddress
+        if (ip != null) {
+            add(ip, true)
         }
     }
 
@@ -77,8 +86,7 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
 
     override fun processFinish(h: Host?, i: AtomicInteger?) {
         if (h != null) {
-            if (FoundDeviceRepository.getInstance().add(h.mac, h.ip))
-                refreshDeviceStatus(h.mac, h.ip)
+            add(h.ip, true)
         }
     }
 }

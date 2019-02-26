@@ -15,6 +15,6 @@ interface AisSocketService {
     @GET("/cm")
     fun setup(@Query("cmnd") cmnd: String): Deferred<ResponseBody>
 
-    @GET("/cm?cmnd=Status")
+    @GET("/cm?cmnd=Status 0")
     fun getStatus(): Deferred<Status>
 }

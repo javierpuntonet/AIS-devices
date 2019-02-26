@@ -4,5 +4,5 @@ import com.github.druk.rx2dnssd.BonjourService;
 
 public interface IBonjourResult {
     void onFound(BonjourService service);
-    void onLost(BonjourService service);
+    //void onLost(BonjourService service);
 }

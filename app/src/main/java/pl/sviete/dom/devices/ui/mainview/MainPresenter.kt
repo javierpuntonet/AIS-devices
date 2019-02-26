@@ -4,7 +4,6 @@ import android.Manifest
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.pm.PackageManager
-import android.os.Handler
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
@@ -18,11 +17,12 @@ import pl.sviete.dom.devices.models.AisDevice
 import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.mvp.*
 import pl.sviete.dom.devices.netscanner.FoundDeviceModel
-import pl.sviete.dom.devices.netscanner.FoundDeviceRepository
 import pl.sviete.dom.devices.netscanner.IScannerResult
 import pl.sviete.dom.devices.netscanner.Scanner
 
-class MainPresenter(val activity: FragmentActivity, override var view: MainView.View) : BasePresenter<MainView.View, MainView.Presenter>(), MainView.Presenter
+class MainPresenter(val activity: FragmentActivity, override var view: MainView.View)
+    : BasePresenter<MainView.View, MainView.Presenter>()
+    , MainView.Presenter
     , IScannerResult {
 
     private val PERMISSIONS_REQUEST_LOCATION: Int = 111
@@ -33,11 +33,11 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     override fun loadView() {
         view.showProgress()
         try {
-            DeviceStatusRepository.getInstance().statuses.observe(activity, Observer {
+            mScanner.repository.devices.observe(activity, Observer {
                 refreshStatuses()
-            })
-            FoundDeviceRepository.getInstance().devices.observe(activity, Observer {
-                refreshFounded(FoundDeviceRepository.getInstance().getFoundedAisDevices())
+                refreshFounded(mScanner.repository.getFoundedDevices())
+                refreshIps(mScanner.repository.getDevicesWithMAC())
+                view.refreshData(mAisList)
             })
 
             mAisDeviceViewModel = ViewModelProviders.of(activity).get(AisDeviceViewModel::class.java)
@@ -45,19 +45,22 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
                 if (devices != null) {
                     refreshFromDB(devices)
                     devices.filter { x -> !x.ip.isNullOrEmpty() }.forEach {
-                        if (DeviceStatusRepository.getInstance().add(it.ip!!))
-                            getDeviceStatus(it.ip!!)
+                        mScanner.add(it.ip!!, false)
                     }
                 }
             })
-
-            Handler().postDelayed({
-                scanNet()
-            }, 1000)
         }
         finally {
             view.hideProgress()
         }
+    }
+
+    override fun resumeView() {
+        mScanner.scan()
+    }
+
+    override fun pauseView() {
+        mScanner.stop()
     }
 
     override fun addNewDevice(device: AisDevice){
@@ -88,15 +91,14 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
             GlobalScope.launch(Dispatchers.Main) {
                 val status = AisDeviceController.toggleStatus(device.ip)
                 if (status != null) {
-                    DeviceStatusRepository.getInstance().set(device.ip, status)
+                    mScanner.repository.set(device.ip, status)
                 }
             }
         }
     }
 
     override fun clearCache() {
-        DeviceStatusRepository.getInstance().clear()
-        FoundDeviceRepository.getInstance().clear()
+        mScanner.repository.clear()
     }
 
     override fun checkPermissions() {
@@ -109,12 +111,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     }
 
     override fun scanFinished() {
-        view.hideProgress()
-    }
-
-    private fun scanNet(){
-        view.showProgress()
-        mScanner.scan()
+        //view.hideProgress()
     }
 
     private fun refreshFromDB(entities: List<AisDeviceEntity>) {
@@ -132,9 +129,8 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     private fun refreshStatuses(){
         mAisList.forEach {
             if (it.ip != null)
-                it.status = DeviceStatusRepository.getInstance().get(it.ip)
+                it.status = mScanner.repository.getStatus(it.ip)
         }
-        view.refreshData(mAisList)
     }
 
     private fun refreshFounded(list: List<FoundDeviceModel>){
@@ -143,19 +139,14 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
         list.forEach {
             mAisList.add(DeviceViewModel(it.name!!, it.ip, it.status!!, it.type, true))
         }
-        view.refreshData(mAisList)
     }
 
-    private fun getDeviceStatus(ip: String){
-        GlobalScope.launch(Dispatchers.Main) {
-            try {
-                view.showProgress()
-                val status = AisDeviceController.getPowerStatus(ip)
-                if (status != null) {
-                    DeviceStatusRepository.getInstance().set(ip, status)
-                }
-            } finally {
-                view.hideProgress()
+    private fun refreshIps(list: List<FoundDeviceModel>){
+        mAisDeviceViewModel.getAll().value?.forEach {
+            val founded = list.firstOrNull { x -> x.mac == it.mac }
+            if (founded != null && founded.ip != it.ip){
+                it.ip = founded.ip
+                mAisDeviceViewModel.update(it)
             }
         }
     }

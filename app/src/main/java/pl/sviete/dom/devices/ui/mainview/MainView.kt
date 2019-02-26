@@ -21,5 +21,7 @@ interface MainView {
         fun checkPermissionsGranted(requestCode: Int, grantResults: IntArray)
         fun showDeviceDetail(device: DeviceViewModel)
         fun toggleDeviceState(device: DeviceViewModel)
+        fun resumeView()
+        fun pauseView()
     }
 }

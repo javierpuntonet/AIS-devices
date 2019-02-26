@@ -60,6 +60,16 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        presenter.resumeView()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        presenter.pauseView()
+    }
+
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
