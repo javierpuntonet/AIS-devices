@@ -7,7 +7,7 @@ import pl.sviete.dom.devices.mvp.*
 
 interface MainView {
     interface View : BaseView<Presenter> {
-        fun refreshData(deviceEntity: List<DeviceViewModel>?)
+        fun refreshData(devices: List<DeviceViewModel>?)
         fun showDetail(id: Int)
         fun showProgress()
         fun hideProgress()

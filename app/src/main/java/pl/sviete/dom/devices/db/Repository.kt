@@ -14,17 +14,17 @@ class Repository internal constructor(private val dao: AisDeviceDao) {
     }
 
     @WorkerThread
-    suspend fun insert(device: AisDeviceEntity) {
+    fun insert(device: AisDeviceEntity) {
         dao.insert(device)
     }
 
     @WorkerThread
-    suspend fun update(device: AisDeviceEntity) {
+    fun update(device: AisDeviceEntity) {
         dao.update(device)
     }
 
     @WorkerThread
-    suspend fun delete(device: AisDeviceEntity) {
+    fun delete(device: AisDeviceEntity) {
         dao.delete(device)
     }
 }

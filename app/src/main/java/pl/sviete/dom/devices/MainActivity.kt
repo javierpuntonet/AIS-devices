@@ -17,6 +17,7 @@ import pl.sviete.dom.devices.models.AisDevice
 import pl.sviete.dom.devices.ui.adddevicecreator.MainCreatorActivity
 import pl.sviete.dom.devices.ui.devicedetails.DeviceDetailsActivity
 import pl.sviete.dom.devices.ui.mainview.*
+import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
@@ -123,7 +124,7 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
     override fun refreshData(devices: List<DeviceViewModel>?) {
         devices?.let {
             mAisList.clear()
-            mAisList.addAll(it)
+            mAisList.addAll(it.sorted())
         }
         mAisAdapter.notifyDataSetChanged()
         showAddWelcomeButton()
