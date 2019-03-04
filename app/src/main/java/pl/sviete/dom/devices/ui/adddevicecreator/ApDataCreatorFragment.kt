@@ -68,7 +68,7 @@ class ApDataCreatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
 
         chkShowPassword.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked)
+            if (!isChecked)
                 txt_ap_password.transformationMethod = null
             else
                 txt_ap_password.transformationMethod = PasswordTransformationMethod()
