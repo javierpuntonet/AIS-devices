@@ -29,6 +29,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     private lateinit var mAisDeviceViewModel: AisDeviceViewModel
     private var mAisList = ArrayList<DeviceViewModel>()
     private val mScanner = Scanner(activity, this)
+    private var mEntities = emptyList<AisDeviceEntity>()
 
     override fun loadView() {
         view.showProgress()
@@ -43,6 +44,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
             mAisDeviceViewModel = ViewModelProviders.of(activity).get(AisDeviceViewModel::class.java)
             mAisDeviceViewModel.getAll().observe(activity, Observer { devices ->
                 if (devices != null) {
+                    mEntities = devices
                     refreshFromDB(devices)
                     devices.filter { x -> !x.ip.isNullOrEmpty() }.forEach {
                         mScanner.add(it.ip!!, false)
@@ -91,7 +93,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
             GlobalScope.launch(Dispatchers.Main) {
                 val status = AisDeviceController.toggleStatus(device.ip)
                 if (status != null) {
-                    mScanner.repository.set(device.ip, status)
+                    mScanner.repository.setStatus(device.ip, status)
                 }
             }
         }
@@ -99,6 +101,8 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
 
     override fun clearCache() {
         mScanner.repository.clear()
+        mScanner.stop()
+        mScanner.scan()
     }
 
     override fun checkPermissions() {
@@ -118,7 +122,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
         val toRemove = mAisList.filter { x -> !x.isFounded }
         mAisList.removeAll(toRemove)
         entities.forEach {
-            val device = DeviceViewModel(it.uid!!, it.name, it.ip)
+            val device = DeviceViewModel(it.uid!!, it.name, it.ip, it.mac)
             if (it.type != null)
                 device.type = AisDeviceType.fromInt(it.type!!)
             mAisList.add(device)
@@ -137,12 +141,12 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
         val toRemove = mAisList.filter { x -> x.isFounded }
         mAisList.removeAll(toRemove)
         list.forEach {
-            mAisList.add(DeviceViewModel(it.name!!, it.ip, it.status!!, it.type, true))
+            mAisList.add(DeviceViewModel(it.name!!, it.ip, it.mac!!, it.status!!, it.type, true))
         }
     }
 
     private fun refreshIps(list: List<FoundDeviceModel>){
-        mAisDeviceViewModel.getAll().value?.forEach {
+        mEntities.forEach {
             val founded = list.firstOrNull { x -> x.mac == it.mac }
             if (founded != null && founded.ip != it.ip){
                 it.ip = founded.ip

@@ -53,15 +53,14 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
             try {
                 val status = AisDeviceController.getStatus(ip)
                 if (status != null) {
-                    FoundDeviceRepository.getInstance().set(ip,
-                        true,
+                    FoundDeviceRepository.getInstance().setAisDevice(ip,
                         status.StatusNET.Mac,
                         status.Status.FriendlyName.first(),
                         AisDeviceType.fromInt(status.Status.Module),
                         if (status.Status.Power == 0)  PowerStatus.Off else PowerStatus.On)
                 }
                 else {
-                    FoundDeviceRepository.getInstance().set(ip,false)
+                    FoundDeviceRepository.getInstance().setNonAisDevice(ip)
                 }
             } finally {
 

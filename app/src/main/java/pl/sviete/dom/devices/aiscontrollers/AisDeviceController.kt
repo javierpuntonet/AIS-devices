@@ -1,5 +1,6 @@
 package pl.sviete.dom.devices.aiscontrollers
 
+import android.util.Log
 import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
 import pl.sviete.dom.devices.aiscontrollers.models.Status
 import pl.sviete.dom.devices.models.AisDeviceType
@@ -10,6 +11,7 @@ class AisDeviceController {
 
     companion object {
         const val AP_IP = "192.168.4.1"
+        private val tag = AisDeviceController.javaClass.name
 
         suspend fun getPowerStatus(ip: String): PowerStatus? {
             val service = AisFactory.makeSocketService(ip)
@@ -66,7 +68,7 @@ class AisDeviceController {
             try {
                 return request.await()
             } catch (e: Exception) {
-
+                //Log.e(tag, "getStatus", e)
             }
             return null
         }

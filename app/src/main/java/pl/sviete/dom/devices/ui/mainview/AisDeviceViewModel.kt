@@ -3,13 +3,14 @@ package pl.sviete.dom.devices.ui.mainview
 import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
 import pl.sviete.dom.devices.models.AisDeviceType
 
-data class DeviceViewModel(val uid: Int?, val name: String, val ip: String?) : Comparable<DeviceViewModel> {
+data class DeviceViewModel(val uid: Int?, val name: String, val ip: String?, val mac: String) : Comparable<DeviceViewModel> {
 
     var status = PowerStatus.Unknown
     var type: AisDeviceType? = null
     var isFounded: Boolean = false
 
-    constructor(name: String, ip: String?, mstatus: PowerStatus, mtype: AisDeviceType?, misFounded: Boolean): this(null, name, ip) {
+    constructor(name: String, ip: String?, mac: String, mstatus: PowerStatus, mtype: AisDeviceType?, misFounded: Boolean)
+            : this(null, name, ip, mac) {
         status = mstatus
         type = mtype
         isFounded = misFounded

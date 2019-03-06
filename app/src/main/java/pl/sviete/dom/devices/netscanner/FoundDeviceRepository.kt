@@ -35,10 +35,10 @@ class FoundDeviceRepository {
         }
     }
 
-    fun set(ip: String, isAisDevice: Boolean, mac: String? = null, name: String? = null, type: AisDeviceType? = null, status: PowerStatus? = null) {
+    fun setAisDevice(ip: String, mac: String, name: String, type: AisDeviceType?, status: PowerStatus) {
         val device = map.firstOrNull { x -> x.ip == ip }
         if (device != null) {
-            device.isAisDevice = isAisDevice
+            device.isAisDevice = true
             device.name = name
             device.type = type
             device.status = status
@@ -47,7 +47,15 @@ class FoundDeviceRepository {
         }
     }
 
-    fun set(ip: String, status: PowerStatus) {
+    fun setNonAisDevice(ip: String) {
+        val device = map.firstOrNull { x -> x.ip == ip }
+        if (device != null) {
+            device.isAisDevice = false
+            devices.postValue(coll)
+        }
+    }
+
+    fun setStatus(ip: String, status: PowerStatus) {
         val device = map.firstOrNull { x -> x.ip == ip }
         if (device != null) {
             device.status = status
