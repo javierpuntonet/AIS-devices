@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
 import pl.sviete.dom.devices.aiscontrollers.AisDeviceController
 import pl.sviete.dom.devices.db.AisDeviceEntity
 import pl.sviete.dom.devices.db.AisDeviceViewModel
-import pl.sviete.dom.devices.models.AisDevice
 import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.mvp.*
 import pl.sviete.dom.devices.netscanner.FoundDeviceModel
@@ -46,6 +45,9 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
                 if (devices != null) {
                     mEntities = devices
                     refreshFromDB(devices)
+                    refreshStatuses()
+                    refreshFounded(mScanner.repository.getFoundedDevices())
+                    view.refreshData(mAisList)
                     devices.filter { x -> !x.ip.isNullOrEmpty() }.forEach {
                         mScanner.add(it.ip!!, false)
                     }
@@ -65,8 +67,8 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
         mScanner.stop()
     }
 
-    override fun addNewDevice(device: AisDevice){
-        val newDevice = AisDeviceEntity(null, device.name!!, device.mMac, null, device.type?.value)
+    override fun addNewDevice(name: String, mac: String, type: AisDeviceType){
+        val newDevice = AisDeviceEntity(null, name, mac, null, type.value)
         mAisDeviceViewModel.insert(newDevice)
     }
 
@@ -93,7 +95,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
             GlobalScope.launch(Dispatchers.Main) {
                 val status = AisDeviceController.toggleStatus(device.ip)
                 if (status != null) {
-                    mScanner.repository.setStatus(device.ip, status)
+                    mScanner.repository.setStatus(device.mac, status)
                 }
             }
         }
@@ -127,13 +129,11 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
                 device.type = AisDeviceType.fromInt(it.type!!)
             mAisList.add(device)
         }
-        view.refreshData(mAisList)
     }
 
     private fun refreshStatuses(){
         mAisList.forEach {
-            if (it.ip != null)
-                it.status = mScanner.repository.getStatus(it.ip)
+            it.status = mScanner.repository.getStatus(it.mac)
         }
     }
 
@@ -146,8 +146,9 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     }
 
     private fun refreshIps(list: List<FoundDeviceModel>){
+        if (list.count() == 0) return
         mEntities.forEach {
-            val founded = list.firstOrNull { x -> x.mac == it.mac }
+            val founded = list.firstOrNull { x -> x.mac?.toUpperCase() == it.mac.toUpperCase() }
             if (founded != null && founded.ip != it.ip){
                 it.ip = founded.ip
                 mAisDeviceViewModel.update(it)

@@ -1,8 +1,6 @@
 package pl.sviete.dom.devices.ui.mainview
 
-import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
-import pl.sviete.dom.devices.db.AisDeviceEntity
-import pl.sviete.dom.devices.models.AisDevice
+import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.mvp.*
 
 interface MainView {
@@ -17,7 +15,7 @@ interface MainView {
         fun loadView()
         fun clearCache()
         fun checkPermissions()
-        fun addNewDevice(device: AisDevice)
+        fun addNewDevice(name: String, mac: String, type: AisDeviceType)
         fun checkPermissionsGranted(requestCode: Int, grantResults: IntArray)
         fun showDeviceDetail(device: DeviceViewModel)
         fun toggleDeviceState(device: DeviceViewModel)

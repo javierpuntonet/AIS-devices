@@ -55,16 +55,16 @@ class FoundDeviceRepository {
         }
     }
 
-    fun setStatus(ip: String, status: PowerStatus) {
-        val device = map.firstOrNull { x -> x.ip == ip }
+    fun setStatus(mac: String, status: PowerStatus) {
+        val device = map.firstOrNull { x -> x.mac?.toUpperCase() == mac.toUpperCase() }
         if (device != null) {
             device.status = status
             devices.postValue(coll)
         }
     }
 
-    fun getStatus(ip: String) : PowerStatus {
-        val device = map.firstOrNull { x -> x.ip == ip }
+    fun getStatus(mac: String) : PowerStatus {
+        val device = map.firstOrNull { x -> x.mac?.toUpperCase() == mac.toUpperCase() }
         return device?.status ?: PowerStatus.Unknown
     }
 

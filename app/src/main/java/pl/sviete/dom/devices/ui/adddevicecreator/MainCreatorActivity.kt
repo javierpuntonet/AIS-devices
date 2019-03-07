@@ -12,7 +12,7 @@ import pl.sviete.dom.devices.net.AisDeviceConfigurator
 import android.content.Intent
 import android.content.res.Resources
 import android.widget.Toast
-import pl.sviete.dom.devices.models.AisDevice
+import pl.sviete.dom.devices.models.AisDeviceType
 
 
 class MainCreatorActivity : AppCompatActivity(), StartCreatorFragment.OnNextStepListener, AplistCreatorFragment.OnAPSelectedListener
@@ -95,11 +95,10 @@ class MainCreatorActivity : AppCompatActivity(), StartCreatorFragment.OnNextStep
 
     override fun onAddDeviceFinished(result: AisDeviceConfigurator.AddDeviceArgs) {
         if (result.result) {
-            val ais = AisDevice(mAPInfo!!.mac)
-            ais.name = mNewDeviceName
-            ais.type = result.deviceType
             val intentResult = Intent()
-            intentResult.putExtra("aisdevice", ais)
+            intentResult.putExtra(RESULT_NAME, mNewDeviceName)
+            intentResult.putExtra(RESULT_MAC, result.deviceStatus!!.StatusNET.Mac)
+            intentResult.putExtra(RESULT_TYPE, AisDeviceType.fromInt(result.deviceStatus!!.Status.Module))
             setResult(CREATOR_REQUEST_CODE, intentResult)
         }
         else{
@@ -122,6 +121,9 @@ class MainCreatorActivity : AppCompatActivity(), StartCreatorFragment.OnNextStep
 
     companion object {
         const val CREATOR_REQUEST_CODE = 111
+        const val RESULT_TYPE = "type"
+        const val RESULT_NAME = "name"
+        const val RESULT_MAC = "mac"
     }
 
     private fun changeFragment(position: Int, canBack: Boolean = false) {

@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import pl.sviete.dom.devices.aiscontrollers.AisDeviceController
+import pl.sviete.dom.devices.aiscontrollers.models.Status
 import pl.sviete.dom.devices.models.AisDeviceType
 import java.io.UnsupportedEncodingException
 
@@ -86,7 +87,7 @@ class AisDeviceConfigurator(context: Context): WiFiScanner.OnWiFiConnectedListen
     override fun onConnected() {
         GlobalScope.launch(Dispatchers.IO) {
             var result = false
-            var deviceType: AisDeviceType? = null
+            var deviceStatus: Status? = null
             try {
                 mConnectingCanceled = true
                 mHandlerTimeout.removeCallbacksAndMessages(timeout)
@@ -94,18 +95,18 @@ class AisDeviceConfigurator(context: Context): WiFiScanner.OnWiFiConnectedListen
                 val connectStatus = connectAndConfiguraDevice()
                 if (connectStatus.first) {
                     result = true
-                    deviceType = connectStatus.second
+                    deviceStatus = connectStatus.second
                 }
             } catch (e: UnsupportedEncodingException) {
                 Log.e(TAG, "onConnected", e)
             } finally {
                 reconnect()
-                mListener?.onAddDeviceFinished(AddDeviceArgs(result, ErrorCode.OK, deviceType))
+                mListener?.onAddDeviceFinished(AddDeviceArgs(result, ErrorCode.OK, deviceStatus))
             }
         }
     }
 
-    private suspend fun connectAndConfiguraDevice(): Pair<Boolean, AisDeviceType?> {
+    private suspend fun connectAndConfiguraDevice(): Pair<Boolean, Status?> {
         // check if we have correct connection if not then exit
         val networkId = mWiFiScanner.getCurrentNetworkId()
         if (networkId != mDeviceNetworkId) {
@@ -113,10 +114,10 @@ class AisDeviceConfigurator(context: Context): WiFiScanner.OnWiFiConnectedListen
         }
         else {
             try {
-                val deviceType = AisDeviceController.getType(AisDeviceController.AP_IP)
+                val deviceStatus = AisDeviceController.getStatus(AisDeviceController.AP_IP)
                 val result = AisDeviceController.setupNew(mFriendlyName!!, mAPName!!, mAPPassword!!)
                 if (result){
-                    return Pair(true, deviceType)
+                    return Pair(true, deviceStatus)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "ConnectAndConfiguraDevice", e)
@@ -138,7 +139,7 @@ class AisDeviceConfigurator(context: Context): WiFiScanner.OnWiFiConnectedListen
     data class AddDeviceArgs(
         val result: Boolean = false,
         val errorCode: ErrorCode = ErrorCode.OK,
-        val deviceType: AisDeviceType? = null
+        val deviceStatus: Status? = null
     )
 
     enum class ErrorCode{

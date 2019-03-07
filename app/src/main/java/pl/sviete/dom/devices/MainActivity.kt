@@ -13,7 +13,7 @@ import android.view.View
 import android.widget.Button
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import pl.sviete.dom.devices.models.AisDevice
+import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.ui.adddevicecreator.MainCreatorActivity
 import pl.sviete.dom.devices.ui.devicedetails.DeviceDetailsActivity
 import pl.sviete.dom.devices.ui.mainview.*
@@ -115,8 +115,10 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == MainCreatorActivity.CREATOR_REQUEST_CODE){
             data?.let {
-                val ais = it.getSerializableExtra("aisdevice")
-                presenter.addNewDevice(ais as AisDevice)
+                val name = it.getStringExtra(MainCreatorActivity.RESULT_NAME)
+                val mac = it.getStringExtra(MainCreatorActivity.RESULT_MAC)
+                val type = it.getSerializableExtra(MainCreatorActivity.RESULT_TYPE) as AisDeviceType
+                presenter.addNewDevice(name, mac, type)
             }
         }
     }
