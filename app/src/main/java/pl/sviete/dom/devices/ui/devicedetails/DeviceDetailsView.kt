@@ -7,6 +7,8 @@ import pl.sviete.dom.devices.mvp.IPresenter
 interface DeviceDetailsView {
     interface View : BaseView<Presenter> {
         fun showView(device: AisDeviceEntity)
+        fun showNameValidationError(resId: Int)
+        fun showIPValidationError(resId: Int)
     }
 
     interface Presenter : IPresenter<View> {

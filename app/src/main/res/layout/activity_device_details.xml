@@ -21,7 +21,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/textView" android:layout_marginTop="8dp"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"/>
+            android:layout_marginStart="8dp"
+            android:maxLength="32"/>
     <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"

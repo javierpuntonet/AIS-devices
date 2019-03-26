@@ -5,7 +5,6 @@ import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
 import pl.sviete.dom.devices.aiscontrollers.models.Status
 import pl.sviete.dom.devices.models.AisDeviceType
 import java.lang.Exception
-import java.net.URLEncoder
 
 class AisDeviceController {
 
@@ -32,7 +31,7 @@ class AisDeviceController {
                 val response = request.await()
                 return response.Power
             } catch (e: Exception) {
-
+                Log.e(tag, "toggleStatus", e)
             }
             return null
         }
@@ -45,7 +44,20 @@ class AisDeviceController {
                 request.await()
                 return true
             } catch (e: Exception) {
+                Log.e(tag, "setupNew", e)
+            }
+            return false
+        }
 
+        suspend fun setName(ip: String, name: String): Boolean{
+            val service = AisFactory.makeSocketService(ip)
+            val query = "FriendlyName $name"
+            val request = service.setName(query)
+            try {
+                request.await()
+                return true
+            } catch (e: Exception) {
+                Log.e(tag, "setName", e)
             }
             return false
         }
@@ -68,7 +80,7 @@ class AisDeviceController {
             try {
                 return request.await()
             } catch (e: Exception) {
-                //Log.e(tag, "getStatus", e)
+                Log.e(tag, "getStatus", e)
             }
             return null
         }

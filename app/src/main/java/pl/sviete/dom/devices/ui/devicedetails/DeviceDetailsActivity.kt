@@ -1,11 +1,14 @@
 package pl.sviete.dom.devices.ui.devicedetails
 
 import android.app.AlertDialog
+import android.content.Context
+import android.content.res.Resources
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_device_details.*
 import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.db.AisDeviceEntity
+import java.lang.Exception
 
 class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
 
@@ -19,7 +22,13 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
         webView.settings.javaScriptEnabled = true
 
         btn_save.setOnClickListener {
-            presenter.saveView(txt_device_name.text.toString(), txt_device_ip.text.toString())
+            try {
+
+                clearError()
+                presenter.saveView(txt_device_name.text.toString(), txt_device_ip.text.toString())
+            }catch (e: Exception) {
+
+            }
         }
 
         btn_delete.setOnClickListener {
@@ -43,6 +52,19 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
         builder.setPositiveButton(R.string.delete){_, _ -> presenter.delete() }
         builder.setNegativeButton(R.string.no){_, _ -> }
         builder.create().show()
+    }
+
+    override fun showNameValidationError(resId: Int) {
+        txt_device_name.error = resources.getString(resId)
+    }
+
+    override fun showIPValidationError(resId: Int) {
+        txt_device_ip.error = resources.getString(resId)
+    }
+
+    private fun clearError(){
+        txt_device_name.error = null
+        txt_device_ip.error = null
     }
 
     companion object {
