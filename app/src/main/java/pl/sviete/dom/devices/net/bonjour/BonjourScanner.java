@@ -1,11 +1,12 @@
 package pl.sviete.dom.devices.net.bonjour;
 
 import android.content.Context;
+import android.util.Log;
 import com.github.druk.rx2dnssd.Rx2Dnssd;
-import com.github.druk.rx2dnssd.Rx2DnssdEmbedded;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import pl.sviete.dom.devices.AisDevicesApplication;
 
 public class BonjourScanner {
 
@@ -14,7 +15,7 @@ public class BonjourScanner {
     private IBonjourResult mResult;
 
     public BonjourScanner(Context context, IBonjourResult result){
-        mRxDnssd = new Rx2DnssdEmbedded(context);
+        mRxDnssd = ((AisDevicesApplication)context.getApplicationContext()).getRxDnssd();
         mResult = result;
     }
 
@@ -31,7 +32,9 @@ public class BonjourScanner {
                     //else {
                         //mResult.onLost(bonjourService);
                     //}
-                }, s -> {});
+                }, s -> {
+                    Log.e("DNSSD", "Error: ", s);
+                });
     }
 
     public void stopDiscovery() {
