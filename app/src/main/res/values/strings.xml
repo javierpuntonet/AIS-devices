@@ -62,11 +62,6 @@
         twojej lokalnej sieci WiFi
         i AIS Devices.
     </string>
-    <string-array name="ais_device_masks">
-        <item>dom_</item>
-        <item>sonoff_</item>
-        <item>itead_</item>
-    </string-array>
 
     <string name="text_name_fragment">Podaj przyjazną nazwę dla wybranego urządzenia (%1$s)</string>
     <string name="new_device">Nowe urządzenie</string>
@@ -91,4 +86,6 @@
     <string name="no">Nie</string>
     <string name="show_password">Pokaż hasło</string>
     <string name="hide_password">Ukryj hasło</string>
+    <string name="empty_name">Wpisz nazwę</string>
+    <string name="empty_ip">Podaj IP/host urządzenia</string>
 </resources>

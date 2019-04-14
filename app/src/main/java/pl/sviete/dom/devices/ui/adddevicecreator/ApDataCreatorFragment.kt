@@ -40,7 +40,7 @@ class ApDataCreatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         if (mAPName == null){
             val wifi = WiFiScanner(context!!)
-            mAPName = wifi.getCurrentAccessPointInfo()?.ssid
+            mAPName = wifi.getCurrentAccessPointName()
         }
 
         if (mAPName != null) {

@@ -88,14 +88,8 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
     }
 
     private fun setData(list: List<AccessPointInfo>){
-        val masks = resources.getStringArray(R.array.ais_device_masks)
         mAisList.clear()
-        list.forEach {
-            if ((masks.filter { m -> it.ssid.toLowerCase().contains(m, true)}).any()) {
-                it.isAis = true
-            }
-            mAisList.add(it)
-        }
+        mAisList.addAll(list)
         mAisList.sort()
         mAisAdapter!!.notifyDataSetChanged()
     }

@@ -57,14 +57,15 @@ class WiFiScanner (context: Context) {
         } else {
             for (scan in scans) {
                 if (scan.frequency < 2500) {
-                    val ap = AccessPointInfo(scan.SSID, scan.BSSID)
-                    result.add(ap)
+                    val capabilities = scan.capabilities.toUpperCase()
+                    val isOpen = !(capabilities.contains("WEP") || capabilities.contains("WPA"))
+                    result.add(AccessPointInfo(scan.SSID, isOpen))
                 }
             }
             if (BuildConfig.DEBUG) {
-                result.add(AccessPointInfo("aaTest1_inDebug", "11:11:11:11:11:11"))
-                result.add(AccessPointInfo("kkTest2_inDebug", "22:22:22:22:22:22"))
-                result.add(AccessPointInfo("zzTest3_inDebug", "33:33:33:33:33:33"))
+                result.add(AccessPointInfo("aaTest1_inDebug", true))
+                result.add(AccessPointInfo("kkTest2_inDebug", true))
+                result.add(AccessPointInfo("zzTest3_inDebug", false))
             }
         }
         return result
@@ -87,10 +88,10 @@ class WiFiScanner (context: Context) {
         return info.networkId
     }
 
-    fun getCurrentAccessPointInfo(): AccessPointInfo? {
+    fun getCurrentAccessPointName(): String? {
         val info = wiFiManager.connectionInfo
         if (info.bssid != null)
-            return AccessPointInfo(info.ssid.replace("\"",""), info.bssid)
+            return info.ssid.replace("\"","")
         return null
     }
 

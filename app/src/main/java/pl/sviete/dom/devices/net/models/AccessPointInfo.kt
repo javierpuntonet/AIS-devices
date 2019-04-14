@@ -1,8 +1,6 @@
 package pl.sviete.dom.devices.net.models
 
-data class AccessPointInfo(val ssid: String, var mac: String): Comparable<AccessPointInfo> {
-
-    var isAis: Boolean = false
+data class AccessPointInfo(val ssid: String, val isAis: Boolean): Comparable<AccessPointInfo> {
 
     override fun toString(): String {
         return ssid
