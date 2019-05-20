@@ -25,7 +25,6 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
 
     fun scan(){
         runBonjourScanner()
-        //runIpScanner()
     }
 
     fun stop(){
@@ -43,7 +42,7 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
         mBonjour!!.startDiscovery()
     }
 
-    private fun runIpScanner() {
+    fun runIpScanner() {
         val ip = mWifi.internalWifiIpAddress
         ScanHostsAsyncTask(this).execute(ip, mWifi.internalWifiSubnet, 150)
     }

@@ -72,6 +72,10 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
         mAisDeviceViewModel.insert(newDevice)
     }
 
+    override fun scanNetwork() {
+        mScanner.runIpScanner()
+    }
+
     override fun checkPermissionsGranted(requestCode: Int, grantResults: IntArray){
         when (requestCode) {
             PERMISSIONS_REQUEST_LOCATION -> {
@@ -86,8 +90,18 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     }
 
     override fun showDeviceDetail(device: DeviceViewModel) {
-        if (!device.isFounded)
+        if (device.isFounded) {
+            mAisDeviceViewModel.insertionId.observe(activity, Observer { id ->
+                if (id != null && id > 0)
+                    view.showDetail(id)
+            })
+            mScanner.repository.deleteDevice(device.mac)
+            val newDevice = AisDeviceEntity(null, device.name, device.mac, device.ip, device.type?.value)
+            mAisDeviceViewModel.insert(newDevice)
+        }
+        else {
             view.showDetail(device.uid!!)
+        }
     }
 
     override fun toggleDeviceState(device: DeviceViewModel) {

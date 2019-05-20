@@ -89,4 +89,5 @@
     <string name="empty_name">Wpisz nazwę</string>
     <string name="empty_ip">Podaj IP/host urządzenia</string>
     <string name="device_website">Otwórz stronę urządzenia</string>
+    <string name="scan_network">Skanuj sieć</string>
 </resources>

@@ -1,12 +1,8 @@
 package pl.sviete.dom.devices.db
 
 import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.LiveData
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import android.arch.lifecycle.*
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 class AisDeviceViewModel(application: Application) : AndroidViewModel(application) {
@@ -14,6 +10,7 @@ class AisDeviceViewModel(application: Application) : AndroidViewModel(applicatio
     private val coroutineContext: CoroutineContext
         get() = parentJob + Dispatchers.Main
     private val scope = CoroutineScope(coroutineContext)
+    var insertionId = MutableLiveData<Long>()
 
     private val repository: Repository
 
@@ -26,13 +23,24 @@ class AisDeviceViewModel(application: Application) : AndroidViewModel(applicatio
         return  repository.getAll()
     }
 
-    fun getById(id: Int): LiveData<AisDeviceEntity>{
+    fun getById(id: Long): LiveData<AisDeviceEntity>{
         return repository.getById(id)
     }
 
-    fun insert(device: AisDeviceEntity) = scope.launch(Dispatchers.IO) {
-        repository.insert(device)
+    fun insert(device: AisDeviceEntity) {
+        scope.launch(Dispatchers.IO) {
+            val result =
+                try {
+                    val id = repository.insert(device)
+                    id
+                } catch (e: Exception) {
+                    -1L
+                }
+
+            insertionId.postValue(result)
+        }
     }
+
 
     fun update(device: AisDeviceEntity) = scope.launch(Dispatchers.IO) {
         repository.update(device)

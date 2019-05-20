@@ -80,17 +80,16 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
-            R.id.action_settings -> return true
+            R.id.main_net_scan -> {
+                presenter.scanNetwork()
+                return true
+            }
             else -> return super.onOptionsItemSelected(item)
         }
     }
@@ -132,7 +131,7 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         showAddWelcomeButton()
     }
 
-    override fun showDetail(id: Int) {
+    override fun showDetail(id: Long) {
         val intent = Intent(this, DeviceDetailsActivity::class.java).apply {
             putExtra(DeviceDetailsActivity.ARG_DEVICE_ITEM_ID, id)
         }

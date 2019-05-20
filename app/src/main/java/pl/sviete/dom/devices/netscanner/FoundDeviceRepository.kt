@@ -76,6 +76,12 @@ class FoundDeviceRepository {
         return map.filter { x -> x.isAisDevice == true && !x.mac.isNullOrEmpty() }
     }
 
+    fun deleteDevice(mac: String){
+        val device = map.firstOrNull { x -> x.mac?.toUpperCase() == mac.toUpperCase() }
+        if (device != null)
+            map.remove(device)
+    }
+
     fun clear(){
         mLock.withLock {
             map.clear()

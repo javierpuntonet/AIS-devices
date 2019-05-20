@@ -9,13 +9,13 @@ interface AisDeviceDao {
     fun getAll(): LiveData<List<AisDeviceEntity>>
 
     @Query("SELECT * FROM AisDevice WHERE uid=:id")
-    fun getById(id: Int): LiveData<AisDeviceEntity>
+    fun getById(id: Long): LiveData<AisDeviceEntity>
 
     @Query("SELECT count(*) from AisDevice")
     fun getCount(): Int
 
     @Insert
-    fun insert(vararg device: AisDeviceEntity)
+    fun insert(device: AisDeviceEntity): Long
 
     @Delete
     fun delete(vararg device: AisDeviceEntity)

@@ -3,7 +3,7 @@ package pl.sviete.dom.devices.ui.mainview
 import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
 import pl.sviete.dom.devices.models.AisDeviceType
 
-data class DeviceViewModel(val uid: Int?, val name: String, val ip: String?, val mac: String) : Comparable<DeviceViewModel> {
+data class DeviceViewModel(val uid: Long?, val name: String, val ip: String?, val mac: String) : Comparable<DeviceViewModel> {
 
     var status = PowerStatus.Unknown
     var type: AisDeviceType? = null

@@ -12,7 +12,7 @@ interface DeviceDetailsView {
     }
 
     interface Presenter : IPresenter<View> {
-        fun loadView(id: Int)
+        fun loadView(id: Long)
         fun saveView(name: String, ip: String)
         fun delete()
     }

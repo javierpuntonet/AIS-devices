@@ -38,7 +38,7 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
             showQuestionForDelete()
         }
 
-        val detailId = intent.getIntExtra(ARG_DEVICE_ITEM_ID, 0)
+        val detailId = intent.getLongExtra(ARG_DEVICE_ITEM_ID, 0)
         presenter.loadView(detailId)
     }
 

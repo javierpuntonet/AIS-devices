@@ -17,7 +17,7 @@ class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: 
     private lateinit var mAisDeviceViewModel: AisDeviceViewModel
     private lateinit var mModel: AisDeviceEntity
 
-    override fun loadView(id: Int) {
+    override fun loadView(id: Long) {
         mAisDeviceViewModel = ViewModelProviders.of(activity).get(AisDeviceViewModel::class.java)
         mAisDeviceViewModel.getById(id).observe(activity, Observer { device ->
             if (device != null) {

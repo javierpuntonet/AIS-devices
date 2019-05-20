@@ -9,13 +9,13 @@ class Repository internal constructor(private val dao: AisDeviceDao) {
         return dao.getAll()
     }
 
-    fun getById(id: Int): LiveData<AisDeviceEntity> {
+    fun getById(id: Long): LiveData<AisDeviceEntity> {
         return dao.getById(id)
     }
 
     @WorkerThread
-    fun insert(device: AisDeviceEntity) {
-        dao.insert(device)
+    fun insert(device: AisDeviceEntity): Long {
+        return dao.insert(device)
     }
 
     @WorkerThread
