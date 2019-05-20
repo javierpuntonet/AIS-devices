@@ -12,6 +12,8 @@ import android.net.Uri
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.URLSpan
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.TextView
 
 class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
@@ -22,8 +24,6 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_device_details)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        initTxtOpenWebSite()
 
         btn_save.setOnClickListener {
             try {
@@ -40,6 +40,21 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
 
         val detailId = intent.getIntExtra(ARG_DEVICE_ITEM_ID, 0)
         presenter.loadView(detailId)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.device_details, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_open_device_website -> {
+                openDeviceWebSite()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 
     override fun showView(device: AisDeviceEntity) {
@@ -68,18 +83,12 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
         txt_device_ip.error = null
     }
 
-    private fun initTxtOpenWebSite() {
-        val ssb = SpannableStringBuilder()
-        ssb.append(txt_open_dev_website.text)
-        ssb.setSpan(URLSpan("#"), 0, ssb.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        txt_open_dev_website.setText(ssb, TextView.BufferType.SPANNABLE)
-        txt_open_dev_website.setOnClickListener {
-            val ip = txt_device_ip.text.toString()
-            if (ip.isNotEmpty()) {
-                val uri = Uri.parse("http://$ip")
-                val intent = Intent(Intent.ACTION_VIEW, uri)
-                startActivity(intent)
-            }
+    private fun openDeviceWebSite() {
+        val ip = txt_device_ip.text.toString()
+        if (ip.isNotEmpty()) {
+            val uri = Uri.parse("http://$ip")
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            startActivity(intent)
         }
     }
 
