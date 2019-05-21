@@ -73,6 +73,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     }
 
     override fun scanNetwork() {
+        view.showProgress()
         mScanner.runIpScanner()
     }
 
@@ -131,7 +132,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     }
 
     override fun scanFinished() {
-        //view.hideProgress()
+        view.hideProgress()
     }
 
     private fun refreshFromDB(entities: List<AisDeviceEntity>) {

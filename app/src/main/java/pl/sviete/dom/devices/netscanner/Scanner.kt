@@ -32,8 +32,8 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
     }
 
     fun add(ip: String, founded: Boolean){
-        if (FoundDeviceRepository.getInstance().add(ip, founded))
-            refreshDeviceStatus(ip)
+        FoundDeviceRepository.getInstance().add(ip, founded)
+        refreshDeviceStatus(ip)
     }
 
     private fun runBonjourScanner() {
@@ -74,6 +74,8 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
         }
     }
 
+
+    //IP scanner
     override fun processFinish(output: Boolean) {
         delegate.scanFinished()
     }

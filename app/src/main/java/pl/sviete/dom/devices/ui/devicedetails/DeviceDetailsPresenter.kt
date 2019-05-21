@@ -11,6 +11,7 @@ import pl.sviete.dom.devices.aiscontrollers.AisDeviceController
 import pl.sviete.dom.devices.db.AisDeviceEntity
 import pl.sviete.dom.devices.db.AisDeviceViewModel
 import pl.sviete.dom.devices.mvp.BasePresenter
+import pl.sviete.dom.devices.netscanner.FoundDeviceRepository
 
 class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: DeviceDetailsView.View): BasePresenter<DeviceDetailsView.View, DeviceDetailsView.Presenter>(), DeviceDetailsView.Presenter {
 
@@ -52,6 +53,7 @@ class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: 
 
     override fun delete() {
         mAisDeviceViewModel.delete(mModel)
+        FoundDeviceRepository.getInstance().deleteDevice(mModel.mac)
         activity.finish()
     }
 
