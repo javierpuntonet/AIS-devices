@@ -13,7 +13,8 @@ import pl.sviete.dom.devices.db.AisDeviceViewModel
 import pl.sviete.dom.devices.mvp.BasePresenter
 import pl.sviete.dom.devices.netscanner.FoundDeviceRepository
 
-class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: DeviceDetailsView.View): BasePresenter<DeviceDetailsView.View, DeviceDetailsView.Presenter>(), DeviceDetailsView.Presenter {
+class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: DeviceDetailsView.View)
+    : BasePresenter<DeviceDetailsView.View, DeviceDetailsView.Presenter>(), DeviceDetailsView.Presenter {
 
     private lateinit var mAisDeviceViewModel: AisDeviceViewModel
     private lateinit var mModel: AisDeviceEntity
@@ -28,10 +29,10 @@ class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: 
         })
     }
 
-    override fun saveView(name: String, ip: String){
+    override fun saveView(name: String, ip: String): Boolean{
         var save = false
         var saveName = false
-        if (!validate(name, ip)) return
+        if (!validate(name, ip)) return false
         if (mModel.name != name) {
             mModel.name = name
             save = true
@@ -43,12 +44,20 @@ class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: 
         }
         if (save) {
             GlobalScope.launch(Dispatchers.Main) {
-                if (saveName)
+                if (saveName) {
                     save = AisDeviceController.setName(ip, name)
-                if (save)
+                }
+                if (save) {
                     mAisDeviceViewModel.update(mModel)
+                    activity.finish()
+                }
+                else {
+                    view.showSaveErrorInfo()
+                }
             }
+            return true
         }
+        return false
     }
 
     override fun delete() {

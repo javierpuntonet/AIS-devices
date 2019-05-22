@@ -9,11 +9,12 @@ interface DeviceDetailsView {
         fun showView(device: AisDeviceEntity)
         fun showNameValidationError(resId: Int)
         fun showIPValidationError(resId: Int)
+        fun showSaveErrorInfo()
     }
 
     interface Presenter : IPresenter<View> {
         fun loadView(id: Long)
-        fun saveView(name: String, ip: String)
+        fun saveView(name: String, ip: String): Boolean
         fun delete()
     }
 }

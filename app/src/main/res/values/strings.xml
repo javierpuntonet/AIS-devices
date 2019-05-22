@@ -90,4 +90,7 @@
     <string name="empty_ip">Podaj IP/host urządzenia</string>
     <string name="device_website">Otwórz stronę urządzenia</string>
     <string name="scan_network">Skanuj sieć</string>
+    <string name="save_error">Błąd zapisu</string>
+    <string name="save_error_info">Nie udało się zapisać zmian, sprawdź czy urządzenie jest dostępne i spróbuj ponownie</string>
+    <string name="ok">OK</string>
 </resources>

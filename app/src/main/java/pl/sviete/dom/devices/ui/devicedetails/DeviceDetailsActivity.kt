@@ -12,8 +12,7 @@ import android.net.Uri
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.URLSpan
-import android.view.Menu
-import android.view.MenuItem
+import android.view.*
 import android.widget.TextView
 
 class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
@@ -27,10 +26,12 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
 
         btn_save.setOnClickListener {
             try {
+                progress_device_details.visibility = View.VISIBLE
                 clearError()
-                presenter.saveView(txt_device_name.text.toString(), txt_device_ip.text.toString())
+                if (!presenter.saveView(txt_device_name.text.toString(), txt_device_ip.text.toString()))
+                    progress_device_details.visibility = View.GONE
             }catch (e: Exception) {
-
+                progress_device_details.visibility = View.GONE
             }
         }
 
@@ -76,6 +77,16 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
 
     override fun showIPValidationError(resId: Int) {
         txt_device_ip.error = resources.getString(resId)
+    }
+
+    override fun showSaveErrorInfo(){
+        progress_device_details.visibility = View.GONE
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(R.string.save_error)
+        builder.setMessage(R.string.save_error_info)
+        builder.setPositiveButton(R.string.ok) { _, _ -> }
+        val dialog = builder.create()
+        dialog.show()
     }
 
     private fun clearError(){
