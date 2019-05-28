@@ -25,11 +25,18 @@ class FoundDeviceRepository {
     private var map = Collections.synchronizedList(coll)
     val devices = MutableLiveData<List<FoundDeviceModel>>()
 
-    fun add(ip: String, founded: Boolean): Boolean{
+    fun add(ip: String, mac: String?, founded: Boolean): Boolean{
         mLock.withLock {
-            if (!map.any { x -> x.ip == ip }) {
+            val dev = map.firstOrNull { x -> x.ip == ip}
+            if (dev == null) {
                 map.add(FoundDeviceModel(ip, founded))
                 return true
+            }
+            else{
+                if (!mac.isNullOrEmpty())
+                    dev.mac = mac
+                if (!founded)
+                    dev.founded = founded
             }
             return false
         }

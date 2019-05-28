@@ -63,7 +63,6 @@ class ApDataCreatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
             if (chkSavePassword.isChecked)
                 savePassword(name, password)
 
-            btn_accept.isEnabled = false
             mAPDataAcceptListener?.onAPDataAccept(name, password)
         }
 
@@ -103,10 +102,6 @@ class ApDataCreatorFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
         mAPName = apName
         mPassword = password
-    }
-
-    fun activateForm() {
-        btn_accept.isEnabled = true
     }
 
     companion object {

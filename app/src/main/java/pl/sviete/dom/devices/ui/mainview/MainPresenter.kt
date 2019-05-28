@@ -10,7 +10,7 @@ import android.support.v4.content.ContextCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import pl.sviete.dom.devices.aiscontrollers.AisDeviceController
+import pl.sviete.dom.devices.aiscontrollers.AisDeviceRestController
 import pl.sviete.dom.devices.db.AisDeviceEntity
 import pl.sviete.dom.devices.db.AisDeviceViewModel
 import pl.sviete.dom.devices.models.AisDeviceType
@@ -49,7 +49,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
                     refreshFounded(mScanner.repository.getFoundedDevices())
                     view.refreshData(mAisList)
                     devices.filter { x -> !x.ip.isNullOrEmpty() }.forEach {
-                        mScanner.add(it.ip!!, false)
+                        mScanner.add(it.ip!!, it.mac, false)
                     }
                 }
             })
@@ -108,7 +108,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     override fun toggleDeviceState(device: DeviceViewModel) {
         if (!device.ip.isNullOrEmpty()) {
             GlobalScope.launch(Dispatchers.Main) {
-                val status = AisDeviceController.toggleStatus(device.ip)
+                val status = AisDeviceRestController.toggleStatus(device.ip)
                 if (status != null) {
                     mScanner.repository.setStatus(device.mac, status)
                 }
@@ -131,7 +131,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
         }
     }
 
-    override fun scanFinished() {
+    override fun ipScanFinished() {
         view.hideProgress()
     }
 

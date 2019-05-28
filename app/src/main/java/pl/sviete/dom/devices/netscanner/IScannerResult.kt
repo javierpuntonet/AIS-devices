@@ -1,5 +1,6 @@
 package pl.sviete.dom.devices.netscanner
 
 interface IScannerResult {
-    fun scanFinished()
+    fun ipScanFinished()
+    //fun found(ip: String)
 }

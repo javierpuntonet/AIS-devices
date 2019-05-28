@@ -7,6 +7,7 @@ import android.widget.*
 import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
 import android.widget.TextView
+import pl.sviete.dom.devices.helpers.AisDeviceHelper
 import pl.sviete.dom.devices.models.AisDeviceType
 
 class MainGridAdapter (
@@ -65,7 +66,7 @@ class MainGridAdapter (
 
         view.setBackgroundResource(getResourceForStatus(device.status))
 
-        holder.imageView!!.setImageResource(getResourceForType(device.type))
+        holder.imageView!!.setImageResource(AisDeviceHelper.getResourceForType(device.type))
 
         return view
     }
@@ -75,14 +76,6 @@ class MainGridAdapter (
             PowerStatus.On -> R.drawable.device_list_item_border_on
             PowerStatus.Off -> R.drawable.device_list_item_border_off
             else -> R.drawable.device_list_item_border_unknown
-        }
-    }
-
-    private fun getResourceForType(type: AisDeviceType?): Int {
-        return when (type) {
-            AisDeviceType.Bulb -> R.drawable.bulb
-            AisDeviceType.Socket -> R.drawable.socket
-            else -> R.drawable.logo
         }
     }
 

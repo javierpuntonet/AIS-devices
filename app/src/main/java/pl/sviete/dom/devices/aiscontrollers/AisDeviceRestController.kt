@@ -6,11 +6,11 @@ import pl.sviete.dom.devices.aiscontrollers.models.Status
 import pl.sviete.dom.devices.models.AisDeviceType
 import java.lang.Exception
 
-class AisDeviceController {
+class AisDeviceRestController {
 
     companion object {
         const val AP_IP = "192.168.4.1"
-        private val tag = AisDeviceController.javaClass.name
+        private val tag = AisDeviceRestController.javaClass.name
 
         suspend fun getPowerStatus(ip: String): PowerStatus? {
             val service = AisFactory.makeSocketService(ip)

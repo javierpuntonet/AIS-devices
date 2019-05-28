@@ -1,4 +1,4 @@
-package pl.sviete.dom.devices.net
+package pl.sviete.dom.devices.aiscontrollers
 
 import android.content.Context
 import android.os.Handler
@@ -6,13 +6,11 @@ import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import pl.sviete.dom.devices.aiscontrollers.AisDeviceController
 import pl.sviete.dom.devices.aiscontrollers.models.Status
-import pl.sviete.dom.devices.models.AisDeviceType
+import pl.sviete.dom.devices.net.WiFiScanner
 import java.io.UnsupportedEncodingException
 
-
-class AisDeviceConfigurator(context: Context): WiFiScanner.OnWiFiConnectedListener {
+class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgressListener): WiFiScanner.OnWiFiConnectedListener {
     private val TAG = AisDeviceConfigurator::class.java.simpleName
 
     private val mWiFiScanner: WiFiScanner = WiFiScanner(context)
@@ -22,14 +20,8 @@ class AisDeviceConfigurator(context: Context): WiFiScanner.OnWiFiConnectedListen
     private var mAPPassword: String? = null
     private var mDeviceNetworkId: Int = -1
     private var mCurrentNetworkId: Int = -1
-    private var mListener: OnAddDeviceFinishedListener? = null
     private var mHandlerTimeout = Handler()
     private var mConnectingCanceled: Boolean = true
-
-    init {
-        if (context is OnAddDeviceFinishedListener)
-            mListener = context
-    }
 
     fun cancelPair() {
         mWiFiScanner.unregisterOnConnected()
@@ -65,7 +57,11 @@ class AisDeviceConfigurator(context: Context): WiFiScanner.OnWiFiConnectedListen
         }
         else {
             reconnect()
-            mListener?.onAddDeviceFinished(AddDeviceArgs(false))
+            listener.onAddDeviceFinished(
+                AddDeviceArgs(
+                    false
+                )
+            )
         }
     }
 
@@ -74,7 +70,12 @@ class AisDeviceConfigurator(context: Context): WiFiScanner.OnWiFiConnectedListen
             try {
                 if (!mConnectingCanceled) {
                     mWiFiScanner.unregisterOnConnected()
-                    mListener?.onAddDeviceFinished(AddDeviceArgs(false, ErrorCode.TIMEOUT))
+                    listener.onAddDeviceFinished(
+                        AddDeviceArgs(
+                            false,
+                            ErrorCode.TIMEOUT
+                        )
+                    )
                     reconnect()
                 }
             } catch (e: Exception) {
@@ -92,6 +93,7 @@ class AisDeviceConfigurator(context: Context): WiFiScanner.OnWiFiConnectedListen
                 mConnectingCanceled = true
                 mHandlerTimeout.removeCallbacksAndMessages(timeout)
 
+                listener.onConnectedToDevice()
                 val connectStatus = connectAndConfiguraDevice()
                 if (connectStatus.first) {
                     result = true
@@ -101,7 +103,13 @@ class AisDeviceConfigurator(context: Context): WiFiScanner.OnWiFiConnectedListen
                 Log.e(TAG, "onConnected", e)
             } finally {
                 reconnect()
-                mListener?.onAddDeviceFinished(AddDeviceArgs(result, ErrorCode.OK, deviceStatus))
+                listener.onAddDeviceFinished(
+                    AddDeviceArgs(
+                        result,
+                        ErrorCode.OK,
+                        deviceStatus
+                    )
+                )
             }
         }
     }
@@ -114,8 +122,8 @@ class AisDeviceConfigurator(context: Context): WiFiScanner.OnWiFiConnectedListen
         }
         else {
             try {
-                val deviceStatus = AisDeviceController.getStatus(AisDeviceController.AP_IP)
-                val result = AisDeviceController.setupNew(mFriendlyName!!, mAPName!!, mAPPassword!!)
+                val deviceStatus = AisDeviceRestController.getStatus(AisDeviceRestController.AP_IP)
+                val result = AisDeviceRestController.setupNew(mFriendlyName!!, mAPName!!, mAPPassword!!)
                 if (result){
                     return Pair(true, deviceStatus)
                 }
@@ -132,8 +140,9 @@ class AisDeviceConfigurator(context: Context): WiFiScanner.OnWiFiConnectedListen
         mWiFiScanner.connectToNetwork(mCurrentNetworkId)
     }
 
-    interface  OnAddDeviceFinishedListener {
+    interface  OnConfigurationProgressListener {
         fun onAddDeviceFinished(result: AddDeviceArgs)
+        fun onConnectedToDevice()
     }
 
     data class AddDeviceArgs(

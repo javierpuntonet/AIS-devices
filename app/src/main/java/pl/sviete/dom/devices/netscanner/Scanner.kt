@@ -5,7 +5,7 @@ import com.github.druk.rx2dnssd.BonjourService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import pl.sviete.dom.devices.aiscontrollers.AisDeviceController
+import pl.sviete.dom.devices.aiscontrollers.AisDeviceRestController
 import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
 import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.net.bonjour.BonjourScanner
@@ -31,8 +31,8 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
         mBonjour?.stopDiscovery()
     }
 
-    fun add(ip: String, founded: Boolean){
-        FoundDeviceRepository.getInstance().add(ip, founded)
+    fun add(ip: String, mac: String?, founded: Boolean){
+        FoundDeviceRepository.getInstance().add(ip, mac, founded)
         refreshDeviceStatus(ip)
     }
 
@@ -50,7 +50,7 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
     private fun refreshDeviceStatus(ip: String){
         GlobalScope.launch(Dispatchers.Main) {
             try {
-                val status = AisDeviceController.getStatus(ip)
+                val status = AisDeviceRestController.getStatus(ip)
                 if (status != null) {
                     FoundDeviceRepository.getInstance().setAisDevice(ip,
                         status.StatusNET.Mac,
@@ -70,23 +70,22 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
     override fun onFound(service: BonjourService?) {
         val ip = service?.inet4Address?.hostAddress
         if (ip != null) {
-            add(ip, true)
+            add(ip, null, true)
         }
     }
 
-
     //IP scanner
     override fun processFinish(output: Boolean) {
-        delegate.scanFinished()
+        delegate.ipScanFinished()
     }
 
     override fun processFinish(output: Throwable?) {
-        delegate.scanFinished()
+        delegate.ipScanFinished()
     }
 
     override fun processFinish(h: Host?, i: AtomicInteger?) {
         if (h != null) {
-            add(h.ip, true)
+            add(h.ip, null,true)
         }
     }
 }

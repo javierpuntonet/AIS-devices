@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import pl.sviete.dom.devices.R
-import pl.sviete.dom.devices.aiscontrollers.AisDeviceController
+import pl.sviete.dom.devices.aiscontrollers.AisDeviceRestController
 import pl.sviete.dom.devices.db.AisDeviceEntity
 import pl.sviete.dom.devices.db.AisDeviceViewModel
 import pl.sviete.dom.devices.mvp.BasePresenter
@@ -45,7 +45,7 @@ class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: 
         if (save) {
             GlobalScope.launch(Dispatchers.Main) {
                 if (saveName) {
-                    save = AisDeviceController.setName(ip, name)
+                    save = AisDeviceRestController.setName(ip, name)
                 }
                 if (save) {
                     mAisDeviceViewModel.update(mModel)
@@ -67,11 +67,11 @@ class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: 
     }
 
     private fun validate(name: String, ip: String) : Boolean {
-        if (name.isNullOrBlank()) {
+        if (name.isBlank()) {
             view.showNameValidationError(R.string.empty_name)
             return false
         }
-        if (ip.isNullOrBlank()) {
+        if (ip.isBlank()) {
             view.showIPValidationError(R.string.empty_ip)
             return false
         }
