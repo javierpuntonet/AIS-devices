@@ -60,11 +60,11 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     }
 
     override fun resumeView() {
-        mScanner.scan()
+        mScanner.runBonjourScanner()
     }
 
     override fun pauseView() {
-        mScanner.stop()
+        mScanner.stopBonjourScanner()
     }
 
     override fun addNewDevice(name: String, mac: String, type: AisDeviceType){
@@ -118,8 +118,8 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
 
     override fun clearCache() {
         mScanner.repository.clear()
-        mScanner.stop()
-        mScanner.scan()
+        mScanner.stopBonjourScanner()
+        mScanner.runBonjourScanner()
     }
 
     override fun checkPermissions() {

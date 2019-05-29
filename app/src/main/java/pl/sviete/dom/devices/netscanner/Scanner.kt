@@ -23,23 +23,19 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
 
     val repository : FoundDeviceRepository get() = FoundDeviceRepository.getInstance()
 
-    fun scan(){
-        runBonjourScanner()
+    fun runBonjourScanner(){
+        if (mBonjour == null)
+            mBonjour = BonjourScanner(context, this)
+        mBonjour!!.startDiscovery()
     }
 
-    fun stop(){
+    fun stopBonjourScanner(){
         mBonjour?.stopDiscovery()
     }
 
     fun add(ip: String, mac: String?, founded: Boolean){
         FoundDeviceRepository.getInstance().add(ip, mac, founded)
         refreshDeviceStatus(ip)
-    }
-
-    private fun runBonjourScanner() {
-        if (mBonjour == null)
-            mBonjour = BonjourScanner(context, this)
-        mBonjour!!.startDiscovery()
     }
 
     fun runIpScanner() {
