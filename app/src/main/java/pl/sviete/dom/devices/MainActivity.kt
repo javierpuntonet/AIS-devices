@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.ui.adddevicecreator.MainCreatorActivity
+import pl.sviete.dom.devices.ui.areas.AreasActivity
 import pl.sviete.dom.devices.ui.devicedetails.DeviceDetailsActivity
 import pl.sviete.dom.devices.ui.mainview.*
 import java.util.*
@@ -99,6 +100,10 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         when (item.itemId) {
             R.id.nav_add_creator -> {
                 showCreator()
+            }
+            R.id.nav_areas -> {
+                val intent = Intent(this, AreasActivity::class.java)
+                startActivity(intent)
             }
             R.id.nav_settings -> {
                 val intent = Intent(this, SettingsActivity::class.java)

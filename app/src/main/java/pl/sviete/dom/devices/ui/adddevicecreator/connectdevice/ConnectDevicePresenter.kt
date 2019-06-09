@@ -63,7 +63,7 @@ class ConnectDevicePresenter(private val fragment: Fragment, override var view: 
                 view.onStep(ConnectStep.NetworkScan)
                 mScanner!!.runIpScanner()
 
-                mTimer.schedule(30000){
+                mTimer.schedule(15000){
                     view.onPairError(AisDeviceConfigurator.ErrorCode.TIMEOUT)
                     fragment.fragmentManager?.popBackStack()
                 }

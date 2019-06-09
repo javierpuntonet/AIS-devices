@@ -1,49 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="pl.sviete.dom.devices">
+    package="pl.sviete.dom.devices">
 
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-            android:name=".AisDevicesApplication"
-            android:allowBackup="true"
-            android:icon="@mipmap/ic_ais_devices"
-            android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_ais_round"
-            android:supportsRtl="true"
-            android:theme="@style/AppTheme">
+        android:name=".AisDevicesApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_ais_devices"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_ais_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
         <activity
-                android:name=".MainActivity"
-                android:label="@string/app_name"
-                android:theme="@style/AppTheme.NoActionBar">
+            android:name=".ui.areas.AreasActivity"
+            android:label="@string/areas"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-                android:name=".SettingsActivity"
-                android:label="@string/settings">
+            android:name=".SettingsActivity"
+            android:label="@string/settings"></activity>
+        <activity
+            android:name=".ui.adddevicecreator.MainCreatorActivity"
+            android:label="@string/title_activity_main_creator"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pl.sviete.dom.devices.MainActivity" />
         </activity>
         <activity
-                android:name=".ui.adddevicecreator.MainCreatorActivity"
-                android:label="@string/title_activity_main_creator"
-                android:parentActivityName=".MainActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="pl.sviete.dom.devices.MainActivity"/>
-        </activity>
-        <activity android:name=".ui.devicedetails.DeviceDetailsActivity"
-                  android:parentActivityName=".MainActivity"
-                  android:windowSoftInputMode="adjustPan">
-        </activity>
+            android:name=".ui.devicedetails.DeviceDetailsActivity"
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="adjustPan"></activity>
     </application>
 
 </manifest>

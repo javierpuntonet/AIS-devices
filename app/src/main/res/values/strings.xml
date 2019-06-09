@@ -95,6 +95,7 @@
     <string name="ok">OK</string>
     <string name="connect_to_device">Łączenie z urządzeniem</string>
     <string name="send_configuration">Konfigurowanie urządzenia</string>
-    <string name="waiting_for_device">Oczekiwanie na podłączenie urządzenia lokalnej sieci WiFi</string>
+    <string name="waiting_for_device">Oczekiwanie na podłączenie urządzenia do lokalnej sieci WiFi</string>
     <string name="network_scan">Skanowanie sieci w poszukiwaniu urządzenia</string>
+    <string name="areas">Obszary</string>
 </resources>
