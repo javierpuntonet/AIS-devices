@@ -21,6 +21,15 @@ class AreasActivity : AppCompatActivity(), AreasView.View {
         mAreasAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, android.R.id.text1, mAreaList)
         list_areas.adapter = mAreasAdapter
 
+        list_areas.setOnItemClickListener { parent, _, position, _ ->
+            val area = parent.getItemAtPosition(position) as AreaViewModel
+            val intent = Intent(this, AreaDetailsActivity::class.java)
+                .apply {
+                    putExtra(AreaDetailsActivity.ARG_AREA_ITEM, area)
+                }
+            startActivity(intent)
+        }
+
         btn_add_area.setOnClickListener {
             val intent = Intent(this, AreaDetailsActivity::class.java)
             startActivity(intent)

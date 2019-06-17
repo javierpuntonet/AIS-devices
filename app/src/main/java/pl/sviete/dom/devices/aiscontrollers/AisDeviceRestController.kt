@@ -10,7 +10,7 @@ class AisDeviceRestController {
 
     companion object {
         const val AP_IP = "192.168.4.1"
-        private val tag = AisDeviceRestController.javaClass.name
+        private val tag = AisDeviceRestController::class.java.simpleName
 
         suspend fun getPowerStatus(ip: String): PowerStatus? {
             val service = AisFactory.makeSocketService(ip)

@@ -9,11 +9,7 @@ import pl.sviete.dom.devices.db.AisDeviceEntity
 import java.lang.Exception
 import android.content.Intent
 import android.net.Uri
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.style.URLSpan
 import android.view.*
-import android.widget.TextView
 
 class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
 
@@ -36,7 +32,7 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
         }
 
         btn_delete.setOnClickListener {
-            showQuestionForDelete()
+            deleteDevice()
         }
 
         val detailId = intent.getLongExtra(ARG_DEVICE_ITEM_ID, 0)
@@ -63,9 +59,9 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
         txt_device_ip.setText(device.ip)
     }
 
-    private fun showQuestionForDelete() {
+    private fun deleteDevice() {
         val builder = AlertDialog.Builder(this)
-        builder.setMessage(R.string.delete_question)
+        builder.setMessage(R.string.delete_device_question)
         builder.setPositiveButton(R.string.delete){_, _ -> presenter.delete() }
         builder.setNegativeButton(R.string.no){_, _ -> }
         builder.create().show()

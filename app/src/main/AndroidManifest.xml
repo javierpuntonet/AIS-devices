@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ui.areas.AreaDetailsActivity"
             android:label="@string/area"
-            />
+            android:parentActivityName=".ui.areas.AreasActivity" />
         <activity
             android:name=".ui.areas.AreasActivity"
             android:label="@string/areas"

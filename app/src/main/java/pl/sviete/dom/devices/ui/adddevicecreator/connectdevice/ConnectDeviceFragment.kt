@@ -105,7 +105,7 @@ class ConnectDeviceFragment : Fragment(), ConnectDeviceView.View  {
 
     private fun AisDeviceConfigurator.ErrorCode.text(resources: Resources): String {
         if (this == AisDeviceConfigurator.ErrorCode.TIMEOUT)
-            return System.getProperty("line.separator") + resources.getString(R.string.connect_ap_timeout)
+            return System.getProperty("line.separator")!! + resources.getString(R.string.connect_ap_timeout)
         return ""
     }
 

@@ -15,7 +15,7 @@ class AisDeviceViewModel(application: Application) : AndroidViewModel(applicatio
     private val repository: AisDeviceRepository
 
     init {
-        val dao = DataBase.getInstance(application, scope).aisDeviceDao()
+        val dao = DataBase.getInstance(application).aisDeviceDao()
         repository = AisDeviceRepository(dao)
     }
 

@@ -82,7 +82,7 @@
     <string name="ip_address">Adres IP</string>
     <string name="delete">Usuń</string>
     <string name="save">Zapisz</string>
-    <string name="delete_question">Usunąć urządzenie?</string>
+    <string name="delete_device_question">Usunąć urządzenie?</string>
     <string name="no">Nie</string>
     <string name="show_password">Pokaż hasło</string>
     <string name="hide_password">Ukryj hasło</string>
@@ -99,4 +99,5 @@
     <string name="network_scan">Skanowanie sieci w poszukiwaniu urządzenia</string>
     <string name="areas">Obszary</string>
     <string name="area">Obszar</string>
+    <string name="delete_area_question">Usunąć obszar?</string>
 </resources>

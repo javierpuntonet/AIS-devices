@@ -15,7 +15,7 @@ class AisDeviceEntity(
     @ColumnInfo(name = "mac") var mac: String,
     @ColumnInfo(name = "ip") var ip: String?,
     @ColumnInfo(name = "type") var type: Int?,
-    @ColumnInfo(name = "area_id") val areaId: Long? = null
+    @ColumnInfo(name = "area_id", index = true) val areaId: Long? = null
 )
 {
     override fun toString(): String {

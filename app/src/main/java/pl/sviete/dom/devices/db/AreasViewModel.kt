@@ -16,7 +16,7 @@ class AreasViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: AreaRepository
 
     init {
-        val dao = DataBase.getInstance(application, scope).areaDao()
+        val dao = DataBase.getInstance(application).areaDao()
         repository = AreaRepository(dao)
     }
 

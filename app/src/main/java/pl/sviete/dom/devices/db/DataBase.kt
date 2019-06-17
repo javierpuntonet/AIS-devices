@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import pl.sviete.dom.devices.models.AisDeviceType
 
-@Database(entities = [AisDeviceEntity::class, AreaEntity::class], version = 1)
+@Database(entities = [AisDeviceEntity::class, AreaEntity::class], version = 1, exportSchema = false)
 abstract class DataBase : RoomDatabase() {
 
     abstract fun aisDeviceDao(): AisDeviceDao
@@ -20,7 +20,7 @@ abstract class DataBase : RoomDatabase() {
     companion object {
         private var INSTANCE: DataBase? = null
 
-        fun getInstance(context: Context, scope: CoroutineScope): DataBase {
+        fun getInstance(context: Context): DataBase {
             val tempInstance = INSTANCE
             if (tempInstance != null) {
                 return tempInstance

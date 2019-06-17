@@ -4,9 +4,7 @@ import pl.sviete.dom.devices.mvp.BaseView
 import pl.sviete.dom.devices.mvp.IPresenter
 
 class AreaDetailsView {
-    interface View : BaseView<Presenter> {
-        //fun refreshData(devices: List<AreaViewModel>?)
-    }
+    interface View : BaseView<Presenter>
 
     interface Presenter : IPresenter<View> {
         fun loadView(area: AreaViewModel?)
