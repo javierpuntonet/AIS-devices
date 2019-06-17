@@ -98,4 +98,5 @@
     <string name="waiting_for_device">Oczekiwanie na podłączenie urządzenia do lokalnej sieci WiFi</string>
     <string name="network_scan">Skanowanie sieci w poszukiwaniu urządzenia</string>
     <string name="areas">Obszary</string>
+    <string name="area">Obszar</string>
 </resources>

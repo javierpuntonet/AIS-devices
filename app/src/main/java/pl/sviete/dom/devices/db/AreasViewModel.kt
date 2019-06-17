@@ -5,49 +5,45 @@ import android.arch.lifecycle.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class AisDeviceViewModel(application: Application) : AndroidViewModel(application) {
+class AreasViewModel(application: Application) : AndroidViewModel(application) {
+
     private var parentJob = Job()
     private val coroutineContext: CoroutineContext
         get() = parentJob + Dispatchers.Main
     private val scope = CoroutineScope(coroutineContext)
     var insertionId = MutableLiveData<Long>()
 
-    private val repository: AisDeviceRepository
+    private val repository: AreaRepository
 
     init {
-        val dao = DataBase.getInstance(application, scope).aisDeviceDao()
-        repository = AisDeviceRepository(dao)
+        val dao = DataBase.getInstance(application, scope).areaDao()
+        repository = AreaRepository(dao)
     }
 
-    fun  getAll():LiveData<List<AisDeviceEntity>>{
+    fun  getAll(): LiveData<List<AreaEntity>> {
         return  repository.getAll()
     }
 
-    fun getById(id: Long): LiveData<AisDeviceEntity>{
-        return repository.getById(id)
-    }
-
-    fun insert(device: AisDeviceEntity) {
+    fun insert(area: AreaEntity) {
         scope.launch(Dispatchers.IO) {
             val result =
                 try {
-                    val id = repository.insert(device)
+                    val id = repository.insert(area)
                     id
                 } catch (e: Exception) {
                     -1L
                 }
-
             insertionId.postValue(result)
         }
     }
 
 
-    fun update(device: AisDeviceEntity) = scope.launch(Dispatchers.IO) {
-        repository.update(device)
+    fun update(area: AreaEntity) = scope.launch(Dispatchers.IO) {
+        repository.update(area)
     }
 
-    fun delete(device: AisDeviceEntity) = scope.launch(Dispatchers.IO) {
-        repository.delete(device)
+    fun delete(area: AreaEntity) = scope.launch(Dispatchers.IO) {
+        repository.delete(area)
     }
 
     override fun onCleared() {

@@ -96,7 +96,6 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_add_creator -> {
                 showCreator()

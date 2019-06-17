@@ -5,7 +5,7 @@ import android.arch.persistence.room.*
 
 @Dao
 interface AisDeviceDao {
-    @Query("SELECT * from AisDevice")
+    @Query("SELECT * FROM AisDevice")
     fun getAll(): LiveData<List<AisDeviceEntity>>
 
     @Query("SELECT * FROM AisDevice WHERE uid=:id")
