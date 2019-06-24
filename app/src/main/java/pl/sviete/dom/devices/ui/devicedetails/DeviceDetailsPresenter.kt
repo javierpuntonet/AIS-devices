@@ -8,10 +8,10 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.aiscontrollers.AisDeviceRestController
-import pl.sviete.dom.devices.db.AisDeviceEntity
-import pl.sviete.dom.devices.db.AisDeviceViewModel
+import pl.sviete.dom.devices.db.*
 import pl.sviete.dom.devices.mvp.BasePresenter
 import pl.sviete.dom.devices.netscanner.FoundDeviceRepository
+import pl.sviete.dom.devices.ui.areas.AreaViewModel
 
 class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: DeviceDetailsView.View)
     : BasePresenter<DeviceDetailsView.View, DeviceDetailsView.Presenter>(), DeviceDetailsView.Presenter {
@@ -27,9 +27,23 @@ class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: 
                 view.showView(mModel)
             }
         })
+        val areaVM = ViewModelProviders.of(activity).get(AreasViewModel::class.java)
+        areaVM.getAll().observe(activity, Observer { areas ->
+            val areasModel = mutableListOf<AreaViewModel>()
+            var selectedIdx = 0
+            var i = 0
+            areasModel.add(AreaViewModel(-1, ""))
+            areas?.forEach {
+                i += 1
+                areasModel.add(AreaViewModel(it.uid!!, it.name))
+                if (it.uid!! == mModel.areaId)
+                    selectedIdx = i
+            }
+            view.setAreas(areasModel, selectedIdx)
+        })
     }
 
-    override fun saveView(name: String, ip: String): Boolean{
+    override fun saveView(name: String, ip: String, area: AreaViewModel?): Boolean{
         var save = false
         var saveName = false
         if (!validate(name, ip)) return false
@@ -40,6 +54,10 @@ class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: 
         }
         if (mModel.ip != ip) {
             mModel.ip = ip
+            save = true
+        }
+        if (area?.id != mModel.areaId) {
+            mModel.areaId = area?.id
             save = true
         }
         if (save) {

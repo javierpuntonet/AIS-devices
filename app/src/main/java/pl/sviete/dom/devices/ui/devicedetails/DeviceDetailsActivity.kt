@@ -10,6 +10,9 @@ import java.lang.Exception
 import android.content.Intent
 import android.net.Uri
 import android.view.*
+import android.widget.ArrayAdapter
+import kotlinx.android.synthetic.main.fragment_creator_ap_data.*
+import pl.sviete.dom.devices.ui.areas.AreaViewModel
 
 class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
 
@@ -24,7 +27,10 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
             try {
                 progress_device_details.visibility = View.VISIBLE
                 clearError()
-                if (!presenter.saveView(txt_device_name.text.toString(), txt_device_ip.text.toString()))
+                var area = spinner_device_area.selectedItem as AreaViewModel?
+                if (area?.id == -1L)
+                    area = null
+                if (!presenter.saveView(txt_device_name.text.toString(), txt_device_ip.text.toString(), area))
                     progress_device_details.visibility = View.GONE
             }catch (e: Exception) {
                 progress_device_details.visibility = View.GONE
@@ -83,6 +89,12 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
         builder.setPositiveButton(R.string.ok) { _, _ -> }
         val dialog = builder.create()
         dialog.show()
+    }
+
+    override fun setAreas(areas: List<AreaViewModel>, selectedIdx: Int) {
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, areas)
+        spinner_device_area.adapter = adapter
+        spinner_device_area.setSelection(selectedIdx)
     }
 
     private fun clearError(){

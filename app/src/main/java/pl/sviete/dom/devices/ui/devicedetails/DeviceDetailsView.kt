@@ -3,6 +3,7 @@ package pl.sviete.dom.devices.ui.devicedetails
 import pl.sviete.dom.devices.db.AisDeviceEntity
 import pl.sviete.dom.devices.mvp.BaseView
 import pl.sviete.dom.devices.mvp.IPresenter
+import pl.sviete.dom.devices.ui.areas.AreaViewModel
 
 interface DeviceDetailsView {
     interface View : BaseView<Presenter> {
@@ -10,11 +11,12 @@ interface DeviceDetailsView {
         fun showNameValidationError(resId: Int)
         fun showIPValidationError(resId: Int)
         fun showSaveErrorInfo()
+        fun setAreas(areas: List<AreaViewModel>, selectedIdx: Int)
     }
 
     interface Presenter : IPresenter<View> {
         fun loadView(id: Long)
-        fun saveView(name: String, ip: String): Boolean
+        fun saveView(name: String, ip: String, area: AreaViewModel?): Boolean
         fun delete()
     }
 }
