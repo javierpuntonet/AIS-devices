@@ -21,6 +21,6 @@ class AreaRepository internal constructor(private val dao: AreaDao) {
 
     @WorkerThread
     fun delete(area: AreaEntity) {
-        dao.delete(area)
+        dao.deleteAndClear(area)
     }
 }

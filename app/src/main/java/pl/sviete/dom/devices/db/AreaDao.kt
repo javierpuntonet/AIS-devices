@@ -16,4 +16,13 @@ interface AreaDao {
 
     @Update
     fun update(vararg device: AreaEntity)
+
+    @Query("UPDATE AisDevice SET area_id = null WHERE area_id = :areaId")
+    fun clearArea(vararg areaId: Long)
+
+    @Transaction
+    fun deleteAndClear(area: AreaEntity){
+        clearArea(area.uid!!)
+        delete(area)
+    }
 }

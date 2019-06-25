@@ -4,8 +4,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.support.v4.app.FragmentActivity
 import kotlinx.coroutines.*
 import pl.sviete.dom.devices.aiscontrollers.AisDeviceRestController
-import pl.sviete.dom.devices.db.AreaEntity
-import pl.sviete.dom.devices.db.AreasViewModel
+import pl.sviete.dom.devices.db.*
 import pl.sviete.dom.devices.mvp.BasePresenter
 
 class AreaDetailsPresenter(val activity: FragmentActivity, override var view: AreaDetailsView.View)

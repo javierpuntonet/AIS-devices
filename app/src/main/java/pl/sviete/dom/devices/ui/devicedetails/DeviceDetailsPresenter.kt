@@ -17,29 +17,28 @@ class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: 
     : BasePresenter<DeviceDetailsView.View, DeviceDetailsView.Presenter>(), DeviceDetailsView.Presenter {
 
     private lateinit var mAisDeviceViewModel: AisDeviceViewModel
-    private lateinit var mModel: AisDeviceEntity
+    private var mModel: AisDeviceEntity? = null
+    private var mAreas: MutableList<AreaViewModel>? = null
+    private var mSelectedAreaIdx = 0
 
     override fun loadView(id: Long) {
         mAisDeviceViewModel = ViewModelProviders.of(activity).get(AisDeviceViewModel::class.java)
         mAisDeviceViewModel.getById(id).observe(activity, Observer { device ->
             if (device != null) {
                 mModel = device
-                view.showView(mModel)
+                loadView()
             }
         })
         val areaVM = ViewModelProviders.of(activity).get(AreasViewModel::class.java)
         areaVM.getAll().observe(activity, Observer { areas ->
-            val areasModel = mutableListOf<AreaViewModel>()
-            var selectedIdx = 0
-            var i = 0
-            areasModel.add(AreaViewModel(-1, ""))
-            areas?.forEach {
-                i += 1
-                areasModel.add(AreaViewModel(it.uid!!, it.name))
-                if (it.uid!! == mModel.areaId)
-                    selectedIdx = i
+            mAreas = mutableListOf()
+            mAreas?.let {
+                it.add(AreaViewModel(-1, ""))
+                areas?.forEach { a ->
+                    mAreas!!.add(AreaViewModel(a.uid!!, a.name))
+                }
+                loadView()
             }
-            view.setAreas(areasModel, selectedIdx)
         })
     }
 
@@ -47,41 +46,58 @@ class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: 
         var save = false
         var saveName = false
         if (!validate(name, ip)) return false
-        if (mModel.name != name) {
-            mModel.name = name
-            save = true
-            saveName = true
-        }
-        if (mModel.ip != ip) {
-            mModel.ip = ip
-            save = true
-        }
-        if (area?.id != mModel.areaId) {
-            mModel.areaId = area?.id
-            save = true
-        }
-        if (save) {
-            GlobalScope.launch(Dispatchers.Main) {
-                if (saveName) {
-                    save = AisDeviceRestController.setName(ip, name)
-                }
-                if (save) {
-                    mAisDeviceViewModel.update(mModel)
-                    activity.finish()
-                }
-                else {
-                    view.showSaveErrorInfo()
-                }
+        mModel?.let {
+            if (it.name != name) {
+                it.name = name
+                save = true
+                saveName = true
             }
-            return true
+            if (it.ip != ip) {
+                it.ip = ip
+                save = true
+            }
+            if (area?.id != it.areaId) {
+                it.areaId = area?.id
+                save = true
+            }
+            if (save) {
+                GlobalScope.launch(Dispatchers.Main) {
+                    if (saveName) {
+                        save = AisDeviceRestController.setName(ip, name)
+                    }
+                    if (save) {
+                        mAisDeviceViewModel.update(it)
+                        activity.finish()
+                    } else {
+                        view.showSaveErrorInfo()
+                    }
+                }
+                return true
+            } else {
+                activity.finish()
+            }
         }
         return false
     }
 
     override fun delete() {
-        mAisDeviceViewModel.delete(mModel)
-        FoundDeviceRepository.getInstance().deleteDevice(mModel.mac)
+        mAisDeviceViewModel.delete(mModel!!)
+        FoundDeviceRepository.getInstance().deleteDevice(mModel!!.mac)
         activity.finish()
+    }
+
+    private fun loadView(){
+        if (mModel != null && mAreas != null){
+            view.showView(mModel!!)
+
+            var i = 0
+            mAreas?.forEach {
+                if (it.id == mModel!!.areaId)
+                    mSelectedAreaIdx = i
+                i += 1
+            }
+            view.setAreas(mAreas!!, mSelectedAreaIdx)
+        }
     }
 
     private fun validate(name: String, ip: String) : Boolean {
