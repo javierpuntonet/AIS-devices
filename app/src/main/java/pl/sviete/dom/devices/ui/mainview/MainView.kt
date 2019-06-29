@@ -2,6 +2,7 @@ package pl.sviete.dom.devices.ui.mainview
 
 import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.mvp.*
+import pl.sviete.dom.devices.ui.areas.AreaViewModel
 
 interface MainView {
     interface View : BaseView<Presenter> {
@@ -9,6 +10,7 @@ interface MainView {
         fun showDetail(id: Long)
         fun showProgress()
         fun hideProgress()
+        fun refreshAreas(areas: List<AreaViewModel>)
     }
 
     interface Presenter : IPresenter<View> {
@@ -22,5 +24,6 @@ interface MainView {
         fun scanNetwork()
         fun resumeView()
         fun pauseView()
+        fun areaSelected(area: AreaViewModel)
     }
 }

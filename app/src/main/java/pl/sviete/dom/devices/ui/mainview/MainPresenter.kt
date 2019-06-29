@@ -1,8 +1,7 @@
 package pl.sviete.dom.devices.ui.mainview
 
 import android.Manifest
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import android.arch.lifecycle.*
 import android.content.pm.PackageManager
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentActivity
@@ -11,13 +10,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import pl.sviete.dom.devices.aiscontrollers.AisDeviceRestController
-import pl.sviete.dom.devices.db.AisDeviceEntity
-import pl.sviete.dom.devices.db.AisDeviceViewModel
+import pl.sviete.dom.devices.db.*
 import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.mvp.*
 import pl.sviete.dom.devices.netscanner.FoundDeviceModel
 import pl.sviete.dom.devices.netscanner.IScannerResult
 import pl.sviete.dom.devices.netscanner.Scanner
+import pl.sviete.dom.devices.ui.areas.AreaViewModel
+import android.arch.lifecycle.MutableLiveData
+
+
 
 class MainPresenter(val activity: FragmentActivity, override var view: MainView.View)
     : BasePresenter<MainView.View, MainView.Presenter>()
@@ -29,6 +31,14 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     private var mAisList = ArrayList<DeviceViewModel>()
     private val mScanner = Scanner(activity, this)
     private var mEntities = emptyList<AisDeviceEntity>()
+    private var mSelectedArea: AreaViewModel? = null
+    private val mutableLiveData = MutableLiveData<AreaViewModel>()
+    private var mFilteredDevices: LiveData<List<AisDeviceEntity>?> = Transformations.switchMap(mutableLiveData) {
+        if (mutableLiveData.value != null)
+            mAisDeviceViewModel.getByArea(mutableLiveData.value!!.id)
+        else
+            mAisDeviceViewModel.getByAreaIsEmpty()
+    }
 
     override fun loadView() {
         view.showProgress()
@@ -41,7 +51,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
             })
 
             mAisDeviceViewModel = ViewModelProviders.of(activity).get(AisDeviceViewModel::class.java)
-            mAisDeviceViewModel.getAll().observe(activity, Observer { devices ->
+            mFilteredDevices.observe(activity, Observer { devices ->
                 if (devices != null) {
                     mEntities = devices
                     refreshFromDB(devices)
@@ -52,6 +62,16 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
                         mScanner.add(it.ip!!, it.mac, false)
                     }
                 }
+            })
+
+            val areasViewModel = ViewModelProviders.of(activity).get(AreasViewModel::class.java)
+            areasViewModel.getAll().observe(activity, Observer {
+                val areas = mutableListOf<AreaViewModel>()
+                areas.add(AreaViewModel(-1, "      -"))
+                it?.forEach { a ->
+                    areas!!.add(AreaViewModel(a.uid!!, a.name))
+                }
+                view.refreshAreas(areas)
             })
         }
         finally {
@@ -65,6 +85,14 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
 
     override fun pauseView() {
         mScanner.stopBonjourScanner()
+    }
+
+    override fun areaSelected(area: AreaViewModel){
+        if (area.id != -1L)
+            mSelectedArea = area
+        else
+            mSelectedArea = null
+        mutableLiveData.value = mSelectedArea
     }
 
     override fun addNewDevice(name: String, mac: String, type: AisDeviceType){

@@ -27,6 +27,14 @@ class AisDeviceViewModel(application: Application) : AndroidViewModel(applicatio
         return repository.getById(id)
     }
 
+    fun getByArea(areaId: Long?): LiveData<List<AisDeviceEntity>>{
+        return repository.getByArea(areaId)
+    }
+
+    fun getByAreaIsEmpty(): LiveData<List<AisDeviceEntity>>{
+        return repository.getByAreaIsEmpty()
+    }
+
     fun insert(device: AisDeviceEntity) {
         scope.launch(Dispatchers.IO) {
             val result =

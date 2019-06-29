@@ -13,6 +13,14 @@ class AisDeviceRepository internal constructor(private val dao: AisDeviceDao) {
         return dao.getById(id)
     }
 
+    fun getByArea(areaId: Long?): LiveData<List<AisDeviceEntity>> {
+        return dao.getByArea(areaId)
+    }
+
+    fun getByAreaIsEmpty(): LiveData<List<AisDeviceEntity>> {
+        return dao.getByAreaIsEmpty()
+    }
+
     @WorkerThread
     fun insert(device: AisDeviceEntity): Long {
         return dao.insert(device)

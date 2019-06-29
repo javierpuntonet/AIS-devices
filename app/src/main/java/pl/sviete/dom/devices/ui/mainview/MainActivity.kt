@@ -1,4 +1,4 @@
-package pl.sviete.dom.devices
+package pl.sviete.dom.devices.ui.mainview
 
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -9,18 +9,23 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Intent
+import android.support.v4.content.ContextCompat
 import android.view.View
-import android.widget.Button
+import android.widget.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import pl.sviete.dom.devices.R
+import pl.sviete.dom.devices.SettingsActivity
 import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.ui.adddevicecreator.MainCreatorActivity
+import pl.sviete.dom.devices.ui.areas.AreaViewModel
 import pl.sviete.dom.devices.ui.areas.AreasActivity
 import pl.sviete.dom.devices.ui.devicedetails.DeviceDetailsActivity
-import pl.sviete.dom.devices.ui.mainview.*
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
+import android.widget.TextView
+
 
 class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNavigationItemSelectedListener {
 
@@ -37,7 +42,9 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         setSupportActionBar(toolbar)
 
         val toggle = ActionBarDrawerToggle(
-            this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+            this, drawer_layout, toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
         )
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
@@ -59,6 +66,18 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
             presenter.clearCache()
             presenter.loadView()
             main_swipe.isRefreshing = false
+        }
+
+        spinner_main_areas.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                (view as TextView).setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+                var area = spinner_main_areas.selectedItem as AreaViewModel?
+                if (area != null)
+                    presenter.areaSelected(area)
+            }
         }
     }
 
@@ -133,6 +152,11 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         }
         mAisAdapter.notifyDataSetChanged()
         showAddWelcomeButton()
+    }
+
+    override fun refreshAreas(areas: List<AreaViewModel>){
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, areas)
+        spinner_main_areas.adapter = adapter
     }
 
     override fun showDetail(id: Long) {

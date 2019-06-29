@@ -3,4 +3,5 @@
     <color name="colorPrimary">#333333</color>
     <color name="colorOrange">#f14f06</color>
     <color name="colorLightOrange">#FA8C49</color>
+    <color name="white">#FFFFFF</color>
 </resources>
