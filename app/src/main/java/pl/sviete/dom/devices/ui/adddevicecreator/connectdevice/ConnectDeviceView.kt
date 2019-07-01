@@ -9,7 +9,6 @@ interface ConnectDeviceView {
         fun onPairError(errorCode: AisDeviceConfigurator.ErrorCode)
         fun setIconForDevice(iconResourceId: Int)
         fun onStep(step: ConnectStep)
-        //fun onPairSuccess()
     }
 
     interface Presenter : IPresenter<View> {

@@ -19,8 +19,6 @@ import pl.sviete.dom.devices.netscanner.Scanner
 import pl.sviete.dom.devices.ui.areas.AreaViewModel
 import android.arch.lifecycle.MutableLiveData
 
-
-
 class MainPresenter(val activity: FragmentActivity, override var view: MainView.View)
     : BasePresenter<MainView.View, MainView.Presenter>()
     , MainView.Presenter
@@ -67,9 +65,9 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
             val areasViewModel = ViewModelProviders.of(activity).get(AreasViewModel::class.java)
             areasViewModel.getAll().observe(activity, Observer {
                 val areas = mutableListOf<AreaViewModel>()
-                areas.add(AreaViewModel(-1, "      -"))
+                areas.add(AreaViewModel(-1, "      brak      "))
                 it?.forEach { a ->
-                    areas!!.add(AreaViewModel(a.uid!!, a.name))
+                    areas.add(AreaViewModel(a.uid!!, a.name))
                 }
                 view.refreshAreas(areas)
             })

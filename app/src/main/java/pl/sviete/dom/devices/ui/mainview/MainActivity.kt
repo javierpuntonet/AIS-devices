@@ -26,7 +26,6 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import android.widget.TextView
 
-
 class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var mAisAdapter: MainGridAdapter
@@ -40,6 +39,7 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar,
@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 (view as TextView).setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
-                var area = spinner_main_areas.selectedItem as AreaViewModel?
+                val area = spinner_main_areas.selectedItem as AreaViewModel?
                 if (area != null)
                     presenter.areaSelected(area)
             }
