@@ -104,4 +104,7 @@
     <string name="u_have_new_device">Masz nowe urządzenie AIS</string>
     <string name="finish">Zakończ</string>
     <string name="creator_area_info">Na koniec możesz przypisać je do obszaru</string>
+    <string name="add">Dodaj</string>
+    <string name="cancel">Anuluj</string>
+    <string name="name_new_area">Podaj nazwę nowego obszaru:</string>
 </resources>

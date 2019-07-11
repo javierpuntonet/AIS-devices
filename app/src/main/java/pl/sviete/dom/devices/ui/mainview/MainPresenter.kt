@@ -93,10 +93,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
         mutableLiveData.value = mSelectedArea
     }
 
-    override fun addNewDevice(name: String, mac: String, type: AisDeviceType){
-        val newDevice = AisDeviceEntity(null, name, mac, null, type.value)
-        mAisDeviceViewModel.insert(newDevice)
-    }
+
 
     override fun scanNetwork() {
         view.showProgress()

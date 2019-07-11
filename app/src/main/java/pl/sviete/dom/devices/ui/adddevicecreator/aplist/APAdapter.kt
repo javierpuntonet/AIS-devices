@@ -1,4 +1,4 @@
-package pl.sviete.dom.devices.ui.adddevicecreator
+package pl.sviete.dom.devices.ui.adddevicecreator.aplist
 
 import android.content.Context
 import android.graphics.Typeface
@@ -16,7 +16,13 @@ import android.text.style.StyleSpan
 class APAdapter (val items : ArrayList<AccessPointInfo>, val context: Context, val listener: OnItemClickListener) : RecyclerView.Adapter<ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_ap_list, parent, false))
+        return ViewHolder(
+            LayoutInflater.from(context).inflate(
+                R.layout.item_ap_list,
+                parent,
+                false
+            )
+        )
     }
 
     override fun getItemCount(): Int {

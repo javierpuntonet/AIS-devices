@@ -32,6 +32,11 @@ class AisDeviceRepository internal constructor(private val dao: AisDeviceDao) {
     }
 
     @WorkerThread
+    fun updateArea(deviceId: Long, areaId: Long) {
+        dao.updateArea(deviceId, areaId)
+    }
+
+    @WorkerThread
     fun delete(device: AisDeviceEntity) {
         dao.delete(device)
     }

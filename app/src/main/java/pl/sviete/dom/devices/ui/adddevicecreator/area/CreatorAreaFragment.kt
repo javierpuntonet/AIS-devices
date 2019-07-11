@@ -1,105 +1,116 @@
 package pl.sviete.dom.devices.ui.adddevicecreator.area
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import kotlinx.android.synthetic.main.fragment_creator_area.*
 import pl.sviete.dom.devices.R
+import pl.sviete.dom.devices.helpers.AisDeviceHelper
+import pl.sviete.dom.devices.models.AisDeviceType
+import android.text.InputType
+import android.widget.EditText
+import android.app.AlertDialog
+import android.widget.ArrayAdapter
+import pl.sviete.dom.devices.ui.areas.AreaViewModel
+import android.view.KeyEvent.KEYCODE_BACK
+import android.view.*
 
+private const val ARG_NAME = "NAME"
+private const val ARG_TYPE = "TYPE"
+private const val ARG_ID = "ID"
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [CreatorAreaFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [CreatorAreaFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class CreatorAreaFragment : Fragment(), CreatorAreaView.View {
-
     override val presenter: CreatorAreaView.Presenter = CreatorAreaPresenter(this, this)
 
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    private var listener: OnFragmentInteractionListener? = null
+    private var mDeviceName: String? = null
+    private var mDeivceType: AisDeviceType? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            mDeviceName = it.getString(ARG_NAME)
+            mDeivceType = AisDeviceType.fromInt(it.getInt(ARG_TYPE))
+            presenter.storeInitData(it.getLong(ARG_ID))
         }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        txt_dev_name_creator_area.text = mDeviceName
+        img_dev_type_creator_area.setImageResource(AisDeviceHelper.getResourceForType(mDeivceType))
+
+        btn_finish_creator_area.setOnClickListener {
+            presenter.finishClick(spinner_area_creator.selectedItem as AreaViewModel)
+        }
+
+        btn_add_area_creator.setOnClickListener {
+            addArea()
+        }
+
+        view!!.run {
+            setFocusableInTouchMode(true)
+            requestFocus()
+            setOnKeyListener { _, keyCode, _ ->
+                activity!!.finish()
+                (keyCode == KEYCODE_BACK)
+            }
+        }
+        presenter.loadView()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_creator_area, container, false)
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
+        presenter.attach(context as CreatorAreaView.OnFinishCreatorArea)
     }
 
     override fun onDetach() {
         super.onDetach()
-        listener = null
+        presenter.detach()
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
+    override fun refreshAreas(areas: List<AreaViewModel>, selectArea: Long) {
+        val adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_dropdown_item, areas)
+        spinner_area_creator.adapter = adapter
+        selectArea(selectArea)
+    }
+
+    override fun selectArea(selectArea: Long) {
+        val position = (spinner_area_creator.adapter as ArrayAdapter<AreaViewModel>).getPosition(AreaViewModel(selectArea, ""))
+        spinner_area_creator.setSelection(position)
+    }
+
+    private fun addArea(){
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle(R.string.name_new_area)
+        val input = EditText(context)
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        builder.setView(input)
+        builder.setPositiveButton(R.string.add) { _, _ ->
+            run {
+                val areaName = input.text.toString()
+                if (areaName.isNotEmpty())
+                    presenter.addArea(areaName)
+            }}
+        builder.setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+        builder.show()
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CreatorAreaFragment.
-         */
-        // TODO: Rename and change types and number of parameters
+
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(deviceId: Long, deviceName: String, deviceType: AisDeviceType) =
             CreatorAreaFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putLong(ARG_ID, deviceId)
+                    putString(ARG_NAME, deviceName)
+                    putInt(ARG_TYPE, deviceType.value)
                 }
             }
     }

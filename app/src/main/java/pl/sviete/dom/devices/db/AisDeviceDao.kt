@@ -28,4 +28,7 @@ interface AisDeviceDao {
 
     @Update
     fun update(vararg device: AisDeviceEntity)
+
+    @Query("UPDATE AisDevice SET area_id = :areaId WHERE uid = :deviceId")
+    fun updateArea(deviceId: Long, areaId: Long)
 }

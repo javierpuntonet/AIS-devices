@@ -1,4 +1,4 @@
-package pl.sviete.dom.devices.ui.adddevicecreator
+package pl.sviete.dom.devices.ui.adddevicecreator.aplist
 
 import android.content.Context
 import android.os.Bundle
@@ -12,13 +12,13 @@ import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.net.WiFiScanner
 import kotlinx.android.synthetic.main.fragment_creator_aplist_.*
 import pl.sviete.dom.devices.net.models.AccessPointInfo
+import pl.sviete.dom.devices.ui.adddevicecreator.MainCreatorView
 import java.util.*
-
 
 class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
 
     private var mApSelectedListener: OnAPSelectedListener? = null
-    private var mProgressBarManager: ProgressBarManager? = null
+    private var mProgressBarManager: MainCreatorView.ProgressBarManager? = null
     private var mWifi: WiFiScanner? = null
     private var mAisAdapter: APAdapter? = null
     private val mAisList = ArrayList<AccessPointInfo>()
@@ -41,12 +41,15 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
         mWifi = WiFiScanner(context!!)
 
         rv_ap_list.layoutManager = LinearLayoutManager(context)
-        mAisAdapter = APAdapter(mAisList, context!!, object : APAdapter.OnItemClickListener {
-            override fun onItemClick(item: AccessPointInfo) {
-                mWifi?.stopScan()
-                mApSelectedListener?.onAPSelected(item, mAPList)
-            }
-        })
+        mAisAdapter = APAdapter(
+            mAisList,
+            context!!,
+            object : APAdapter.OnItemClickListener {
+                override fun onItemClick(item: AccessPointInfo) {
+                    mWifi?.stopScan()
+                    mApSelectedListener?.onAPSelected(item, mAPList)
+                }
+            })
         rv_ap_list.adapter = mAisAdapter
 
         ap_swipe.setOnRefreshListener {
@@ -63,14 +66,14 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
     override fun onStop() {
         super.onStop()
         mWifi!!.stopScan()
-        mProgressBarManager!!.hide()
+        mProgressBarManager!!.hideProgressBar()
     }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context is OnAPSelectedListener)
             mApSelectedListener = context
-        if (context is ProgressBarManager)
+        if (context is MainCreatorView.ProgressBarManager)
             mProgressBarManager = context
     }
 
@@ -83,7 +86,7 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
             Log.e("AplistCreatorFragment","onScanResults", ex)
         }
         finally {
-            mProgressBarManager!!.hide()
+            mProgressBarManager!!.hideProgressBar()
         }
     }
 
@@ -99,7 +102,7 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
     }
 
     private fun refreshAPList() {
-        mProgressBarManager!!.show()
+        mProgressBarManager!!.showProgressBar()
         mWifi!!.startScan(this)
     }
 }

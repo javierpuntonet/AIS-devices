@@ -12,6 +12,7 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_creator_connect.*
 import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.aiscontrollers.AisDeviceConfigurator
+import pl.sviete.dom.devices.models.AisDeviceType
 
 private const val ARG_DEVICE_NAME = "device_name"
 private const val ARG_DEVICE_SSID = "device_ssid"
@@ -23,8 +24,6 @@ class ConnectDeviceFragment : Fragment(), ConnectDeviceView.View  {
     override val presenter: ConnectDeviceView.Presenter = ConnectDevicePresenter(this, this)
 
     private var mDeviceName: String? = null
-
-    private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +39,6 @@ class ConnectDeviceFragment : Fragment(), ConnectDeviceView.View  {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         txt_connect_device_name.text = mDeviceName!!
     }
 
@@ -51,18 +49,9 @@ class ConnectDeviceFragment : Fragment(), ConnectDeviceView.View  {
         return inflater.inflate(R.layout.fragment_creator_connect, container, false)
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            //throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
+        presenter.attach(context as ConnectDeviceView.OnConnectDevice)
     }
 
     override fun onStop() {
@@ -72,7 +61,7 @@ class ConnectDeviceFragment : Fragment(), ConnectDeviceView.View  {
 
     override fun onDetach() {
         super.onDetach()
-        listener = null
+        presenter.detach()
     }
 
     override fun onPairError(errorCode: AisDeviceConfigurator.ErrorCode) {
@@ -109,21 +98,7 @@ class ConnectDeviceFragment : Fragment(), ConnectDeviceView.View  {
         return ""
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
-    }
+
 
     companion object {
         @JvmStatic

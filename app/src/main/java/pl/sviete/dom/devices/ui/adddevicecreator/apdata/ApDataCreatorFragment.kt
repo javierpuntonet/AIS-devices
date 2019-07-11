@@ -1,4 +1,4 @@
-package pl.sviete.dom.devices.ui.adddevicecreator
+package pl.sviete.dom.devices.ui.adddevicecreator.apdata
 
 import android.content.Context
 import android.os.Bundle

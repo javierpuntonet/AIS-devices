@@ -1,4 +1,4 @@
-package pl.sviete.dom.devices.ui.adddevicecreator
+package pl.sviete.dom.devices.ui.adddevicecreator.startcreator
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -9,10 +9,6 @@ import kotlinx.android.synthetic.main.fragment_creator_start.*
 import pl.sviete.dom.devices.R
 import android.content.Context
 
-
-/**
- * A placeholder fragment containing a simple view.
- */
 class StartCreatorFragment : Fragment() {
     private var mNextStepCallback: OnNextStepListener? = null
 
@@ -42,16 +38,6 @@ class StartCreatorFragment : Fragment() {
     }
 
     companion object {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private val ARG_SECTION_NUMBER = "section_number"
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
         fun newInstance(): StartCreatorFragment {
             return StartCreatorFragment()
         }

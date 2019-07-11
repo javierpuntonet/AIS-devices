@@ -1,7 +1,6 @@
 package pl.sviete.dom.devices.ui.adddevicecreator.connectdevice
 
 import android.arch.lifecycle.Observer
-import android.content.Intent
 import android.support.v4.app.Fragment
 import pl.sviete.dom.devices.aiscontrollers.AisDeviceConfigurator
 import pl.sviete.dom.devices.helpers.AisDeviceHelper
@@ -9,7 +8,6 @@ import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.mvp.BasePresenter
 import pl.sviete.dom.devices.netscanner.IScannerResult
 import pl.sviete.dom.devices.netscanner.Scanner
-import pl.sviete.dom.devices.ui.adddevicecreator.*
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -17,6 +15,7 @@ class ConnectDevicePresenter(private val fragment: Fragment, override var view: 
     : BasePresenter<ConnectDeviceView.View, ConnectDeviceView.Presenter>(), ConnectDeviceView.Presenter
     , AisDeviceConfigurator.OnConfigurationProgressListener, IScannerResult{
 
+    private var mListener: ConnectDeviceView.OnConnectDevice? = null
     private var mAisCtrl: AisDeviceConfigurator? = null
     private var mScanner: Scanner? = null
     private var mNewDeviceName: String? = null
@@ -37,7 +36,10 @@ class ConnectDevicePresenter(private val fragment: Fragment, override var view: 
         mScanner!!.repository.devices.observe(fragment.activity!!, Observer {
             mScanner?.repository?.getFoundedDevices()?.forEach {
                 if (it.mac == mNewDeviceMAC){
-                    finishCreator()
+                    mTimer.cancel()
+                    mScanner?.stopBonjourScanner()
+                    mScanner!!.repository.devices.removeObservers(fragment.activity!!)
+                    mListener!!.onConnectDeviceSuccess(mNewDeviceType!!, mNewDeviceMAC!!)
                 }
             }
         })
@@ -65,35 +67,31 @@ class ConnectDevicePresenter(private val fragment: Fragment, override var view: 
 
                 mTimer.schedule(15000){
                     view.onPairError(AisDeviceConfigurator.ErrorCode.TIMEOUT)
-                    fragment.fragmentManager?.popBackStack()
+                    mListener!!.onConnectDeviceFaild()
                 }
             }
 
             mScanner!!.runBonjourScanner()
         }
         else{
+            //test
+            //mListener!!.onConnectDeviceSuccess(AisDeviceType.Socket, "AA:BB:CC:DD:EE")
             view.onPairError(result.errorCode)
-            fragment.fragmentManager?.popBackStack()
+            mListener!!.onConnectDeviceFaild()
         }
+    }
+
+    override fun attach(listener: ConnectDeviceView.OnConnectDevice) {
+        mListener = listener
+    }
+
+    override fun detach() {
+        mListener = null
     }
 
     override fun ipScanFinished() {
 
     }
 
-    private fun finishCreator(){
-        mTimer.cancel()
-        mScanner?.stopBonjourScanner()
-        mScanner!!.repository.devices.removeObservers(fragment.activity!!)
-        val activity = fragment.activity!!
-        val intentResult = Intent()
-        intentResult.putExtra(MainCreatorActivity.RESULT_NAME, mNewDeviceName)
-        intentResult.putExtra(MainCreatorActivity.RESULT_MAC, mNewDeviceMAC)
-        intentResult.putExtra(MainCreatorActivity.RESULT_TYPE, mNewDeviceType)
-        activity.setResult(MainCreatorActivity.CREATOR_REQUEST_CODE, intentResult)
 
-        activity.runOnUiThread {
-            fragment.activity?.finish()
-        }
-    }
 }

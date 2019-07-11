@@ -136,12 +136,12 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == MainCreatorActivity.CREATOR_REQUEST_CODE){
-            data?.let {
+            /*data?.let {
                 val name = it.getStringExtra(MainCreatorActivity.RESULT_NAME)
                 val mac = it.getStringExtra(MainCreatorActivity.RESULT_MAC)
                 val type = it.getSerializableExtra(MainCreatorActivity.RESULT_TYPE) as AisDeviceType
                 presenter.addNewDevice(name, mac, type)
-            }
+            }*/
         }
     }
 

@@ -4,7 +4,5 @@ interface IPresenter<T> {
 
     fun stop()
 
-
-
     var view: T
 }

@@ -14,4 +14,10 @@ data class AreaViewModel(
     override fun toString(): String {
         return name
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is AreaViewModel)
+            return id == other.id
+        return false
+    }
 }

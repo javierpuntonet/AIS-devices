@@ -54,6 +54,10 @@ class AisDeviceViewModel(application: Application) : AndroidViewModel(applicatio
         repository.update(device)
     }
 
+    fun updateArea(deviceId: Long, areaId: Long) = scope.launch(Dispatchers.IO) {
+        repository.updateArea(deviceId, areaId)
+    }
+
     fun delete(device: AisDeviceEntity) = scope.launch(Dispatchers.IO) {
         repository.delete(device)
     }
