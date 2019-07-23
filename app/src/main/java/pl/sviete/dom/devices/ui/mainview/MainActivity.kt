@@ -133,18 +133,6 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         return false
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == MainCreatorActivity.CREATOR_REQUEST_CODE){
-            /*data?.let {
-                val name = it.getStringExtra(MainCreatorActivity.RESULT_NAME)
-                val mac = it.getStringExtra(MainCreatorActivity.RESULT_MAC)
-                val type = it.getSerializableExtra(MainCreatorActivity.RESULT_TYPE) as AisDeviceType
-                presenter.addNewDevice(name, mac, type)
-            }*/
-        }
-    }
-
     override fun refreshData(devices: List<DeviceViewModel>?) {
         devices?.let {
             mAisList.clear()
@@ -194,7 +182,7 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
 
     private fun showCreator() {
         val intent = Intent(this, MainCreatorActivity::class.java)
-        startActivityForResult(intent, MainCreatorActivity.CREATOR_REQUEST_CODE)
+        startActivity(intent)
     }
 
     private fun showAddWelcomeButton() {

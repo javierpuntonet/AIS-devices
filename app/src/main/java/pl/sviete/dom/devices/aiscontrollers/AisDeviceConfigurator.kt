@@ -122,7 +122,13 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
         }
         else {
             try {
-                val deviceStatus = AisDeviceRestController.getStatus(AisDeviceRestController.AP_IP)
+                var deviceStatus = AisDeviceRestController.getStatus(AisDeviceRestController.AP_IP)
+                //try again
+                if (deviceStatus == null)
+                    deviceStatus = AisDeviceRestController.getStatus(AisDeviceRestController.AP_IP)
+                //cant get device status then return false
+                if (deviceStatus == null)
+                    return Pair(false, null)
                 val result = AisDeviceRestController.setupNew(mFriendlyName!!, mAPName!!, mAPPassword!!)
                 if (result){
                     return Pair(true, deviceStatus)

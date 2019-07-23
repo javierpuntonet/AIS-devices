@@ -17,7 +17,6 @@ interface MainView {
         fun loadView()
         fun clearCache()
         fun checkPermissions()
-        //fun addNewDevice(name: String, mac: String, type: AisDeviceType)
         fun checkPermissionsGranted(requestCode: Int, grantResults: IntArray)
         fun showDeviceDetail(device: DeviceViewModel)
         fun toggleDeviceState(device: DeviceViewModel)

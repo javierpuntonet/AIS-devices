@@ -1,6 +1,5 @@
 package pl.sviete.dom.devices.ui.adddevicecreator
 
-import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -14,7 +13,6 @@ import pl.sviete.dom.devices.ui.adddevicecreator.area.CreatorAreaView
 import pl.sviete.dom.devices.ui.adddevicecreator.connectdevice.ConnectDeviceView
 import pl.sviete.dom.devices.ui.adddevicecreator.namecreator.NameCreatorFragment
 import pl.sviete.dom.devices.ui.adddevicecreator.startcreator.StartCreatorFragment
-
 
 class MainCreatorActivity : AppCompatActivity(), MainCreatorView.View
                             , MainCreatorView.ProgressBarManager
@@ -109,21 +107,9 @@ class MainCreatorActivity : AppCompatActivity(), MainCreatorView.View
     }
 
     override fun finishCreator(){
-        val intentResult = Intent()
-        //intentResult.putExtra(MainCreatorActivity.RESULT_NAME, mNewDeviceName)
-        //intentResult.putExtra(MainCreatorActivity.RESULT_MAC, mNewDeviceMAC)
-       // intentResult.putExtra(MainCreatorActivity.RESULT_TYPE, mNewDeviceType)
-        setResult(MainCreatorActivity.CREATOR_REQUEST_CODE, intentResult)
         runOnUiThread {
             finish()
         }
-    }
-
-    companion object {
-        const val CREATOR_REQUEST_CODE = 111
-        const val RESULT_TYPE = "type"
-        const val RESULT_NAME = "name"
-        const val RESULT_MAC = "mac"
     }
 }
 

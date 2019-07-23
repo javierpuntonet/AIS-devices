@@ -30,13 +30,6 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     private val mScanner = Scanner(activity, this)
     private var mEntities = emptyList<AisDeviceEntity>()
     private var mSelectedArea: AreaViewModel? = null
-    private val mutableLiveData = MutableLiveData<AreaViewModel>()
-    private var mFilteredDevices: LiveData<List<AisDeviceEntity>?> = Transformations.switchMap(mutableLiveData) {
-        if (mutableLiveData.value != null)
-            mAisDeviceViewModel.getByArea(mutableLiveData.value!!.id)
-        else
-            mAisDeviceViewModel.getByAreaIsEmpty()
-    }
 
     override fun loadView() {
         view.showProgress()
@@ -49,7 +42,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
             })
 
             mAisDeviceViewModel = ViewModelProviders.of(activity).get(AisDeviceViewModel::class.java)
-            mFilteredDevices.observe(activity, Observer { devices ->
+            mAisDeviceViewModel.getAll().observe(activity, Observer { devices ->
                 if (devices != null) {
                     mEntities = devices
                     refreshFromDB(devices)
@@ -65,7 +58,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
             val areasViewModel = ViewModelProviders.of(activity).get(AreasViewModel::class.java)
             areasViewModel.getAll().observe(activity, Observer {
                 val areas = mutableListOf<AreaViewModel>()
-                areas.add(AreaViewModel(-1, "      brak      "))
+                areas.add(AreaViewModel(AreaViewModel.EMPTY, "      brak      "))
                 it?.forEach { a ->
                     areas.add(AreaViewModel(a.uid!!, a.name))
                 }
@@ -86,14 +79,15 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     }
 
     override fun areaSelected(area: AreaViewModel){
-        if (area.id != -1L)
+        if (!area.isEmpty)
             mSelectedArea = area
         else
             mSelectedArea = null
-        mutableLiveData.value = mSelectedArea
+
+        refreshFromDB(mEntities)
+        refreshStatuses()
+        view.refreshData(mAisList)
     }
-
-
 
     override fun scanNetwork() {
         view.showProgress()
@@ -159,13 +153,17 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     }
 
     private fun refreshFromDB(entities: List<AisDeviceEntity>) {
+        //clear actual list from elements from DB
         val toRemove = mAisList.filter { x -> !x.isFounded }
         mAisList.removeAll(toRemove)
+        //add again to list
         entities.forEach {
-            val device = DeviceViewModel(it.uid!!, it.name, it.ip, it.mac)
-            if (it.type != null)
-                device.type = AisDeviceType.fromInt(it.type!!)
-            mAisList.add(device)
+            if (it.areaId == mSelectedArea?.id) {
+                val device = DeviceViewModel(it.uid!!, it.name, it.ip, it.mac)
+                if (it.type != null)
+                    device.type = AisDeviceType.fromInt(it.type!!)
+                mAisList.add(device)
+            }
         }
     }
 

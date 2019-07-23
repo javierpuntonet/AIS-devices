@@ -41,7 +41,7 @@ class CreatorAreaFragment : Fragment(), CreatorAreaView.View {
 
         btn_finish_creator_area.setOnClickListener {
             var area = spinner_area_creator.selectedItem as AreaViewModel?
-            if (area?.id == -1L)
+            if (area?.isEmpty == true)
                 area = null
             presenter.finishClick(area)
         }
