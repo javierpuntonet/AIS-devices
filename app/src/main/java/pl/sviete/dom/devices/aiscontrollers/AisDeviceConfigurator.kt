@@ -94,7 +94,7 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
                 mHandlerTimeout.removeCallbacksAndMessages(timeout)
 
                 listener.onConnectedToDevice()
-                val connectStatus = connectAndConfiguraDevice()
+                val connectStatus = connectAndConfigureDevice()
                 if (connectStatus.first) {
                     result = true
                     deviceStatus = connectStatus.second
@@ -114,7 +114,7 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
         }
     }
 
-    private suspend fun connectAndConfiguraDevice(): Pair<Boolean, Status?> {
+    private suspend fun connectAndConfigureDevice(): Pair<Boolean, Status?> {
         // check if we have correct connection if not then exit
         val networkId = mWiFiScanner.getCurrentNetworkId()
         if (networkId != mDeviceNetworkId) {

@@ -40,7 +40,10 @@ class CreatorAreaFragment : Fragment(), CreatorAreaView.View {
         img_dev_type_creator_area.setImageResource(AisDeviceHelper.getResourceForType(mDeivceType))
 
         btn_finish_creator_area.setOnClickListener {
-            presenter.finishClick(spinner_area_creator.selectedItem as AreaViewModel)
+            var area = spinner_area_creator.selectedItem as AreaViewModel?
+            if (area?.id == -1L)
+                area = null
+            presenter.finishClick(area)
         }
 
         btn_add_area_creator.setOnClickListener {
