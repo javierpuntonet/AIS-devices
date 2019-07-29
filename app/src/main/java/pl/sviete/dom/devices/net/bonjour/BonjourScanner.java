@@ -11,7 +11,8 @@ import pl.sviete.dom.devices.AisDevicesApplication;
 public class BonjourScanner {
 
     private Rx2Dnssd mRxDnssd;
-    private Disposable mDisposable;
+    private Disposable mDevicesDisposable;
+    private Disposable mBoxDisposable;
     private IBonjourResult mResult;
 
     public BonjourScanner(Context context, IBonjourResult result){
@@ -19,27 +20,48 @@ public class BonjourScanner {
         mResult = result;
     }
 
-    public void startDiscovery() {
-        mDisposable = mRxDnssd.browse("_http._tcp", "local.")
+    public void startDiscoveryDevice() {
+        mDevicesDisposable = mRxDnssd.browse("_http._tcp", "local.")
                 .compose(mRxDnssd.resolve())
                 .compose(mRxDnssd.queryIPRecords())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bonjourService -> {
                     if (!bonjourService.isLost()) {
-                        mResult.onFound(bonjourService);
+                        mResult.onDeviceFound(bonjourService);
                     }
                     //else {
                         //mResult.onLost(bonjourService);
                     //}
                 }, s -> {
-                    Log.e("DNSSD", "Error: ", s);
+                    Log.e("startDiscoveryDevice", "Error: ", s);
                 });
     }
 
-    public void stopDiscovery() {
-        if (mDisposable != null) {
-            mDisposable.dispose();
+    public void stopDiscoveryDevice() {
+        if (mDevicesDisposable != null) {
+            mDevicesDisposable.dispose();
+        }
+    }
+
+    public void startDiscoveryBox() {
+        mBoxDisposable = mRxDnssd.browse("_ais-dom._tcp", "local.")
+                .compose(mRxDnssd.resolve())
+                .compose(mRxDnssd.queryIPRecords())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(bonjourService -> {
+                    if (!bonjourService.isLost()) {
+                        mResult.onBoxFound(bonjourService);
+                    }
+                }, s -> {
+                    Log.e("startDiscoveryBox", "Error: ", s);
+                });
+    }
+
+    public void stopDiscoveryBox() {
+        if (mBoxDisposable != null) {
+            mBoxDisposable.dispose();
         }
     }
 }

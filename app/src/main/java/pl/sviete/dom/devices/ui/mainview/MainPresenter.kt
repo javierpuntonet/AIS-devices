@@ -17,7 +17,6 @@ import pl.sviete.dom.devices.netscanner.FoundDeviceModel
 import pl.sviete.dom.devices.netscanner.IScannerResult
 import pl.sviete.dom.devices.netscanner.Scanner
 import pl.sviete.dom.devices.ui.areas.AreaViewModel
-import android.arch.lifecycle.MutableLiveData
 
 class MainPresenter(val activity: FragmentActivity, override var view: MainView.View)
     : BasePresenter<MainView.View, MainView.Presenter>()
@@ -50,7 +49,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
                     refreshFounded(mScanner.repository.getFoundedDevices())
                     view.refreshData(mAisList)
                     devices.filter { x -> !x.ip.isNullOrEmpty() }.forEach {
-                        mScanner.add(it.ip!!, it.mac, false)
+                        mScanner.addDevice(it.ip!!, it.mac, false)
                     }
                 }
             })

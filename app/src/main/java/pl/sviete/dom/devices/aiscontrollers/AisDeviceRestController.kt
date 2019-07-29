@@ -13,7 +13,7 @@ class AisDeviceRestController {
         private val tag = AisDeviceRestController::class.java.simpleName
 
         suspend fun getPowerStatus(ip: String): PowerStatus? {
-            val service = AisFactory.makeSocketService(ip)
+            val service = AisFactory.makeDeviceService(ip)
             val request = service.getPowerStatus()
             try {
                 val response = request.await()
@@ -25,7 +25,7 @@ class AisDeviceRestController {
         }
 
         suspend fun toggleStatus(ip: String): PowerStatus? {
-            val service = AisFactory.makeSocketService(ip)
+            val service = AisFactory.makeDeviceService(ip)
             val request = service.toggleStatus()
             try {
                 val response = request.await()
@@ -37,7 +37,7 @@ class AisDeviceRestController {
         }
 
          suspend fun setupNew(name: String, ssid: String, password: String): Boolean{
-            val service = AisFactory.makeSocketService(AP_IP)
+            val service = AisFactory.makeDeviceService(AP_IP)
             val query = "Backlog FriendlyName1 $name; SSId1 $ssid; Password1 $password"//URLEncoder.encode("Backlog FriendlyName1 $name; SSId1 $ssid; Password1 $password","UTF-8")
             val request = service.setup(query)
             try {
@@ -50,7 +50,7 @@ class AisDeviceRestController {
         }
 
         suspend fun setName(ip: String, name: String): Boolean{
-            val service = AisFactory.makeSocketService(ip)
+            val service = AisFactory.makeDeviceService(ip)
             val query = "FriendlyName $name"
             val request = service.setName(query)
             try {
@@ -63,7 +63,7 @@ class AisDeviceRestController {
         }
 
         suspend fun getType(ip: String): AisDeviceType? {
-            val service = AisFactory.makeSocketService(ip)
+            val service = AisFactory.makeDeviceService(ip)
             val request = service.getStatus()
             try {
                 val response = request.await()
@@ -75,7 +75,7 @@ class AisDeviceRestController {
         }
 
         suspend fun getStatus(ip: String): Status? {
-            val service = AisFactory.makeSocketService(ip)
+            val service = AisFactory.makeDeviceService(ip)
             val request = service.getStatus()
             try {
                 return request.await()

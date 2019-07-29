@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import pl.sviete.dom.devices.aiscontrollers.AisDeviceRestController
+import pl.sviete.dom.devices.aiscontrollers.BoxRestController
 import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
 import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.net.bonjour.BonjourScanner
@@ -26,14 +27,14 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
     fun runBonjourScanner(){
         if (mBonjour == null)
             mBonjour = BonjourScanner(context, this)
-        mBonjour!!.startDiscovery()
+        mBonjour!!.startDiscoveryDevice()
     }
 
     fun stopBonjourScanner(){
-        mBonjour?.stopDiscovery()
+        mBonjour?.stopDiscoveryDevice()
     }
 
-    fun add(ip: String, mac: String?, founded: Boolean){
+    fun addDevice(ip: String, mac: String?, founded: Boolean){
         FoundDeviceRepository.getInstance().add(ip, mac, founded)
         refreshDeviceStatus(ip)
     }
@@ -44,7 +45,7 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
     }
 
     private fun refreshDeviceStatus(ip: String){
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.IO) {
             try {
                 val status = AisDeviceRestController.getStatus(ip)
                 if (status != null) {
@@ -63,10 +64,30 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
         }
     }
 
-    override fun onFound(service: BonjourService?) {
+    override fun onDeviceFound(service: BonjourService?) {
         val ip = service?.inet4Address?.hostAddress
         if (ip != null) {
-            add(ip, null, true)
+            addDevice(ip, null, true)
+        }
+    }
+
+    override fun onBoxFound(service: BonjourService?) {
+        val ip = service?.inet4Address?.hostAddress
+        if (ip != null) {
+            getBoxInfo(ip)
+        }
+    }
+
+    private fun getBoxInfo(ip: String){
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                val info = BoxRestController.getInfo(ip)
+                if (info != null) {
+                    FoundBoxRepository.getInstance().add(info.Hostname, info.gate_id)
+                }
+            } finally {
+
+            }
         }
     }
 
@@ -81,7 +102,7 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
 
     override fun processFinish(h: Host?, i: AtomicInteger?) {
         if (h != null) {
-            add(h.ip, null,true)
+            addDevice(h.ip, null,true)
         }
     }
 }

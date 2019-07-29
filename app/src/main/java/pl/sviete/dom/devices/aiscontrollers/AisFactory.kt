@@ -9,7 +9,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 object AisFactory {
 
-    fun makeSocketService(ip: String): AisSocketService {
+    fun makeDeviceService(ip: String): AisSocketService {
         val gson = GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
             .create()
@@ -20,5 +20,17 @@ object AisFactory {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build().create(AisSocketService::class.java)
+    }
+
+    fun makeBoxService(ip: String): BoxService {
+        val gson = GsonBuilder()
+            .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+            .create()
+
+        return Retrofit.Builder()
+            .baseUrl("http://$ip")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
+            .build().create(BoxService::class.java)
     }
 }
