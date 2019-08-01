@@ -21,14 +21,14 @@ class FoundBoxRepository {
     private val mLock = ReentrantLock()
     private val coll = mutableListOf<BoxModel>()
     private var map = Collections.synchronizedList(coll)
-    val boxes = MutableLiveData<List<BoxModel>>()
+    val liveData = MutableLiveData<List<BoxModel>>()
 
-    fun add(name: String, gateId: String){
+    fun add(name: String, gateId: String, ip: String){
         mLock.withLock {
             val dev = map.firstOrNull { x -> x.gateId == gateId}
             if (dev == null) {
-                map.add(BoxModel(name, gateId))
-                boxes.postValue(coll)
+                map.add(BoxModel(name, gateId, ip))
+                liveData.postValue(coll)
             }
         }
     }

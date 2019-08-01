@@ -22,20 +22,21 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
     private val mWifi = Wireless(context)
     private var mBonjour: BonjourScanner? = null
 
-    val repository : FoundDeviceRepository get() = FoundDeviceRepository.getInstance()
+    val devices : FoundDeviceRepository get() = FoundDeviceRepository.getInstance()
+    val boxes : FoundBoxRepository get() = FoundBoxRepository.getInstance()
 
-    fun runBonjourScanner(){
+    fun runBonjourDeviceScanner(){
         if (mBonjour == null)
             mBonjour = BonjourScanner(context, this)
         mBonjour!!.startDiscoveryDevice()
     }
 
-    fun stopBonjourScanner(){
+    fun stopBonjourDeviceScanner(){
         mBonjour?.stopDiscoveryDevice()
     }
 
     fun addDevice(ip: String, mac: String?, founded: Boolean){
-        FoundDeviceRepository.getInstance().add(ip, mac, founded)
+        devices.add(ip, mac, founded)
         refreshDeviceStatus(ip)
     }
 
@@ -49,14 +50,14 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
             try {
                 val status = AisDeviceRestController.getStatus(ip)
                 if (status != null) {
-                    FoundDeviceRepository.getInstance().setAisDevice(ip,
+                    devices.setAisDevice(ip,
                         status.StatusNET.Mac,
                         status.Status.FriendlyName.first(),
                         AisDeviceType.fromInt(status.Status.Module),
                         if (status.Status.Power == 0)  PowerStatus.Off else PowerStatus.On)
                 }
                 else {
-                    FoundDeviceRepository.getInstance().setNonAisDevice(ip)
+                    devices.setNonAisDevice(ip)
                 }
             } finally {
 
@@ -83,7 +84,7 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
             try {
                 val info = BoxRestController.getInfo(ip)
                 if (info != null) {
-                    FoundBoxRepository.getInstance().add(info.Hostname, info.gate_id)
+                    boxes.add(info.Hostname, info.GateId, ip)
                 }
             } finally {
 

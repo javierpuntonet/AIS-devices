@@ -23,7 +23,7 @@ class FoundDeviceRepository {
     private val mLock = ReentrantLock()
     private val coll = mutableListOf<FoundDeviceModel>()
     private var map = Collections.synchronizedList(coll)
-    val devices = MutableLiveData<List<FoundDeviceModel>>()
+    val liveData = MutableLiveData<List<FoundDeviceModel>>()
 
     fun add(ip: String, mac: String?, founded: Boolean): Boolean{
         mLock.withLock {
@@ -50,7 +50,7 @@ class FoundDeviceRepository {
             device.type = type
             device.status = status
             device.mac = mac
-            devices.postValue(coll)
+            liveData.postValue(coll)
         }
     }
 
@@ -58,7 +58,7 @@ class FoundDeviceRepository {
         val device = map.firstOrNull { x -> x.ip == ip }
         if (device != null) {
             device.isAisDevice = false
-            devices.postValue(coll)
+            liveData.postValue(coll)
         }
     }
 
@@ -66,7 +66,7 @@ class FoundDeviceRepository {
         val device = map.firstOrNull { x -> x.mac?.toUpperCase() == mac.toUpperCase() }
         if (device != null) {
             device.status = status
-            devices.postValue(coll)
+            liveData.postValue(coll)
         }
     }
 

@@ -28,7 +28,7 @@ object AisFactory {
             .create()
 
         return Retrofit.Builder()
-            .baseUrl("http://$ip")
+            .baseUrl("http://$ip:8122")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build().create(BoxService::class.java)

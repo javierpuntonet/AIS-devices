@@ -12,7 +12,6 @@ public class BonjourScanner {
 
     private Rx2Dnssd mRxDnssd;
     private Disposable mDevicesDisposable;
-    private Disposable mBoxDisposable;
     private IBonjourResult mResult;
 
     public BonjourScanner(Context context, IBonjourResult result){
@@ -28,11 +27,11 @@ public class BonjourScanner {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bonjourService -> {
                     if (!bonjourService.isLost()) {
-                        mResult.onDeviceFound(bonjourService);
+                        if (bonjourService.getServiceName().equals("ais-dom"))
+                            mResult.onBoxFound(bonjourService);
+                        else
+                            mResult.onDeviceFound(bonjourService);
                     }
-                    //else {
-                        //mResult.onLost(bonjourService);
-                    //}
                 }, s -> {
                     Log.e("startDiscoveryDevice", "Error: ", s);
                 });
@@ -41,27 +40,6 @@ public class BonjourScanner {
     public void stopDiscoveryDevice() {
         if (mDevicesDisposable != null) {
             mDevicesDisposable.dispose();
-        }
-    }
-
-    public void startDiscoveryBox() {
-        mBoxDisposable = mRxDnssd.browse("_ais-dom._tcp", "local.")
-                .compose(mRxDnssd.resolve())
-                .compose(mRxDnssd.queryIPRecords())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(bonjourService -> {
-                    if (!bonjourService.isLost()) {
-                        mResult.onBoxFound(bonjourService);
-                    }
-                }, s -> {
-                    Log.e("startDiscoveryBox", "Error: ", s);
-                });
-    }
-
-    public void stopDiscoveryBox() {
-        if (mBoxDisposable != null) {
-            mBoxDisposable.dispose();
         }
     }
 }

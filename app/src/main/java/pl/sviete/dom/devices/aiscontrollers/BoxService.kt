@@ -5,6 +5,6 @@ import pl.sviete.dom.devices.aiscontrollers.models.BoxInfo
 import retrofit2.http.*
 
 interface BoxService {
-    @GET("")
+    @GET(".")
     fun getInfo(): Deferred<BoxInfo>
 }

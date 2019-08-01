@@ -1,6 +1,10 @@
 package pl.sviete.dom.devices.aiscontrollers.models
 
+import com.google.gson.annotations.SerializedName
+
 data class BoxInfo (
+    @SerializedName("Hostname")
     val Hostname: String,
-    val gate_id: String
+    @SerializedName("gate_id")
+    val GateId: String
 )

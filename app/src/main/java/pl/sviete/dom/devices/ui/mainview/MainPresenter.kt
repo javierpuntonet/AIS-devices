@@ -10,12 +10,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import pl.sviete.dom.devices.aiscontrollers.AisDeviceRestController
+import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
 import pl.sviete.dom.devices.db.*
 import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.mvp.*
-import pl.sviete.dom.devices.netscanner.FoundDeviceModel
-import pl.sviete.dom.devices.netscanner.IScannerResult
-import pl.sviete.dom.devices.netscanner.Scanner
+import pl.sviete.dom.devices.netscanner.*
 import pl.sviete.dom.devices.ui.areas.AreaViewModel
 
 class MainPresenter(val activity: FragmentActivity, override var view: MainView.View)
@@ -33,11 +32,18 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     override fun loadView() {
         view.showProgress()
         try {
-            mScanner.repository.devices.observe(activity, Observer {
+            mScanner.devices.liveData.observe(activity, Observer {
                 refreshStatuses()
-                refreshFounded(mScanner.repository.getFoundedDevices())
-                refreshIps(mScanner.repository.getDevicesWithMAC())
+                refreshFoundedDevices(mScanner.devices.getFoundedDevices())
+                refreshIps(mScanner.devices.getDevicesWithMAC())
                 view.refreshData(mAisList)
+            })
+
+            mScanner.boxes.liveData.observe(activity, Observer {
+                if (it != null) {
+                    refreshFoundedBoxes(it)
+                    view.refreshData(mAisList)
+                }
             })
 
             mAisDeviceViewModel = ViewModelProviders.of(activity).get(AisDeviceViewModel::class.java)
@@ -46,7 +52,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
                     mEntities = devices
                     refreshFromDB(devices)
                     refreshStatuses()
-                    refreshFounded(mScanner.repository.getFoundedDevices())
+                    refreshFoundedDevices(mScanner.devices.getFoundedDevices())
                     view.refreshData(mAisList)
                     devices.filter { x -> !x.ip.isNullOrEmpty() }.forEach {
                         mScanner.addDevice(it.ip!!, it.mac, false)
@@ -70,11 +76,11 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     }
 
     override fun resumeView() {
-        mScanner.runBonjourScanner()
+        mScanner.runBonjourDeviceScanner()
     }
 
     override fun pauseView() {
-        mScanner.stopBonjourScanner()
+        mScanner.stopBonjourDeviceScanner()
     }
 
     override fun areaSelected(area: AreaViewModel){
@@ -112,7 +118,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
                 if (id != null && id > 0)
                     view.showDetail(id)
             })
-            mScanner.repository.deleteDevice(device.mac)
+            mScanner.devices.deleteDevice(device.mac)
             val newDevice = AisDeviceEntity(null, device.name, device.mac, device.ip, device.type?.value)
             mAisDeviceViewModel.insert(newDevice)
         }
@@ -126,16 +132,16 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
             GlobalScope.launch(Dispatchers.Main) {
                 val status = AisDeviceRestController.toggleStatus(device.ip)
                 if (status != null) {
-                    mScanner.repository.setStatus(device.mac, status)
+                    mScanner.devices.setStatus(device.mac, status)
                 }
             }
         }
     }
 
     override fun clearCache() {
-        mScanner.repository.clear()
-        mScanner.stopBonjourScanner()
-        mScanner.runBonjourScanner()
+        mScanner.devices.clear()
+        mScanner.stopBonjourDeviceScanner()
+        mScanner.runBonjourDeviceScanner()
     }
 
     override fun checkPermissions() {
@@ -167,16 +173,24 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     }
 
     private fun refreshStatuses(){
-        mAisList.forEach {
-            it.status = mScanner.repository.getStatus(it.mac)
+        mAisList.filter { x -> x.type != AisDeviceType.Box }.forEach {
+            it.status = mScanner.devices.getStatus(it.mac)
         }
     }
 
-    private fun refreshFounded(list: List<FoundDeviceModel>){
-        val toRemove = mAisList.filter { x -> x.isFounded }
+    private fun refreshFoundedDevices(list: List<FoundDeviceModel>){
+        val toRemove = mAisList.filter { x -> x.type != AisDeviceType.Box && x.isFounded }
         mAisList.removeAll(toRemove)
         list.forEach {
             mAisList.add(DeviceViewModel(it.name!!, it.ip, it.mac!!, it.status!!, it.type, true))
+        }
+    }
+
+    private fun refreshFoundedBoxes(list: List<BoxModel>){
+        val toRemove = mAisList.filter { x -> x.type == AisDeviceType.Box && x.isFounded }
+        mAisList.removeAll(toRemove)
+        list.forEach {
+            mAisList.add(DeviceViewModel(it.name, it.ip, "-NONE-", PowerStatus.On, AisDeviceType.Box, true))
         }
     }
 
