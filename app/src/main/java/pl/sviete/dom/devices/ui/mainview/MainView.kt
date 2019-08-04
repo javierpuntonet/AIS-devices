@@ -19,7 +19,7 @@ interface MainView {
         fun checkPermissions()
         fun checkPermissionsGranted(requestCode: Int, grantResults: IntArray)
         fun showDeviceDetail(device: DeviceViewModel)
-        fun toggleDeviceState(device: DeviceViewModel)
+        fun deviceClick(device: DeviceViewModel)
         fun scanNetwork()
         fun resumeView()
         fun pauseView()

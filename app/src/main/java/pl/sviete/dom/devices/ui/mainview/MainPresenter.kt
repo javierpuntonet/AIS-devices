@@ -2,7 +2,9 @@ package pl.sviete.dom.devices.ui.mainview
 
 import android.Manifest
 import android.arch.lifecycle.*
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
@@ -16,6 +18,9 @@ import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.mvp.*
 import pl.sviete.dom.devices.netscanner.*
 import pl.sviete.dom.devices.ui.areas.AreaViewModel
+import android.support.v4.content.ContextCompat.startActivity
+
+
 
 class MainPresenter(val activity: FragmentActivity, override var view: MainView.View)
     : BasePresenter<MainView.View, MainView.Presenter>()
@@ -41,7 +46,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
 
             mScanner.boxes.liveData.observe(activity, Observer {
                 if (it != null) {
-                    refreshFoundedBoxes(it)
+                    refreshFoundedBoxes(it.filter { x -> x.founded })
                     view.refreshData(mAisList)
                 }
             })
@@ -55,7 +60,10 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
                     refreshFoundedDevices(mScanner.devices.getFoundedDevices())
                     view.refreshData(mAisList)
                     devices.filter { x -> !x.ip.isNullOrEmpty() }.forEach {
-                        mScanner.addDevice(it.ip!!, it.mac, false)
+                        if (it.type != null && it.type!! == AisDeviceType.Box.value)
+                            mScanner.addBox(it.ip!!, it.mac, it.name)
+                        else
+                            mScanner.addDevice(it.ip!!, it.mac, false)
                     }
                 }
             })
@@ -118,7 +126,10 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
                 if (id != null && id > 0)
                     view.showDetail(id)
             })
-            mScanner.devices.deleteDevice(device.mac)
+            if (device.type == AisDeviceType.Box)
+                mScanner.boxes.deleteDevice(device.mac)
+            else
+                mScanner.devices.deleteDevice(device.mac)
             val newDevice = AisDeviceEntity(null, device.name, device.mac, device.ip, device.type?.value)
             mAisDeviceViewModel.insert(newDevice)
         }
@@ -127,12 +138,18 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
         }
     }
 
-    override fun toggleDeviceState(device: DeviceViewModel) {
+    override fun deviceClick(device: DeviceViewModel) {
         if (!device.ip.isNullOrEmpty()) {
-            GlobalScope.launch(Dispatchers.Main) {
-                val status = AisDeviceRestController.toggleStatus(device.ip)
-                if (status != null) {
-                    mScanner.devices.setStatus(device.mac, status)
+            if (device.type == AisDeviceType.Box){
+                val url = "http://${device.ip}:8180"
+                activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            }
+            else {
+                GlobalScope.launch(Dispatchers.Main) {
+                    val status = AisDeviceRestController.toggleStatus(device.ip)
+                    if (status != null) {
+                        mScanner.devices.setStatus(device.mac, status)
+                    }
                 }
             }
         }
@@ -173,8 +190,11 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     }
 
     private fun refreshStatuses(){
-        mAisList.filter { x -> x.type != AisDeviceType.Box }.forEach {
-            it.status = mScanner.devices.getStatus(it.mac)
+        mAisList.forEach {
+            it.status = if (it.type == AisDeviceType.Box)
+                mScanner.boxes.getStatus(it.mac)
+            else
+                mScanner.devices.getStatus(it.mac)
         }
     }
 
@@ -190,7 +210,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
         val toRemove = mAisList.filter { x -> x.type == AisDeviceType.Box && x.isFounded }
         mAisList.removeAll(toRemove)
         list.forEach {
-            mAisList.add(DeviceViewModel(it.name, it.ip, "-NONE-", PowerStatus.On, AisDeviceType.Box, true))
+            mAisList.add(DeviceViewModel(it.name, it.ip, it.gateId, PowerStatus.On, AisDeviceType.Box, true))
         }
     }
 

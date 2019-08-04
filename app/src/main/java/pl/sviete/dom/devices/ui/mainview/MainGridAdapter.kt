@@ -8,7 +8,6 @@ import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
 import android.widget.TextView
 import pl.sviete.dom.devices.helpers.AisDeviceHelper
-import pl.sviete.dom.devices.models.AisDeviceType
 
 class MainGridAdapter (
     private val mDevices: ArrayList<DeviceViewModel>,
@@ -47,7 +46,7 @@ class MainGridAdapter (
         }
 
         view!!.setOnClickListener {
-            presenter.toggleDeviceState(device)
+            presenter.deviceClick(device)
         }
 
         holder.detailsButton!!.setImageResource(getResourceForFounded(device.isFounded))
@@ -56,12 +55,12 @@ class MainGridAdapter (
         }
 
         holder.imageView!!.setOnClickListener {
-            presenter.toggleDeviceState(device)
+            presenter.deviceClick(device)
         }
 
         holder.nameText!!.text = device.name
         holder.nameText!!.setOnClickListener {
-            presenter.toggleDeviceState(device)
+            presenter.deviceClick(device)
         }
 
         view.setBackgroundResource(getResourceForStatus(device.status))

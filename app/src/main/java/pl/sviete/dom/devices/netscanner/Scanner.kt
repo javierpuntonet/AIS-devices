@@ -72,6 +72,10 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
         }
     }
 
+    fun addBox(ip: String, gateId: String, name: String){
+        boxes.add(name,  gateId, ip, false)
+    }
+
     override fun onBoxFound(service: BonjourService?) {
         val ip = service?.inet4Address?.hostAddress
         if (ip != null) {
@@ -84,7 +88,7 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
             try {
                 val info = BoxRestController.getInfo(ip)
                 if (info != null) {
-                    boxes.add(info.Hostname, info.GateId, ip)
+                    boxes.add(info.Hostname, info.GateId, ip, true)
                 }
             } finally {
 
