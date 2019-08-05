@@ -18,9 +18,6 @@ import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.mvp.*
 import pl.sviete.dom.devices.netscanner.*
 import pl.sviete.dom.devices.ui.areas.AreaViewModel
-import android.support.v4.content.ContextCompat.startActivity
-
-
 
 class MainPresenter(val activity: FragmentActivity, override var view: MainView.View)
     : BasePresenter<MainView.View, MainView.Presenter>()
@@ -40,13 +37,16 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
             mScanner.devices.liveData.observe(activity, Observer {
                 refreshStatuses()
                 refreshFoundedDevices(mScanner.devices.getFoundedDevices())
-                refreshIps(mScanner.devices.getDevicesWithMAC())
+                refreshDeviceIps(mScanner.devices.getDevicesWithMAC())
+                refreshStatuses()
                 view.refreshData(mAisList)
             })
 
             mScanner.boxes.liveData.observe(activity, Observer {
                 if (it != null) {
                     refreshFoundedBoxes(it.filter { x -> x.founded })
+                    refreshBoxIps(mScanner.boxes.getFoundBox())
+                    refreshStatuses()
                     view.refreshData(mAisList)
                 }
             })
@@ -214,13 +214,24 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
         }
     }
 
-    private fun refreshIps(list: List<FoundDeviceModel>){
+    private fun refreshDeviceIps(list: List<FoundDeviceModel>){
         if (list.count() == 0) return
         mEntities.forEach {
             val founded = list.firstOrNull { x -> x.mac?.toUpperCase() == it.mac.toUpperCase() }
             if (founded != null && founded.ip != it.ip){
                 it.ip = founded.ip
                 mAisDeviceViewModel.update(it)
+            }
+        }
+    }
+
+    private fun refreshBoxIps(list: List<BoxModel>){
+        if (list.count() == 0) return
+        list.forEach {
+            val founded = mEntities.firstOrNull { x -> x.type == AisDeviceType.Box.value && x.mac.toUpperCase() == it.gateId.toUpperCase() }
+            if (founded != null && founded.ip != it.ip){
+                founded.ip = it.ip
+                mAisDeviceViewModel.update(founded)
             }
         }
     }

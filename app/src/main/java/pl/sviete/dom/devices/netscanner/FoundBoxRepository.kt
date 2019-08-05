@@ -28,8 +28,15 @@ class FoundBoxRepository {
         mLock.withLock {
             val dev = map.firstOrNull { x -> x.gateId == gateId }
             if (dev == null) {
-                map.add(BoxModel(name, gateId, ip, founded))
-                liveData.postValue(coll)
+                map.add(BoxModel(name, gateId, ip, founded, if (founded) PowerStatus.On else PowerStatus.Off))
+                if (founded)
+                    liveData.postValue(coll)
+            }
+            else {
+                if (dev.status == PowerStatus.Off) {
+                    dev.status = if (founded) PowerStatus.On else PowerStatus.Off
+                    liveData.postValue(coll)
+                }
             }
         }
     }
@@ -41,7 +48,11 @@ class FoundBoxRepository {
     }
 
     fun getStatus(mac: String) : PowerStatus {
-        val device = map.firstOrNull { x -> x.gateId?.toUpperCase() == mac.toUpperCase() }
-        return if (device?.founded == false) PowerStatus.On else PowerStatus.Off
+        val device = map.firstOrNull { x -> x.gateId.toUpperCase() == mac.toUpperCase() }
+        return device?.status ?: PowerStatus.Off
+    }
+
+    fun getFoundBox(): List<BoxModel> {
+        return map.filter { x -> x.founded }
     }
 }
