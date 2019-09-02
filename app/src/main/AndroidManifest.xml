@@ -49,6 +49,10 @@
             android:name=".ui.devicedetails.DeviceDetailsActivity"
             android:parentActivityName=".ui.mainview.MainActivity"
             android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.boxdetails.BoxDetailsActivity"
+            android:parentActivityName=".ui.mainview.MainActivity"
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

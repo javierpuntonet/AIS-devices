@@ -51,7 +51,7 @@ class MainGridAdapter (
 
         holder.detailsButton!!.setImageResource(getResourceForFounded(device.isFounded))
         holder.detailsButton!!.setOnClickListener {
-            presenter.showDeviceDetail(device)
+            presenter.showDeviceDetails(device)
         }
 
         holder.imageView!!.setOnClickListener {

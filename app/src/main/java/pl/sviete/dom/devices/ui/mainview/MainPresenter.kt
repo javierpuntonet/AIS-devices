@@ -120,11 +120,11 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
         }
     }
 
-    override fun showDeviceDetail(device: DeviceViewModel) {
+    override fun showDeviceDetails(device: DeviceViewModel) {
         if (device.isFounded) {
             mAisDeviceViewModel.insertionId.observe(activity, Observer { id ->
                 if (id != null && id > 0)
-                    view.showDetail(id)
+                    view.showDetail(id, device.type)
             })
             if (device.type == AisDeviceType.Box)
                 mScanner.boxes.deleteDevice(device.mac)
@@ -134,7 +134,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
             mAisDeviceViewModel.insert(newDevice)
         }
         else {
-            view.showDetail(device.uid!!)
+            view.showDetail(device.uid!!, device.type)
         }
     }
 

@@ -25,6 +25,7 @@ import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import android.widget.TextView
+import pl.sviete.dom.devices.ui.details.DetailsFabric
 
 class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNavigationItemSelectedListener {
 
@@ -147,11 +148,8 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         spinner_main_areas.adapter = adapter
     }
 
-    override fun showDetail(id: Long) {
-        val intent = Intent(this, DeviceDetailsActivity::class.java).apply {
-            putExtra(DeviceDetailsActivity.ARG_DEVICE_ITEM_ID, id)
-        }
-        startActivity(intent)
+    override fun showDetail(id: Long, type: AisDeviceType?) {
+        DetailsFabric.openDetialsView(this, id, type)
     }
 
     override fun showProgress() {
