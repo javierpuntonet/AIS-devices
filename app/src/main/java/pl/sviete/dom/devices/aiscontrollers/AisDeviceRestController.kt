@@ -84,5 +84,18 @@ class AisDeviceRestController {
             }
             return null
         }
+
+        suspend fun pairWithBox(ip: String, boxId: String): Boolean{
+            val service = AisFactory.makeDeviceService(ip)
+            val query = "Backlog SetOption3 1; MqttHost $boxId"
+            val request = service.pairBox(query)
+            try {
+                request.await()
+                return true
+            } catch (e: Exception) {
+                Log.e(tag, "pairWithBox", e)
+            }
+            return false
+        }
     }
 }

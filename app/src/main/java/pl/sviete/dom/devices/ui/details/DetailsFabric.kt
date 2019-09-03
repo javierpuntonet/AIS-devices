@@ -13,7 +13,7 @@ class DetailsFabric {
             {
                 AisDeviceType.Box ->
                     Intent(context, BoxDetailsActivity::class.java).apply {
-                        putExtra(BoxDetailsActivity.ARG_DEVICE_ITEM_ID, id)
+                        putExtra(BoxDetailsActivity.ARG_BOX_ITEM_ID, id)
                     }
                 else ->
                     Intent(context, DeviceDetailsActivity::class.java).apply {

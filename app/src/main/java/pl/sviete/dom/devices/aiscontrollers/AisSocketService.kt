@@ -20,4 +20,7 @@ interface AisSocketService {
 
     @GET("/cm")
     fun setName(@Query("cmnd") cmnd: String): Deferred<Name>
+
+    @GET("/cm")
+    fun pairBox(@Query("cmnd") cmnd: String): Deferred<ResponseBody>
 }

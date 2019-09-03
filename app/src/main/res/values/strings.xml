@@ -107,4 +107,7 @@
     <string name="add">Dodaj</string>
     <string name="cancel">Anuluj</string>
     <string name="name_new_area">Podaj nazwę nowego obszaru:</string>
+    <string name="pair_with_box">Parowanie z bramką</string>
+    <string name="no_boxes_to_pair">Brak dostępnych bramek do parowania</string>
+    <string name="pair_success">Sparowano</string>
 </resources>

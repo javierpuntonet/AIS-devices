@@ -5,4 +5,7 @@
     <item
         android:id="@+id/menu_open_device_website"
         android:title="@string/device_website" />
+    <item
+        android:id="@+id/menu_pair_device_with_box"
+        android:title="@string/pair_with_box" />
 </menu>

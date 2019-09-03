@@ -12,11 +12,14 @@ interface DeviceDetailsView {
         fun showIPValidationError(resId: Int)
         fun showSaveErrorInfo()
         fun setAreas(areas: List<AreaViewModel>, selectedIdx: Int)
+        fun showNoBoxesMessage()
+        fun pairSuccess()
     }
 
     interface Presenter : IPresenter<View> {
         fun loadView(id: Long)
         fun saveView(name: String, ip: String, area: AreaViewModel?): Boolean
         fun delete()
+        fun pairWithBox()
     }
 }

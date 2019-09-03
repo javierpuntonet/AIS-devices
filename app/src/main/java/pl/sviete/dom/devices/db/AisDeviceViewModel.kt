@@ -19,7 +19,7 @@ class AisDeviceViewModel(application: Application) : AndroidViewModel(applicatio
         repository = AisDeviceRepository(dao)
     }
 
-    fun  getAll():LiveData<List<AisDeviceEntity>>{
+    fun getAll():LiveData<List<AisDeviceEntity>>{
         return  repository.getAll()
     }
 
@@ -27,12 +27,8 @@ class AisDeviceViewModel(application: Application) : AndroidViewModel(applicatio
         return repository.getById(id)
     }
 
-    fun getByArea(areaId: Long?): LiveData<List<AisDeviceEntity>>{
-        return repository.getByArea(areaId)
-    }
-
-    fun getByAreaIsEmpty(): LiveData<List<AisDeviceEntity>>{
-        return repository.getByAreaIsEmpty()
+    fun getBoxes(): LiveData<List<AisDeviceEntity>>{
+        return repository.getBoxes()
     }
 
     fun insert(device: AisDeviceEntity) {

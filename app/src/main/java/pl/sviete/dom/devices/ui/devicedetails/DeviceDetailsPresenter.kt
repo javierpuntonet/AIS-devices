@@ -86,6 +86,21 @@ class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: 
         activity.finish()
     }
 
+    override fun pairWithBox() {
+        mAisDeviceViewModel.getBoxes().observe(activity, Observer { boxes ->
+            if (boxes != null && boxes.count() > 0) {
+                GlobalScope.launch(Dispatchers.Main) {
+                    if (AisDeviceRestController.pairWithBox(mModel!!.ip!!, "")) {
+                        view.pairSuccess()
+                    }
+                }
+            }
+            else{
+                view.showNoBoxesMessage()
+            }
+        })
+    }
+
     private fun loadView(){
         if (mModel != null && mAreas != null){
             view.showView(mModel!!)

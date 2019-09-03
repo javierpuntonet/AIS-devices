@@ -2,6 +2,7 @@ package pl.sviete.dom.devices.db
 
 import android.arch.lifecycle.LiveData
 import android.support.annotation.WorkerThread
+import pl.sviete.dom.devices.models.AisDeviceType
 
 class AisDeviceRepository internal constructor(private val dao: AisDeviceDao) {
 
@@ -13,12 +14,8 @@ class AisDeviceRepository internal constructor(private val dao: AisDeviceDao) {
         return dao.getById(id)
     }
 
-    fun getByArea(areaId: Long?): LiveData<List<AisDeviceEntity>> {
-        return dao.getByArea(areaId)
-    }
-
-    fun getByAreaIsEmpty(): LiveData<List<AisDeviceEntity>> {
-        return dao.getByAreaIsEmpty()
+    fun getBoxes(): LiveData<List<AisDeviceEntity>> {
+        return dao.getByType(AisDeviceType.Box.value)
     }
 
     @WorkerThread

@@ -2,6 +2,7 @@ package pl.sviete.dom.devices.db
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
+import pl.sviete.dom.devices.models.AisDeviceType
 
 @Dao
 interface AisDeviceDao {
@@ -11,11 +12,8 @@ interface AisDeviceDao {
     @Query("SELECT * FROM AisDevice WHERE uid=:id")
     fun getById(id: Long): LiveData<AisDeviceEntity>
 
-    @Query("SELECT * FROM AisDevice WHERE area_id=:areaId")
-    fun getByArea(areaId: Long?): LiveData<List<AisDeviceEntity>>
-
-    @Query("SELECT * FROM AisDevice WHERE area_id is null")
-    fun getByAreaIsEmpty(): LiveData<List<AisDeviceEntity>>
+    @Query("SELECT * FROM AisDevice WHERE type=:type")
+    fun getByType(type: Int): LiveData<List<AisDeviceEntity>>
 
     @Query("SELECT count(*) from AisDevice")
     fun getCount(): Int

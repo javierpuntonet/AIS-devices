@@ -56,6 +56,10 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
                 openDeviceWebSite()
                 return true
             }
+            R.id.menu_pair_device_with_box -> {
+                presenter.pairWithBox()
+                return true
+            }
             else -> return super.onOptionsItemSelected(item)
         }
     }
@@ -63,14 +67,6 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
     override fun showView(device: AisDeviceEntity) {
         txt_device_name.setText(device.name)
         txt_device_ip.setText(device.ip)
-    }
-
-    private fun deleteDevice() {
-        val builder = AlertDialog.Builder(this)
-        builder.setMessage(R.string.delete_device_question)
-        builder.setPositiveButton(R.string.delete){_, _ -> presenter.delete() }
-        builder.setNegativeButton(R.string.no){_, _ -> }
-        builder.create().show()
     }
 
     override fun showNameValidationError(resId: Int) {
@@ -96,6 +92,31 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
         spinner_device_area.adapter = adapter
         spinner_device_area.setSelection(selectedIdx)
     }
+
+    override fun showNoBoxesMessage() {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage(R.string.no_boxes_to_pair)
+        builder.setPositiveButton(R.string.ok) { _, _ -> }
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    override fun pairSuccess() {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage(R.string.pair_success)
+        builder.setPositiveButton(R.string.ok) { _, _ -> }
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun deleteDevice() {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage(R.string.delete_device_question)
+        builder.setPositiveButton(R.string.delete){_, _ -> presenter.delete() }
+        builder.setNegativeButton(R.string.no){_, _ -> }
+        builder.create().show()
+    }
+
 
     private fun clearError(){
         txt_device_name.error = null
