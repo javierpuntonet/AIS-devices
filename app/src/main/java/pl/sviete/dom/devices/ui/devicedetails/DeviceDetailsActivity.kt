@@ -11,8 +11,8 @@ import android.content.Intent
 import android.net.Uri
 import android.view.*
 import android.widget.ArrayAdapter
-import kotlinx.android.synthetic.main.fragment_creator_ap_data.*
 import pl.sviete.dom.devices.ui.areas.AreaViewModel
+import android.content.DialogInterface
 
 class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
 
@@ -57,7 +57,7 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
                 return true
             }
             R.id.menu_pair_device_with_box -> {
-                presenter.pairWithBox()
+                presenter.initPairWithBox()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -101,12 +101,24 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
         dialog.show()
     }
 
-    override fun pairSuccess() {
+    override fun showPairStatus(success: Boolean) {
         val builder = AlertDialog.Builder(this)
-        builder.setMessage(R.string.pair_success)
+        if (success)
+            builder.setMessage(R.string.pair_success)
+        else
+            builder.setMessage(R.string.pair_error)
         builder.setPositiveButton(R.string.ok) { _, _ -> }
         val dialog = builder.create()
         dialog.show()
+    }
+
+    override fun selectBoxToPair(boxes: List<BoxVM>) {
+        AlertDialog
+            .Builder(this)
+            .setItems(boxes.map { x -> x.name }.toTypedArray()) { _, which ->
+                presenter.pairWithBox(boxes[which].id)
+            }
+            .show()
     }
 
     private fun deleteDevice() {

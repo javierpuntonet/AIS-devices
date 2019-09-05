@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.aiscontrollers.AisDeviceRestController
 import pl.sviete.dom.devices.db.*
+import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.mvp.BasePresenter
 import pl.sviete.dom.devices.netscanner.FoundDeviceRepository
 import pl.sviete.dom.devices.ui.areas.AreaViewModel
@@ -86,19 +87,22 @@ class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: 
         activity.finish()
     }
 
-    override fun pairWithBox() {
+    override fun initPairWithBox() {
         mAisDeviceViewModel.getBoxes().observe(activity, Observer { boxes ->
             if (boxes != null && boxes.count() > 0) {
-                GlobalScope.launch(Dispatchers.Main) {
-                    if (AisDeviceRestController.pairWithBox(mModel!!.ip!!, "")) {
-                        view.pairSuccess()
-                    }
-                }
+                view.selectBoxToPair(boxes.map { x -> BoxVM(x.name, x.mac) })
             }
             else{
                 view.showNoBoxesMessage()
             }
         })
+    }
+
+    override fun pairWithBox(boxId: String) {
+        GlobalScope.launch(Dispatchers.Main) {
+            val success = AisDeviceRestController.pairWithBox(mModel!!.ip!!, boxId)
+            view.showPairStatus(success)
+        }
     }
 
     private fun loadView(){

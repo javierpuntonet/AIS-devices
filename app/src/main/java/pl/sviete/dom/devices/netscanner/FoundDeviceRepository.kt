@@ -63,7 +63,7 @@ class FoundDeviceRepository {
     }
 
     fun setStatus(mac: String, status: PowerStatus) {
-        val device = map.firstOrNull { x -> x.mac?.toUpperCase() == mac.toUpperCase() }
+        val device = map.firstOrNull { x -> mac.equals(x.mac, true) }
         if (device != null) {
             device.status = status
             liveData.postValue(coll)
@@ -71,7 +71,7 @@ class FoundDeviceRepository {
     }
 
     fun getStatus(mac: String) : PowerStatus {
-        val device = map.firstOrNull { x -> x.mac?.toUpperCase() == mac.toUpperCase() }
+        val device = map.firstOrNull { x -> mac.equals(x.mac, true) }
         return device?.status ?: PowerStatus.Unknown
     }
 
@@ -84,7 +84,7 @@ class FoundDeviceRepository {
     }
 
     fun deleteDevice(mac: String){
-        val device = map.firstOrNull { x -> x.mac?.toUpperCase() == mac.toUpperCase() }
+        val device = map.firstOrNull { x -> mac.equals(x.mac, true) }
         if (device != null)
             map.remove(device)
     }

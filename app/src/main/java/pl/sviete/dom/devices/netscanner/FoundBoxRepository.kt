@@ -41,18 +41,18 @@ class FoundBoxRepository {
         }
     }
 
-    fun deleteDevice(gateId: String){
-        val device = map.firstOrNull { x -> x.gateId.toUpperCase() == gateId.toUpperCase() }
+    fun deleteBox(gateId: String){
+        val device = map.firstOrNull { x -> x.gateId.equals(gateId, true) }
         if (device != null)
             map.remove(device)
     }
 
     fun getStatus(mac: String) : PowerStatus {
-        val device = map.firstOrNull { x -> x.gateId.toUpperCase() == mac.toUpperCase() }
+        val device = map.firstOrNull { x -> x.gateId.equals(mac, true) }
         return device?.status ?: PowerStatus.Off
     }
 
-    fun getFoundBox(): List<BoxModel> {
+    fun getFoundBoxes(): List<BoxModel> {
         return map.filter { x -> x.founded }
     }
 }

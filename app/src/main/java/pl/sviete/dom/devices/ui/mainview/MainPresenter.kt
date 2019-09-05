@@ -45,7 +45,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
             mScanner.boxes.liveData.observe(activity, Observer {
                 if (it != null) {
                     refreshFoundedBoxes(it.filter { x -> x.founded })
-                    refreshBoxIps(mScanner.boxes.getFoundBox())
+                    refreshBoxIps(mScanner.boxes.getFoundBoxes())
                     refreshStatuses()
                     view.refreshData(mAisList)
                 }
@@ -127,7 +127,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
                     view.showDetail(id, device.type)
             })
             if (device.type == AisDeviceType.Box)
-                mScanner.boxes.deleteDevice(device.mac)
+                mScanner.boxes.deleteBox(device.mac)
             else
                 mScanner.devices.deleteDevice(device.mac)
             val newDevice = AisDeviceEntity(null, device.name, device.mac, device.ip, device.type?.value)

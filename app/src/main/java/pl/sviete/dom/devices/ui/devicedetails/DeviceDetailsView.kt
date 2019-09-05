@@ -13,13 +13,15 @@ interface DeviceDetailsView {
         fun showSaveErrorInfo()
         fun setAreas(areas: List<AreaViewModel>, selectedIdx: Int)
         fun showNoBoxesMessage()
-        fun pairSuccess()
+        fun showPairStatus(success: Boolean)
+        fun selectBoxToPair(boxes: List<BoxVM>)
     }
 
     interface Presenter : IPresenter<View> {
         fun loadView(id: Long)
         fun saveView(name: String, ip: String, area: AreaViewModel?): Boolean
         fun delete()
-        fun pairWithBox()
+        fun initPairWithBox()
+        fun pairWithBox(boxId: String)
     }
 }
