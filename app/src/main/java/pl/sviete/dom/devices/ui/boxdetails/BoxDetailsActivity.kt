@@ -17,6 +17,7 @@ class BoxDetailsActivity:  AppCompatActivity(), BoxDetailsView.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_box_details)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         btn_save_box.setOnClickListener {
             try {

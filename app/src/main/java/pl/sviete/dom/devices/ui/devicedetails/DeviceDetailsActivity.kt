@@ -12,7 +12,6 @@ import android.net.Uri
 import android.view.*
 import android.widget.ArrayAdapter
 import pl.sviete.dom.devices.ui.areas.AreaViewModel
-import android.content.DialogInterface
 
 class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
 
@@ -22,6 +21,7 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_device_details)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         btn_save.setOnClickListener {
             try {

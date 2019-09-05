@@ -124,10 +124,10 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
                 val intent = Intent(this, AreasActivity::class.java)
                 startActivity(intent)
             }
-            R.id.nav_settings -> {
+            /*R.id.nav_settings -> {
                 val intent = Intent(this, SettingsActivity::class.java)
                 startActivity(intent)
-            }
+            }*/
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)
