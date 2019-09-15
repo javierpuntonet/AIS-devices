@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_area_details.*
+import pl.sviete.dom.devices.ExceptionHandler
 import pl.sviete.dom.devices.R
 
 class AreaDetailsActivity : AppCompatActivity(), AreaDetailsView.View {
@@ -12,6 +13,7 @@ class AreaDetailsActivity : AppCompatActivity(), AreaDetailsView.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler())
         setContentView(R.layout.activity_area_details)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 

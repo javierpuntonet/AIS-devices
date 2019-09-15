@@ -53,7 +53,7 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
 
             mWiFiScanner.connectToNetwork(mDeviceNetworkId)
             if (!mConnectingCanceled)
-                mHandlerTimeout.postDelayed(timeout, 5000)
+                mHandlerTimeout.postDelayed(doTimeout, 5000)
         }
         else {
             reconnect()
@@ -65,7 +65,7 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
         }
     }
 
-    private val timeout = object : Runnable {
+    private val doTimeout = object : Runnable {
         override fun run() {
             try {
                 if (!mConnectingCanceled) {
@@ -79,7 +79,7 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
                     reconnect()
                 }
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e(TAG, "doTimeout", e)
                 reconnect()
             }
         }
@@ -91,7 +91,7 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
             var deviceStatus: Status? = null
             try {
                 mConnectingCanceled = true
-                mHandlerTimeout.removeCallbacksAndMessages(timeout)
+                mHandlerTimeout.removeCallbacksAndMessages(doTimeout)
 
                 listener.onConnectedToDevice()
                 val connectStatus = connectAndConfigureDevice()

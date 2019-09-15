@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.*
 import kotlinx.android.synthetic.main.activity_box_details.*
 import kotlinx.android.synthetic.main.activity_device_details.*
+import pl.sviete.dom.devices.ExceptionHandler
 import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.db.AisDeviceEntity
 import java.lang.Exception
@@ -15,6 +16,7 @@ class BoxDetailsActivity:  AppCompatActivity(), BoxDetailsView.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler())
         setContentView(R.layout.activity_box_details)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)

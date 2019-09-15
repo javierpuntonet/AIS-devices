@@ -80,7 +80,7 @@ class AisDeviceRestController {
             try {
                 return request.await()
             } catch (e: Exception) {
-                Log.e(tag, "getStatus", e)
+                Log.e(tag, "getStatus: " + e.message)
             }
             return null
         }

@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main_creator.*
+import pl.sviete.dom.devices.ExceptionHandler
 import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.net.models.AccessPointInfo
@@ -23,6 +24,7 @@ class MainCreatorActivity : AppCompatActivity(), MainCreatorView.View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler())
         setContentView(R.layout.activity_main_creator)
 
         setSupportActionBar(toolbar)

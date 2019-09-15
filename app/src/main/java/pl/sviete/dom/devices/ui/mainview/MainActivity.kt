@@ -14,17 +14,15 @@ import android.view.View
 import android.widget.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import pl.sviete.dom.devices.R
-import pl.sviete.dom.devices.SettingsActivity
 import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.ui.adddevicecreator.MainCreatorActivity
 import pl.sviete.dom.devices.ui.areas.AreaViewModel
 import pl.sviete.dom.devices.ui.areas.AreasActivity
-import pl.sviete.dom.devices.ui.devicedetails.DeviceDetailsActivity
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import android.widget.TextView
+import pl.sviete.dom.devices.*
 import pl.sviete.dom.devices.ui.details.DetailsFabric
 
 class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNavigationItemSelectedListener {
@@ -38,6 +36,7 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler())
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)

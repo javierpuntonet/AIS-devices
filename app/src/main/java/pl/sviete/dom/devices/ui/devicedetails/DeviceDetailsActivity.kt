@@ -11,6 +11,7 @@ import android.content.Intent
 import android.net.Uri
 import android.view.*
 import android.widget.ArrayAdapter
+import pl.sviete.dom.devices.ExceptionHandler
 import pl.sviete.dom.devices.ui.areas.AreaViewModel
 
 class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
@@ -19,6 +20,7 @@ class DeviceDetailsActivity : AppCompatActivity(), DeviceDetailsView.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler())
         setContentView(R.layout.activity_device_details)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)

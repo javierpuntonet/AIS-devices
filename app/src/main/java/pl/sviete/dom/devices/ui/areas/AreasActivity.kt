@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import pl.sviete.dom.devices.R
 import kotlinx.android.synthetic.main.activity_areas.*
 import android.widget.ArrayAdapter
+import pl.sviete.dom.devices.ExceptionHandler
 
 class AreasActivity : AppCompatActivity(), AreasView.View {
 
@@ -15,6 +16,7 @@ class AreasActivity : AppCompatActivity(), AreasView.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler())
         setContentView(R.layout.activity_areas)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
