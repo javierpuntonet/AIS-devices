@@ -2,14 +2,14 @@ package pl.sviete.dom.devices.ui.boxdetails
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.support.v4.app.FragmentActivity
+import android.support.v7.app.AppCompatActivity
 import kotlinx.coroutines.*
 import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.db.*
 import pl.sviete.dom.devices.mvp.BasePresenter
 import pl.sviete.dom.devices.netscanner.FoundDeviceRepository
 
-class BoxDetailsPresenter(val activity: FragmentActivity, override var view: BoxDetailsView.View)
+class BoxDetailsPresenter(val activity: AppCompatActivity, override var view: BoxDetailsView.View)
     : BasePresenter<BoxDetailsView.View, BoxDetailsView.Presenter>(), BoxDetailsView.Presenter {
 
     private lateinit var mAisDeviceViewModel: AisDeviceViewModel

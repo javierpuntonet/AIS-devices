@@ -174,6 +174,9 @@ class WiFiScanner (context: Context) {
                         connectivityManager.unregisterNetworkCallback(this)
                         listener.onConnected()
                     }
+                    else {
+                        Log.w(TAG, "Connected to weird WiFi: " + currentConnection?.ssid)
+                    }
                 }
             }
         }

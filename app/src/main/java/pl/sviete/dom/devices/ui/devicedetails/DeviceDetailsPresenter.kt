@@ -9,12 +9,12 @@ import kotlinx.coroutines.launch
 import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.aiscontrollers.AisDeviceRestController
 import pl.sviete.dom.devices.db.*
-import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.mvp.BasePresenter
 import pl.sviete.dom.devices.netscanner.FoundDeviceRepository
 import pl.sviete.dom.devices.ui.areas.AreaViewModel
+import android.support.v7.app.AppCompatActivity
 
-class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: DeviceDetailsView.View)
+class DeviceDetailsPresenter(val activity: AppCompatActivity, override var view: DeviceDetailsView.View)
     : BasePresenter<DeviceDetailsView.View, DeviceDetailsView.Presenter>(), DeviceDetailsView.Presenter {
 
     private lateinit var mAisDeviceViewModel: AisDeviceViewModel
@@ -28,6 +28,7 @@ class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: 
             if (device != null) {
                 mModel = device
                 loadView()
+                mAisDeviceViewModel.getById(id).removeObservers(activity as AppCompatActivity)
             }
         })
         val areaVM = ViewModelProviders.of(activity).get(AreasViewModel::class.java)
@@ -39,6 +40,7 @@ class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: 
                     mAreas!!.add(AreaViewModel(a.uid!!, a.name))
                 }
                 loadView()
+                areaVM.getAll().removeObservers(activity as AppCompatActivity)
             }
         })
     }
@@ -76,6 +78,7 @@ class DeviceDetailsPresenter(val activity: FragmentActivity, override var view: 
                 return true
             } else {
                 activity.finish()
+                return true
             }
         }
         return false

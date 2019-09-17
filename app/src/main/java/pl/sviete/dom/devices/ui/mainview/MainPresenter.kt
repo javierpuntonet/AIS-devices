@@ -123,8 +123,10 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     override fun showDeviceDetails(device: DeviceViewModel) {
         if (device.isFounded) {
             mAisDeviceViewModel.insertionId.observe(activity, Observer { id ->
-                if (id != null && id > 0)
+                if (id != null && id > 0) {
                     view.showDetail(id, device.type)
+                    mAisDeviceViewModel.insertionId.removeObservers(activity)
+                }
             })
             if (device.type == AisDeviceType.Box)
                 mScanner.boxes.deleteBox(device.mac)
