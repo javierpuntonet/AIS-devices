@@ -24,10 +24,7 @@ class WiFiScanner (context: Context) {
             mWifiScanReceiver = object : BroadcastReceiver() {
 
                 override fun onReceive(context: Context, intent: Intent) {
-                    val success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false)
-                    if (success) {
-                        listener.onScanResults(getScanResult())
-                    }
+                    listener.onScanResults(getScanResult())
                 }
             }
 
@@ -57,15 +54,10 @@ class WiFiScanner (context: Context) {
         } else {
             for (scan in scans) {
                 if (scan.frequency < 2500) {
-                    val capabilities = scan.capabilities.toUpperCase()
-                    val isOpen = !(capabilities.contains("WEP") || capabilities.contains("WPA"))
-                    result.add(AccessPointInfo(scan.SSID, isOpen))
+                    val capabilities = scan.capabilities
+                    val isOpen = !(capabilities.contains("WEP", true) || capabilities.contains("WPA", true))
+                    result.add(AccessPointInfo(scan.SSID, isOpen, scan.BSSID))
                 }
-            }
-            if (BuildConfig.DEBUG) {
-                result.add(AccessPointInfo("aaTest1_inDebug", true))
-                result.add(AccessPointInfo("kkTest2_inDebug", true))
-                result.add(AccessPointInfo("zzTest3_inDebug", false))
             }
         }
         return result
@@ -79,7 +71,7 @@ class WiFiScanner (context: Context) {
         try {
             wiFiManager.isWifiEnabled = enabled
         } catch (e: Exception) {
-            Log.e(TAG, "onReceiveWifiEnable $e")
+            Log.e(TAG, "enableWiFi", e)
         }
     }
 
@@ -166,17 +158,21 @@ class WiFiScanner (context: Context) {
 
         networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
-                var info = connectivityManager.getNetworkInfo(network)
-                if (info?.isConnected == true) {
-                    val currentConnection = wiFiManager.connectionInfo
-                    if (("\"" + ssid + "\"") == currentConnection?.ssid) {
-                        networkCallback = null
-                        connectivityManager.unregisterNetworkCallback(this)
-                        listener.onConnected()
+                try {
+                    val info = connectivityManager.getNetworkInfo(network)
+                    if (info?.isConnected == true) {
+                        val currentConnection = wiFiManager.connectionInfo
+                        if (("\"" + ssid + "\"") == currentConnection?.ssid) {
+                            networkCallback = null
+                            connectivityManager.unregisterNetworkCallback(this)
+                            listener.onConnected()
+                        } else {
+                            Log.w(TAG, "Connected to weird WiFi: " + currentConnection?.ssid)
+                        }
                     }
-                    else {
-                        Log.w(TAG, "Connected to weird WiFi: " + currentConnection?.ssid)
-                    }
+                }
+                catch (ex: Exception){
+                    Log.e(TAG, "onAvailable", ex)
                 }
             }
         }

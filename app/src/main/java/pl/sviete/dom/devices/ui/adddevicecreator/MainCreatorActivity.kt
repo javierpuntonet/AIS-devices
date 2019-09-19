@@ -9,6 +9,7 @@ import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.net.models.AccessPointInfo
 import pl.sviete.dom.devices.ui.adddevicecreator.apdata.ApDataCreatorFragment
+import pl.sviete.dom.devices.ui.adddevicecreator.aplist.AccessPointViewModel
 import pl.sviete.dom.devices.ui.adddevicecreator.aplist.AplistCreatorFragment
 import pl.sviete.dom.devices.ui.adddevicecreator.area.CreatorAreaView
 import pl.sviete.dom.devices.ui.adddevicecreator.connectdevice.ConnectDeviceView
@@ -49,7 +50,7 @@ class MainCreatorActivity : AppCompatActivity(), MainCreatorView.View
         changeFragment(POS_AP_LIST)
     }
 
-    override fun onAPSelected(selectedAP : AccessPointInfo, accessibleAP: List<AccessPointInfo>){
+    override fun onAPSelected(selectedAP : AccessPointViewModel, accessibleAP: List<AccessPointViewModel>){
         presenter.storeAP(selectedAP, accessibleAP)
         changeFragment(POS_NAME, true)
     }

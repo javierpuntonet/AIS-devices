@@ -11,18 +11,20 @@ import android.view.ViewGroup
 import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.net.WiFiScanner
 import kotlinx.android.synthetic.main.fragment_creator_aplist_.*
+import pl.sviete.dom.devices.helpers.AisDeviceHelper
 import pl.sviete.dom.devices.net.models.AccessPointInfo
 import pl.sviete.dom.devices.ui.adddevicecreator.MainCreatorView
 import java.util.*
 
 class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
 
+    private val TAG = AplistCreatorFragment::class.java.simpleName
     private var mApSelectedListener: OnAPSelectedListener? = null
     private var mProgressBarManager: MainCreatorView.ProgressBarManager? = null
     private var mWifi: WiFiScanner? = null
     private var mAisAdapter: APAdapter? = null
-    private val mAisList = ArrayList<AccessPointInfo>()
-    private var mAPList: List<AccessPointInfo> = mutableListOf()
+    private val mAisList = ArrayList<AccessPointViewModel>()
+    private var mAPList: List<AccessPointViewModel> = mutableListOf()
 
     companion object {
         fun newInstance() = AplistCreatorFragment()
@@ -45,7 +47,7 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
             mAisList,
             context!!,
             object : APAdapter.OnItemClickListener {
-                override fun onItemClick(item: AccessPointInfo) {
+                override fun onItemClick(item: AccessPointViewModel) {
                     mWifi?.stopScan()
                     mApSelectedListener?.onAPSelected(item, mAPList)
                 }
@@ -79,18 +81,22 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
 
     override fun onScanResults(scanResult: List<AccessPointInfo>) {
         try {
-            setData(scanResult)
-            mAPList = scanResult
+            val apList = mutableListOf<AccessPointViewModel>()
+            scanResult.forEach {
+                apList.add(AccessPointViewModel(it.ssid, AisDeviceHelper.apIsAisDevice(it.isOpen, it.mac)))
+            }
+            setData(apList)
+            mAPList = apList
         }
         catch (ex: Exception){
-            Log.e("AplistCreatorFragment","onScanResults", ex)
+            Log.e(TAG,"onScanResults", ex)
         }
         finally {
             mProgressBarManager!!.hideProgressBar()
         }
     }
 
-    private fun setData(list: List<AccessPointInfo>){
+    private fun setData(list: List<AccessPointViewModel>){
         mAisList.clear()
         mAisList.addAll(list)
         mAisList.sort()
@@ -98,11 +104,17 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
     }
 
     interface OnAPSelectedListener{
-        fun onAPSelected(selectedAP: AccessPointInfo, accessibleAP: List<AccessPointInfo>)
+        fun onAPSelected(selectedAP: AccessPointViewModel, accessibleAP: List<AccessPointViewModel>)
     }
 
     private fun refreshAPList() {
-        mProgressBarManager!!.showProgressBar()
-        mWifi!!.startScan(this)
+        try {
+            mProgressBarManager!!.showProgressBar()
+            mWifi!!.startScan(this)
+        }
+        catch (ex: Exception){
+            Log.e(TAG, "refreshAPList", ex)
+            mProgressBarManager!!.hideProgressBar()
+        }
     }
 }

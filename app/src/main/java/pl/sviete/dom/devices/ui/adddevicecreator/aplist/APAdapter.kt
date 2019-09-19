@@ -8,12 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import pl.sviete.dom.devices.R
 import kotlinx.android.synthetic.main.item_ap_list.view.*
-import pl.sviete.dom.devices.net.models.AccessPointInfo
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 
-class APAdapter (val items : ArrayList<AccessPointInfo>, val context: Context, val listener: OnItemClickListener) : RecyclerView.Adapter<ViewHolder>() {
+class APAdapter (private val items : ArrayList<AccessPointViewModel>, val context: Context, private val listener: OnItemClickListener)
+    : RecyclerView.Adapter<ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -34,15 +34,15 @@ class APAdapter (val items : ArrayList<AccessPointInfo>, val context: Context, v
     }
 
     interface OnItemClickListener {
-        fun onItemClick(item: AccessPointInfo)
+        fun onItemClick(item: AccessPointViewModel)
     }
 }
 
 class ViewHolder (val view: View) : RecyclerView.ViewHolder(view) {
-    val apName = view.txt_ap_name
-    val aisLogo = view.img_ap_aislogo
+    private val apName = view.txt_ap_name
+    private val aisLogo = view.img_ap_aislogo
 
-    fun bind(item: AccessPointInfo , listener: APAdapter.OnItemClickListener) {
+    fun bind(item: AccessPointViewModel , listener: APAdapter.OnItemClickListener) {
         if (item.isAis) {
             apName.text = SpannableStringBuilder(item.ssid).apply{
                 setSpan(StyleSpan(Typeface.BOLD), 0, item.ssid.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)

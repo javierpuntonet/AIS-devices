@@ -74,8 +74,6 @@ class ConnectDevicePresenter(private val fragment: Fragment, override var view: 
             mScanner!!.runBonjourDeviceScanner()
         }
         else{
-            //test
-            //mListener!!.onConnectDeviceSuccess(AisDeviceType.Socket, "AA:BB:CC:DD:EE")
             view.onPairError(result.errorCode)
             mListener!!.onConnectDeviceFaild()
         }

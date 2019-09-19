@@ -5,6 +5,7 @@ import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.mvp.BaseView
 import pl.sviete.dom.devices.mvp.IPresenter
 import pl.sviete.dom.devices.net.models.AccessPointInfo
+import pl.sviete.dom.devices.ui.adddevicecreator.aplist.AccessPointViewModel
 
 const val POS_START_CREATOR = 0
 const val POS_AP_LIST = 1
@@ -23,7 +24,7 @@ interface MainCreatorView {
     interface Presenter : IPresenter<View> {
         fun getFragment(position: Int): Fragment?
 
-        fun storeAP(selected: AccessPointInfo, accessibleAPs: List<AccessPointInfo>)
+        fun storeAP(selected: AccessPointViewModel, accessibleAPs: List<AccessPointViewModel>)
         fun storeName(name: String)
         fun storeAPData(apSsid: String, password: String)
         fun saveNewDevice(deviceType: AisDeviceType, deviceMAC: String)

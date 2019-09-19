@@ -11,6 +11,7 @@ import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.mvp.BasePresenter
 import pl.sviete.dom.devices.net.models.AccessPointInfo
 import pl.sviete.dom.devices.ui.adddevicecreator.apdata.ApDataCreatorFragment
+import pl.sviete.dom.devices.ui.adddevicecreator.aplist.AccessPointViewModel
 import pl.sviete.dom.devices.ui.adddevicecreator.aplist.AplistCreatorFragment
 import pl.sviete.dom.devices.ui.adddevicecreator.area.CreatorAreaFragment
 import pl.sviete.dom.devices.ui.adddevicecreator.connectdevice.ConnectDeviceFragment
@@ -22,8 +23,8 @@ class MainCreatorPresenter(val activity: FragmentActivity, override var view: Ma
     : BasePresenter<MainCreatorView.View, MainCreatorView.Presenter>()
     , MainCreatorView.Presenter {
 
-    private var mDeviceInfo: AccessPointInfo? = null
-    private var mAccessibleDevices: List<AccessPointInfo>? = null
+    private var mDeviceInfo: AccessPointViewModel? = null
+    private var mAccessibleDevices: List<AccessPointViewModel>? = null
     private var mNewDeviceName: String? = null
     private var mAPName: String? = null
     private var mAPPassword: String? = null
@@ -31,7 +32,7 @@ class MainCreatorPresenter(val activity: FragmentActivity, override var view: Ma
     private var mNewDeviceType: AisDeviceType? = null
     private var mNewDeviceId: Long? = null
 
-    override fun storeAP(selected: AccessPointInfo, accessibleAPs: List<AccessPointInfo>){
+    override fun storeAP(selected: AccessPointViewModel, accessibleAPs: List<AccessPointViewModel>){
         mDeviceInfo = selected
         mAccessibleDevices = accessibleAPs
     }

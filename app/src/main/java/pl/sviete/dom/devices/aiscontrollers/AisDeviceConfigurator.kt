@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import pl.sviete.dom.devices.aiscontrollers.models.Status
+import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.net.WiFiScanner
 import java.io.UnsupportedEncodingException
 
@@ -99,7 +100,7 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
                     result = true
                     deviceStatus = connectStatus.second
                 }
-            } catch (e: UnsupportedEncodingException) {
+            } catch (e: Exception) {
                 Log.e(TAG, "onConnected", e)
             } finally {
                 reconnect()
@@ -118,7 +119,7 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
         // check if we have correct connection if not then exit
         val networkId = mWiFiScanner.getCurrentNetworkId()
         if (networkId != mDeviceNetworkId) {
-            //Log.d(TAG, "wrong connection, info.getNetworkId(): " + info.networkId)
+            Log.e(TAG, "Connected to wrong network")
         }
         else {
             try {
@@ -127,11 +128,21 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
                 if (deviceStatus == null)
                     deviceStatus = AisDeviceRestController.getStatus(AisDeviceRestController.AP_IP)
                 //cant get device status then return false
-                if (deviceStatus == null)
+
+                if (deviceStatus?.Status == null) {
+                    Log.e(TAG, "Connected device doesn't return status")
                     return Pair(false, null)
+                }
+                if (AisDeviceType.fromInt(deviceStatus.Status.Module) == null) {
+                    Log.e(TAG, "Connected device return unknown Module: $deviceStatus.Status.Module")
+                    return Pair(false, null)
+                }
                 val result = AisDeviceRestController.setupNew(mFriendlyName!!, mAPName!!, mAPPassword!!)
                 if (result){
                     return Pair(true, deviceStatus)
+                }
+                else{
+                    Log.e(TAG, "Connected device return false on setup")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "ConnectAndConfiguraDevice", e)
