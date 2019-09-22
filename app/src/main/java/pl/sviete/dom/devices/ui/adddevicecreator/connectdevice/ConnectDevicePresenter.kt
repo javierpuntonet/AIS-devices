@@ -39,7 +39,7 @@ class ConnectDevicePresenter(private val fragment: Fragment, override var view: 
                     mTimer.cancel()
                     mScanner?.stopBonjourDeviceScanner()
                     mScanner!!.devices.liveData.removeObservers(fragment.activity!!)
-                    mListener!!.onConnectDeviceSuccess(mNewDeviceType!!, mNewDeviceMAC!!)
+                    mListener!!.onConnectDeviceSuccess(mNewDeviceType, mNewDeviceMAC!!)
                 }
             }
         })
@@ -90,6 +90,4 @@ class ConnectDevicePresenter(private val fragment: Fragment, override var view: 
     override fun ipScanFinished() {
 
     }
-
-
 }

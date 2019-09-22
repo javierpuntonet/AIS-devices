@@ -29,7 +29,8 @@ class CreatorAreaFragment : Fragment(), CreatorAreaView.View {
         super.onCreate(savedInstanceState)
         arguments?.let {
             mDeviceName = it.getString(ARG_NAME)
-            mDeivceType = AisDeviceType.fromInt(it.getInt(ARG_TYPE))
+            if (it.containsKey(ARG_TYPE))
+                mDeivceType = AisDeviceType.fromInt(it.getInt(ARG_TYPE))
             presenter.storeInitData(it.getLong(ARG_ID))
         }
     }
@@ -108,12 +109,13 @@ class CreatorAreaFragment : Fragment(), CreatorAreaView.View {
     companion object {
 
         @JvmStatic
-        fun newInstance(deviceId: Long, deviceName: String, deviceType: AisDeviceType) =
+        fun newInstance(deviceId: Long, deviceName: String, deviceType: AisDeviceType?) =
             CreatorAreaFragment().apply {
                 arguments = Bundle().apply {
                     putLong(ARG_ID, deviceId)
                     putString(ARG_NAME, deviceName)
-                    putInt(ARG_TYPE, deviceType.value)
+                    if (deviceType != null)
+                        putInt(ARG_TYPE, deviceType.value)
                 }
             }
     }

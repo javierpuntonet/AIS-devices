@@ -46,7 +46,7 @@ class MainCreatorPresenter(val activity: FragmentActivity, override var view: Ma
         mAPPassword = password
     }
 
-    override fun saveNewDevice(deviceType: AisDeviceType, deviceMAC: String){
+    override fun saveNewDevice(deviceType: AisDeviceType?, deviceMAC: String){
         mNewDeviceType = deviceType
         mNewDeviceMAC = deviceMAC
 
@@ -83,7 +83,7 @@ class MainCreatorPresenter(val activity: FragmentActivity, override var view: Ma
             POS_CONNECT -> {
                 return ConnectDeviceFragment.newInstance(mNewDeviceName!!, mDeviceInfo!!.ssid, mAPName!!, mAPPassword!!)
             }
-            POS_AREA -> return CreatorAreaFragment.newInstance(mNewDeviceId!!, mNewDeviceName!!, mNewDeviceType!!)
+            POS_AREA -> return CreatorAreaFragment.newInstance(mNewDeviceId!!, mNewDeviceName!!, mNewDeviceType)
         }
         throw Exception("Not implemented")
     }

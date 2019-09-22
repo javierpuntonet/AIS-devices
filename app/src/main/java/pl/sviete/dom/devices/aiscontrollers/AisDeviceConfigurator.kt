@@ -128,15 +128,11 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
                 if (deviceStatus == null)
                     deviceStatus = AisDeviceRestController.getStatus(AisDeviceRestController.AP_IP)
                 //cant get device status then return false
-
                 if (deviceStatus?.Status == null) {
                     Log.e(TAG, "Connected device doesn't return status")
                     return Pair(false, null)
                 }
-                if (AisDeviceType.fromInt(deviceStatus.Status.Module) == null) {
-                    Log.e(TAG, "Connected device return unknown Module: $deviceStatus.Status.Module")
-                    return Pair(false, null)
-                }
+
                 val result = AisDeviceRestController.setupNew(mFriendlyName!!, mAPName!!, mAPPassword!!)
                 if (result){
                     return Pair(true, deviceStatus)

@@ -78,7 +78,7 @@ class MainCreatorActivity : AppCompatActivity(), MainCreatorView.View
         backFragment()
     }
 
-    override fun onConnectDeviceSuccess(deviceType: AisDeviceType, deviceMAC: String) {
+    override fun onConnectDeviceSuccess(deviceType: AisDeviceType?, deviceMAC: String) {
         presenter.saveNewDevice(deviceType, deviceMAC)
     }
 

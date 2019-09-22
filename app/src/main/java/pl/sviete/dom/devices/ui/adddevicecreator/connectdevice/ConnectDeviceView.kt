@@ -22,7 +22,7 @@ interface ConnectDeviceView {
     }
 
     interface OnConnectDevice {
-        fun onConnectDeviceSuccess(deviceType: AisDeviceType, deviceMAC: String)
+        fun onConnectDeviceSuccess(deviceType: AisDeviceType?, deviceMAC: String)
         fun onConnectDeviceFaild()
     }
 }
