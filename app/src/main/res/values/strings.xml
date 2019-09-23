@@ -57,58 +57,56 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
-    <string name="title_activity_main_creator">Dodaj nowe urządzenie</string>
-    <string name="creator_welcome_text">Włącz do prądu swoje nowe urządzenie AIS. W kolejnych krokach podłączymy je do
-        twojej lokalnej sieci WiFi
-        i AIS Devices.
+    <string name="title_activity_main_creator">Add new device</string>
+    <string name="creator_welcome_text">Turn on your new device. In the next steps we will connect them to
+         your local WiFi network and add to devices list in app.
     </string>
-
-    <string name="text_name_fragment">Podaj przyjazną nazwę dla wybranego urządzenia (%1$s)</string>
-    <string name="new_device">Nowe urządzenie</string>
-    <string name="connect">Połącz</string>
-    <string name="back">Cofnij</string>
-    <string name="unknown_error">Niestety coś poszło nie tak</string>
-    <string name="welcome_add_new_device">Dodaj swoje pierwsze urządzenie</string>
-    <string name="next">Dalej</string>
-    <string name="name">Nazwa</string>
-    <string name="password">Hasło</string>
-    <string name="ap_data_info">Podaj dane swojej sieci WiFi do której chcesz podłączyć urządzenie AIS</string>
-    <string name="connecting_info">Wybierz \"Połącz\" by rozpocząć proces połączenia urządzenia do twojej lokalnej sieci
-        WiFi. Podczas tego procesu konieczne jest rozłączenie tego urządzenia z sieci WiFi, zajmie to tylko chwilę.
+    <string name="text_name_fragment">Enter a friendly name for the selected device (%1$s)</string>
+    <string name="new_device">New device</string>
+    <string name="connect">Connect</string>
+    <string name="back">Back</string>
+    <string name="unknown_error">Unfortunately something went wrong</string>
+    <string name="welcome_add_new_device">Add your first device</string>
+    <string name="next">Next</string>
+    <string name="name">Name</string>
+    <string name="password">Password</string>
+    <string name="ap_data_info">Enter the data of your WiFi network to which you want to connect the new device</string>
+    <string name="connecting_info">Select \ "Connect \" to start the process of connecting the device to your local network
+         Fi. During this process it is necessary to disconnect this device from the WiFi network, it will only take a moment.
     </string>
-    <string name="save_password">Zapisz hasło</string>
-    <string name="connect_ap_timeout">Nie udało się połączyć z wybranym urządzeniem.</string>
-    <string name="details">Szczegóły</string>
-    <string name="ip_address">Adres IP</string>
-    <string name="delete">Usuń</string>
-    <string name="save">Zapisz</string>
-    <string name="delete_device_question">Usunąć urządzenie?</string>
-    <string name="no">Nie</string>
-    <string name="show_password">Pokaż hasło</string>
-    <string name="hide_password">Ukryj hasło</string>
-    <string name="empty_name">Wpisz nazwę</string>
-    <string name="empty_ip">Podaj IP/host urządzenia</string>
-    <string name="device_website">Otwórz stronę urządzenia</string>
-    <string name="scan_network">Skanuj sieć</string>
-    <string name="save_error">Błąd zapisu</string>
-    <string name="save_error_info">Nie udało się zapisać zmian, sprawdź czy urządzenie jest dostępne i spróbuj ponownie</string>
+    <string name="save_password">Save password</string>
+    <string name="connect_ap_timeout">Failed to connect to the selected device.</string>
+    <string name="details">Details</string>
+    <string name="ip_address">IP Address</string>
+    <string name="delete">Delete</string>
+    <string name="save">Save</string>
+    <string name="delete_device_question">Remove device?</string>
+    <string name="no">No</string>
+    <string name="show_password">Show password</string>
+    <string name="hide_password">Hide password</string>
+    <string name="empty_name">Enter name</string>
+    <string name="empty_ip">Enter IP/host of the device</string>
+    <string name="device_website">Open device app</string>
+    <string name="scan_network">Scan sieć</string>
+    <string name="save_error">Error during save</string>
+    <string name="save_error_info">Failed to save changes, check if the device is available and try again</string>
     <string name="ok">OK</string>
-    <string name="connect_to_device">Łączenie z urządzeniem</string>
-    <string name="send_configuration">Konfigurowanie urządzenia</string>
-    <string name="waiting_for_device">Oczekiwanie na podłączenie urządzenia do lokalnej sieci WiFi</string>
-    <string name="network_scan">Skanowanie sieci w poszukiwaniu urządzenia</string>
-    <string name="areas">Obszary</string>
-    <string name="area">Obszar</string>
-    <string name="delete_area_question">Usunąć obszar?</string>
-    <string name="Congratulations">Gratulacje!</string>
-    <string name="u_have_new_device">Masz nowe urządzenie AIS</string>
-    <string name="finish">Zakończ</string>
-    <string name="creator_area_info">Na koniec możesz przypisać je do obszaru</string>
-    <string name="add">Dodaj</string>
-    <string name="cancel">Anuluj</string>
-    <string name="name_new_area">Podaj nazwę nowego obszaru:</string>
-    <string name="pair_with_box">Parowanie z bramką</string>
-    <string name="no_boxes_to_pair">Brak dostępnych bramek do parowania</string>
-    <string name="pair_success">Sparowano</string>
-    <string name="pair_error">Nie można sparować urządzenia, spróbuj ponownie później</string>
+    <string name="connect_to_device">Connecting to the device</string>
+    <string name="send_configuration">Configuring the device</string>
+    <string name="waiting_for_device">Waiting for the device to connect to the local WiFi network</string>
+    <string name="network_scan">Scanning the network for a device</string>
+    <string name="areas">Areas</string>
+    <string name="area">Area</string>
+    <string name="delete_area_question">Delete area?</string>
+    <string name="Congratulations">Congratulations!</string>
+    <string name="u_have_new_device">You have a new device</string>
+    <string name="finish">Exit</string>
+    <string name="creator_area_info">Finally, you can assign them to an area</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="name_new_area">Enter a name for the new area:</string>
+    <string name="pair_with_box">Pairing with a MQTT gateway</string>
+    <string name="no_boxes_to_pair">No pairing MQTT gates available</string>
+    <string name="pair_success">Paired successfully</string>
+    <string name="pair_error">Unable to pair your device, please try again later</string>
 </resources>
