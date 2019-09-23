@@ -29,10 +29,12 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
         if (mBonjour == null)
             mBonjour = BonjourScanner(context, this)
         mBonjour!!.startDiscoveryDevice()
+        mBonjour!!.startDiscoveryGate()
     }
 
     fun stopBonjourDeviceScanner(){
         mBonjour?.stopDiscoveryDevice()
+        mBonjour?.stopDiscoveryGate()
     }
 
     fun addDevice(ip: String, mac: String?, founded: Boolean){

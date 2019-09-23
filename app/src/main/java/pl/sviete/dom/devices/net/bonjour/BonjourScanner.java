@@ -33,6 +33,9 @@ public class BonjourScanner {
                 }, s -> {
                     Log.e("startDiscoveryDevice", "Error: ", s);
                 });
+    }
+
+    public void startDiscoveryGate() {
         mGatesDisposable = mRxDnssd.browse("_ais-dom._tcp", "local.")
                 .compose(mRxDnssd.resolve())
                 .compose(mRxDnssd.queryIPRecords())
@@ -51,6 +54,9 @@ public class BonjourScanner {
         if (mDevicesDisposable != null) {
             mDevicesDisposable.dispose();
         }
+    }
+
+    public void stopDiscoveryGate() {
         if (mGatesDisposable != null) {
             mGatesDisposable.dispose();
         }
