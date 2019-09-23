@@ -12,6 +12,7 @@ public class BonjourScanner {
 
     private Rx2Dnssd mRxDnssd;
     private Disposable mDevicesDisposable;
+    private Disposable mGatesDisposable;
     private IBonjourResult mResult;
 
     public BonjourScanner(Context context, IBonjourResult result){
@@ -27,19 +28,31 @@ public class BonjourScanner {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bonjourService -> {
                     if (!bonjourService.isLost()) {
-                        if (bonjourService.getServiceName().equals("ais-dom"))
-                            mResult.onBoxFound(bonjourService);
-                        else
-                            mResult.onDeviceFound(bonjourService);
+                        mResult.onDeviceFound(bonjourService);
                     }
                 }, s -> {
                     Log.e("startDiscoveryDevice", "Error: ", s);
+                });
+        mGatesDisposable = mRxDnssd.browse("_ais-dom._tcp", "local.")
+                .compose(mRxDnssd.resolve())
+                .compose(mRxDnssd.queryIPRecords())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(bonjourService -> {
+                    if (!bonjourService.isLost()) {
+                        mResult.onBoxFound(bonjourService);
+                    }
+                }, s -> {
+                    Log.e("startDiscoveryGate", "Error: ", s);
                 });
     }
 
     public void stopDiscoveryDevice() {
         if (mDevicesDisposable != null) {
             mDevicesDisposable.dispose();
+        }
+        if (mGatesDisposable != null) {
+            mGatesDisposable.dispose();
         }
     }
 }
