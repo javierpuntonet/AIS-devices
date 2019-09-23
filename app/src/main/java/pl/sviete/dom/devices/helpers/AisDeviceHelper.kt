@@ -10,7 +10,7 @@ class AisDeviceHelper {
             return when (type) {
                 AisDeviceType.Bulb -> R.drawable.bulb
                 AisDeviceType.Socket -> R.drawable.socket
-                AisDeviceType.Box -> R.drawable.box
+                AisDeviceType.Box -> R.drawable.mqtt_gate_logo
                 else -> R.drawable.logo
             }
         }

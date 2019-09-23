@@ -91,7 +91,7 @@
     <string name="delete_area_question">Delete area?</string>
     <string name="Congratulations">Congratulations!</string>
     <string name="u_have_new_device">You have a new device</string>
-    <string name="finish">Exit</string>
+    <string name="finish">OK</string>
     <string name="creator_area_info">Finally, you can assign them to an area</string>
     <string name="add">Add</string>
     <string name="cancel">Cancel</string>
