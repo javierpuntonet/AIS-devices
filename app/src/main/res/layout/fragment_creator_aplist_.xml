@@ -24,7 +24,7 @@
                 android:layout_height="match_parent"/>
     </android.support.v4.widget.SwipeRefreshLayout>
     <TextView
-            android:text="Wybierz z listy swoje nowe urządzenie AIS"
+            android:text="@string/select_new_device_from_list_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/txt_step" android:layout_marginTop="8dp"

@@ -1,115 +1,99 @@
 <resources>
-<string name="app_name">AIS-Devices</string>
-<string name="navigation_drawer_open">Open navigation drawer</string>
-<string name="navigation_drawer_close">Close navigation drawer</string>
-<string name="settings">Settings</string>
+    <string name="app_name">AIS-Devices</string>
+    <string name="settings">Ustawienia</string>
+    <string name="navigation_drawer_open">Otwórz panel nawigacji</string>
+    <string name="navigation_drawer_close">Zamknij panel nawigacji</string>
+    <string name="pref_header_general">Ogólne</string>
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact based on your message  history</string>
 
-<!-- Strings related to Settings -->
-
-<!-- Example General settings -->
-<string name="pref_header_general">General</string>
-
-<string name="pref_title_social_recommendations">Enable social recommendations</string>
-<string name="pref_description_social_recommendations">Recommendations for people to contact based on your message
-        history
-    </string>
-
-<string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-<string-array name="pref_example_list_titles">
-    <item>Always</item>
-    <item>When possible</item>
-    <item>Never</item>
-</string-array>
-<string-array name="pref_example_list_values">
-    <item>1</item>
-    <item>0</item>
-    <item>-1</item>
-</string-array>
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
 
 <!-- Example settings for Data & Sync -->
-<string name="pref_header_data_sync">Data &amp; sync</string>
+    <string name="pref_header_data_sync">Data &amp; sync</string>
 
-<string name="pref_title_sync_frequency">Sync frequency</string>
-<string-array name="pref_sync_frequency_titles">
-    <item>15 minutes</item>
-    <item>30 minutes</item>
-    <item>1 hour</item>
-    <item>3 hours</item>
-    <item>6 hours</item>
-    <item>Never</item>
-</string-array>
-<string-array name="pref_sync_frequency_values">
-    <item>15</item>
-    <item>30</item>
-    <item>60</item>
-    <item>180</item>
-    <item>360</item>
-    <item>-1</item>
-</string-array>
-
-<string name="pref_title_system_sync_settings">System sync settings</string>
-
-<string name="pref_header_notifications">Notifications</string>
-
-<string name="pref_title_new_message_notifications">New message notifications</string>
-
-<string name="pref_title_ringtone">Ringtone</string>
-<string name="pref_ringtone_silent">Silent</string>
-
-<string name="pref_title_vibrate">Vibrate</string>
-<string name="title_activity_main_creator">Dodaj nowe urządzenie</string>
-<string name="creator_welcome_text">Włącz do prądu swoje nowe urządzenie AIS. W kolejnych krokach podłączymy je do
-        twojej lokalnej sieci WiFi
-        i AIS Devices.
-    </string>
-
-<string name="text_name_fragment">Podaj przyjazną nazwę dla wybranego urządzenia (%1$s)</string>
-<string name="new_device">Nowe urządzenie</string>
-<string name="connect">Połącz</string>
-<string name="back">Cofnij</string>
-<string name="unknown_error">Niestety coś poszło nie tak</string>
-<string name="welcome_add_new_device">Dodaj swoje pierwsze urządzenie</string>
-<string name="next">Dalej</string>
-<string name="name">Nazwa</string>
-<string name="password">Hasło</string>
-<string name="ap_data_info">Podaj dane swojej sieci WiFi do której chcesz podłączyć urządzenie AIS</string>
-<string name="connecting_info">Wybierz \"Połącz\" by rozpocząć proces połączenia urządzenia do twojej lokalnej sieci
-        WiFi. Podczas tego procesu konieczne jest rozłączenie tego urządzenia z sieci WiFi, zajmie to tylko chwilę.
-    </string>
-<string name="save_password">Zapisz hasło</string>
-<string name="connect_ap_timeout">Nie udało się połączyć z wybranym urządzeniem.</string>
-<string name="details">Szczegóły</string>
-<string name="ip_address">Adres IP</string>
-<string name="delete">Usuń</string>
-<string name="save">Zapisz</string>
-<string name="delete_device_question">Usunąć urządzenie?</string>
-<string name="no">Nie</string>
-<string name="show_password">Pokaż hasło</string>
-<string name="hide_password">Ukryj hasło</string>
-<string name="empty_name">Wpisz nazwę</string>
-<string name="empty_ip">Podaj IP/host urządzenia</string>
-<string name="device_website">Otwórz stronę urządzenia</string>
-<string name="scan_network">Skanuj sieć</string>
-<string name="save_error">Błąd zapisu</string>
-<string name="save_error_info">Nie udało się zapisać zmian, sprawdź czy urządzenie jest dostępne i spróbuj ponownie</string>
-<string name="ok">OK</string>
-<string name="connect_to_device">Łączenie z urządzeniem</string>
-<string name="send_configuration">Konfigurowanie urządzenia</string>
-<string name="waiting_for_device">Oczekiwanie na podłączenie urządzenia do lokalnej sieci WiFi</string>
-<string name="network_scan">Skanowanie sieci w poszukiwaniu urządzenia</string>
-<string name="areas">Obszary</string>
-<string name="area">Obszar</string>
-<string name="delete_area_question">Usunąć obszar?</string>
-<string name="Congratulations">Gratulacje!</string>
-<string name="u_have_new_device">Masz nowe urządzenie AIS</string>
-<string name="finish">Zakończ</string>
-<string name="creator_area_info">Na koniec możesz przypisać je do obszaru</string>
-<string name="add">Dodaj</string>
-<string name="cancel">Anuluj</string>
-<string name="name_new_area">Podaj nazwę nowego obszaru:</string>
-<string name="pair_with_box">Parowanie z bramką</string>
-<string name="no_boxes_to_pair">Brak dostępnych bramek do parowania</string>
-<string name="pair_success">Sparowano</string>
-<string name="pair_error">Nie można sparować urządzenia, spróbuj ponownie później</string>
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+    <string name="pref_header_notifications">Notifications</string>
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="title_activity_main_creator">Dodaj nowe urządzenie</string>
+    <string name="creator_welcome_text">Włącz do prądu swoje nowe urządzenie AIS. W kolejnych krokach podłączymy je do twojej lokalnej sieci WiFi i AIS Devices.</string>
+    <string name="text_name_fragment">Podaj przyjazną nazwę dla wybranego urządzenia (%1$s)</string>
+    <string name="new_device">Nowe urządzenie</string>
+    <string name="connect">Połącz</string>
+    <string name="back">Cofnij</string>
+    <string name="unknown_error">Niestety coś poszło nie tak</string>
+    <string name="welcome_add_new_device">Dodaj swoje pierwsze urządzenie</string>
+    <string name="next">Dalej</string>
+    <string name="name">Nazwa</string>
+    <string name="password">Hasło</string>
+    <string name="ap_data_info">Podaj dane swojej sieci WiFi do której chcesz podłączyć urządzenie AIS</string>
+    <string name="connecting_info">Wybierz \"Połącz\" by rozpocząć proces połączenia urządzenia do twojej lokalnej sieci WiFi. Podczas tego procesu konieczne jest rozłączenie tego urządzenia z sieci WiFi, zajmie to tylko chwilę.</string>
+    <string name="save_password">Zapisz hasło</string>
+    <string name="connect_ap_timeout">Nie udało się połączyć z wybranym urządzeniem.</string>
+    <string name="details">Szczegóły</string>
+    <string name="ip_address">Adres IP</string>
+    <string name="delete">Usuń</string>
+    <string name="save">Zapisz</string>
+    <string name="delete_device_question">Usunąć urządzenie?</string>
+    <string name="no">Nie</string>
+    <string name="show_password">Pokaż hasło</string>
+    <string name="hide_password">Ukryj hasło</string>
+    <string name="empty_name">Wpisz nazwę</string>
+    <string name="empty_ip">Podaj IP/host urządzenia</string>
+    <string name="device_website">Otwórz stronę urządzenia</string>
+    <string name="scan_network">Skanuj sieć</string>
+    <string name="save_error">Błąd zapisu</string>
+    <string name="save_error_info">Nie udało się zapisać zmian, sprawdź czy urządzenie jest dostępne i spróbuj ponownie</string>
+    <string name="ok">OK</string>
+    <string name="connect_to_device">Łączenie z urządzeniem</string>
+    <string name="send_configuration">Konfigurowanie urządzenia</string>
+    <string name="waiting_for_device">Oczekiwanie na podłączenie urządzenia do lokalnej sieci WiFi</string>
+    <string name="network_scan">Skanowanie sieci w poszukiwaniu urządzenia</string>
+    <string name="areas">Obszary</string>
+    <string name="area">Obszar</string>
+    <string name="delete_area_question">Usunąć obszar?</string>
+    <string name="Congratulations">Gratulacje!</string>
+    <string name="u_have_new_device">Masz nowe urządzenie AIS</string>
+    <string name="finish">Zakończ</string>
+    <string name="creator_area_info">Na koniec możesz przypisać je do obszaru</string>
+    <string name="add">Dodaj</string>
+    <string name="cancel">Anuluj</string>
+    <string name="name_new_area">Podaj nazwę nowego obszaru:</string>
+    <string name="pair_with_box">Parowanie z bramką</string>
+    <string name="no_boxes_to_pair">Brak dostępnych bramek do parowania</string>
+    <string name="pair_success">Sparowano</string>
+    <string name="pair_error">Nie można sparować urządzenia, spróbuj ponownie później</string>
+    <string name="creator_start_button">ZACZYNAMY</string>
+    <string name="select_new_device_from_list_text">Wybierz z listy swoje nowe urządzenie AIS</string>
 </resources>
 

@@ -71,7 +71,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
             val areasViewModel = ViewModelProviders.of(activity).get(AreasViewModel::class.java)
             areasViewModel.getAll().observe(activity, Observer {
                 val areas = mutableListOf<AreaViewModel>()
-                areas.add(AreaViewModel(AreaViewModel.EMPTY, "      brak      "))
+                areas.add(AreaViewModel(AreaViewModel.EMPTY, "      -      "))
                 it?.forEach { a ->
                     areas.add(AreaViewModel(a.uid!!, a.name))
                 }
