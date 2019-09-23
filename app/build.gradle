@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId "pl.sviete.dom.devices"
         minSdkVersion 23
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
