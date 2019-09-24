@@ -7,9 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import pl.sviete.dom.devices.aiscontrollers.models.Status
-import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.net.WiFiScanner
-import java.io.UnsupportedEncodingException
 
 class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgressListener): WiFiScanner.OnWiFiConnectedListener {
     private val TAG = AisDeviceConfigurator::class.java.simpleName
@@ -123,16 +121,19 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
         }
         else {
             try {
+                mWiFiScanner.bindToNetwork()//Issue#2
                 var deviceStatus = AisDeviceRestController.getStatus(AisDeviceRestController.AP_IP)
                 //try again
-                if (deviceStatus == null)
+                if (deviceStatus == null) {
+                    mWiFiScanner.bindToNetwork()//Issue#2
                     deviceStatus = AisDeviceRestController.getStatus(AisDeviceRestController.AP_IP)
+                }
                 //cant get device status then return false
                 if (deviceStatus?.Status == null) {
                     Log.e(TAG, "Connected device doesn't return status")
                     return Pair(false, null)
                 }
-
+                mWiFiScanner.bindToNetwork()//Issue#2
                 val result = AisDeviceRestController.setupNew(mFriendlyName!!, mAPName!!, mAPPassword!!)
                 if (result){
                     return Pair(true, deviceStatus)
@@ -142,6 +143,9 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "ConnectAndConfiguraDevice", e)
+            }
+            finally {
+                mWiFiScanner.bindToNetwork(true)
             }
         }
         return Pair(false, null)

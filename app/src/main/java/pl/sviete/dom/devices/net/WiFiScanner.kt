@@ -187,6 +187,12 @@ class WiFiScanner (context: Context) {
         }
     }
 
+    fun bindToNetwork(clear: Boolean = false): Boolean{
+        val connectivityManager = mContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val net = if (clear) null else connectivityManager.activeNetwork
+        return connectivityManager.bindProcessToNetwork(net)
+    }
+
     private val wiFiManager: WifiManager
     get (){
         if (mWiFiManager == null)
