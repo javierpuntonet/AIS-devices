@@ -27,4 +27,4 @@ interface ConnectDeviceView {
     }
 }
 
-enum class ConnectStep { ConnectToDevice, SendConfiguration, Waiting, NetworkScan }
+enum class ConnectStep { ConnectToDevice, SendConfiguration, Waiting, NetworkScan1, NetworkScan2, NetworkScan3 }

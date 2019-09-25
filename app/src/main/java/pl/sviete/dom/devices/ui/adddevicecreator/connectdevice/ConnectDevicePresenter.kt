@@ -10,6 +10,7 @@ import pl.sviete.dom.devices.netscanner.IScannerResult
 import pl.sviete.dom.devices.netscanner.Scanner
 import java.util.*
 import kotlin.concurrent.schedule
+import android.util.Log
 
 class ConnectDevicePresenter(private val fragment: Fragment, override var view: ConnectDeviceView.View)
     : BasePresenter<ConnectDeviceView.View, ConnectDeviceView.Presenter>(), ConnectDeviceView.Presenter
@@ -22,6 +23,7 @@ class ConnectDevicePresenter(private val fragment: Fragment, override var view: 
     private var mNewDeviceMAC: String? = null
     private var mNewDeviceType: AisDeviceType? = null
     private val mTimer = Timer()
+    val TAG = "ConnectDevicePresenter"
 
     override fun onStop() {
         mAisCtrl?.cancelPair()
@@ -61,11 +63,24 @@ class ConnectDevicePresenter(private val fragment: Fragment, override var view: 
             view.onStep(ConnectStep.Waiting)
             view.setIconForDevice(AisDeviceHelper.getResourceForType(mNewDeviceType))
 
-            mTimer.schedule(60000){
-                view.onStep(ConnectStep.NetworkScan)
+            mTimer.schedule(15000){
+                Log.d(TAG, "NetworkScan1")
+                view.onStep(ConnectStep.NetworkScan1)
                 mScanner!!.runIpScanner()
 
                 mTimer.schedule(15000){
+                    Log.d(TAG, "NetworkScan2")
+                    view.onStep(ConnectStep.NetworkScan2)
+                    mScanner!!.runIpScanner()
+
+                    mTimer.schedule(15000){
+                        Log.d(TAG, "NetworkScan3")
+                        view.onStep(ConnectStep.NetworkScan3)
+                        mScanner!!.runIpScanner()
+                    }
+                }
+
+                mTimer.schedule(60000){
                     view.onPairError(AisDeviceConfigurator.ErrorCode.TIMEOUT)
                     mListener!!.onConnectDeviceFaild()
                 }

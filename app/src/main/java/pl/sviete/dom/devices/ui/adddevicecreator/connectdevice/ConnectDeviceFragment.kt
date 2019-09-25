@@ -85,7 +85,9 @@ class ConnectDeviceFragment : Fragment(), ConnectDeviceView.View  {
                 when (step) {
                     ConnectStep.ConnectToDevice -> R.string.connect_to_device
                     ConnectStep.SendConfiguration -> R.string.send_configuration
-                    ConnectStep.NetworkScan -> R.string.network_scan
+                    ConnectStep.NetworkScan1 -> R.string.network_scan_1
+                    ConnectStep.NetworkScan2 -> R.string.network_scan_2
+                    ConnectStep.NetworkScan3 -> R.string.network_scan_3
                     ConnectStep.Waiting -> R.string.waiting_for_device
                 }
             )
