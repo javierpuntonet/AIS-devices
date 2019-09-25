@@ -80,6 +80,7 @@
     <string name="waiting_for_device">Oczekiwanie na podłączenie urządzenia do lokalnej sieci WiFi</string>
     <string name="network_scan">Skanowanie sieci w poszukiwaniu urządzenia</string>
     <string name="areas">Obszary</string>
+    <string name="manage_areas">Zarządzaj obszarami</string>
     <string name="area">Obszar</string>
     <string name="delete_area_question">Usunąć obszar?</string>
     <string name="Congratulations">Gratulacje!</string>

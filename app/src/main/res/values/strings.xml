@@ -87,6 +87,7 @@
     <string name="waiting_for_device">Waiting for the device to connect to the local WiFi network</string>
     <string name="network_scan">Scanning the network for a device</string>
     <string name="areas">Areas</string>
+    <string name="manage_areas">Manage areas</string>
     <string name="area">Area</string>
     <string name="delete_area_question">Delete area?</string>
     <string name="Congratulations">Congratulations!</string>
