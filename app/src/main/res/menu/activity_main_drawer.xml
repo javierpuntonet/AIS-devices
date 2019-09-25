@@ -11,7 +11,7 @@
         <item
             android:id="@+id/nav_areas"
             android:icon="@drawable/areas"
-            android:title="@string/areas" />
+            android:title="@string/manage_areas" />
     <!-- <item
              android:id="@+id/nav_settings"
              android:icon="@drawable/ic_menu_manage"
