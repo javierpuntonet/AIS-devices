@@ -116,16 +116,21 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
     private suspend fun connectAndConfigureDevice(): Pair<Boolean, Status?> {
         // check if we have correct connection if not then exit
         val networkId = mWiFiScanner.getCurrentNetworkId()
+        var bindedToWiFiNet = false;
         if (networkId != mDeviceNetworkId) {
             Log.e(TAG, "Connected to wrong network")
         }
         else {
             try {
-                mWiFiScanner.bindToNetwork()//Issue#2
+                bindedToWiFiNet = mWiFiScanner.bindToWifiNetwork()//Issue#2
+                Log.d(TAG, "bindedToNet: ${bindedToWiFiNet.toString()}")
                 var deviceStatus = AisDeviceRestController.getStatus(AisDeviceRestController.AP_IP)
                 //try again
                 if (deviceStatus == null) {
-                    mWiFiScanner.bindToNetwork()//Issue#2
+                    if (!bindedToWiFiNet) {
+                        mWiFiScanner.bindToWifiNetwork()//Issue#2
+                        Log.d(TAG, "bindedToNet: ${bindedToWiFiNet.toString()}")
+                    }
                     deviceStatus = AisDeviceRestController.getStatus(AisDeviceRestController.AP_IP)
                 }
                 //cant get device status then return false
@@ -133,7 +138,10 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
                     Log.e(TAG, "Connected device doesn't return status")
                     return Pair(false, null)
                 }
-                mWiFiScanner.bindToNetwork()//Issue#2
+                if (!bindedToWiFiNet) {
+                    bindedToWiFiNet = mWiFiScanner.bindToWifiNetwork()//Issue#2
+                    Log.d(TAG, "bindToWifiNetwork: ${bindedToWiFiNet.toString()}")
+                }
                 val result = AisDeviceRestController.setupNew(mFriendlyName!!, mAPName!!, mAPPassword!!)
                 if (result){
                     return Pair(true, deviceStatus)
@@ -145,7 +153,8 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
                 Log.e(TAG, "ConnectAndConfiguraDevice", e)
             }
             finally {
-                mWiFiScanner.bindToNetwork(true)
+                bindedToWiFiNet = mWiFiScanner.unBindFromNetwork()
+                Log.d(TAG, "unBindFromNetwork: ${bindedToWiFiNet.toString()}")
             }
         }
         return Pair(false, null)

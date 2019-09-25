@@ -187,10 +187,26 @@ class WiFiScanner (context: Context) {
         }
     }
 
-    fun bindToNetwork(clear: Boolean = false): Boolean{
+    fun unBindFromNetwork() : Boolean{
+        Log.d(TAG, "Clear the current network binding")
         val connectivityManager = mContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val net = if (clear) null else connectivityManager.activeNetwork
-        return connectivityManager.bindProcessToNetwork(net)
+        // bind to null network to clear the current binding
+        return connectivityManager.bindProcessToNetwork(null)
+    }
+
+    fun bindToWifiNetwork(): Boolean{
+        Log.d(TAG, "Bind to Wifi network")
+        val connectivityManager = mContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networks = connectivityManager.allNetworks
+        for (network in networks) {
+            var networkCapabilities = connectivityManager.getNetworkCapabilities(network)
+            Log.d(TAG, "We have network with capabilities ${networkCapabilities.toString()}")
+            if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)){
+                Log.d(TAG, "This newtowk has WiFi transport we can bind! ${networkCapabilities.toString()}")
+                return connectivityManager.bindProcessToNetwork(network)
+            }
+        }
+        return false;
     }
 
     private val wiFiManager: WifiManager
