@@ -46,9 +46,7 @@ public class ScanHostsAsyncTask extends AsyncTask<Integer, Void, Void> {
         IpScannerResult activity = delegate.get();
         File file = new File(ARP_TABLE);
         if (!file.exists() || !file.canRead()) {
-            activity.processFinish(new FileNotFoundException("Unable to access device ARP table"));
-            activity.processFinish(true);
-
+            activity.scanFinish(new FileNotFoundException("Unable to access device ARP table"));
             return null;
         }
 
@@ -75,7 +73,7 @@ public class ScanHostsAsyncTask extends AsyncTask<Integer, Void, Void> {
             executor.awaitTermination(5, TimeUnit.MINUTES);
             executor.shutdownNow();
         } catch (InterruptedException e) {
-            activity.processFinish(e);
+            activity.scanFinish(e);
             return null;
         }
 
@@ -125,11 +123,11 @@ public class ScanHostsAsyncTask extends AsyncTask<Integer, Void, Void> {
                                 host.setHostname(hostname);
 
                                 if (activity != null) {
-                                    activity.processFinish(host, numHosts);
+                                    activity.hostFounded(host, numHosts);
                                 }
                             } catch (UnknownHostException e) {
                                 numHosts.decrementAndGet();
-                                activity.processFinish(e);
+                                activity.scanFinish(e);
                                 return;
                             }
 
@@ -150,13 +148,13 @@ public class ScanHostsAsyncTask extends AsyncTask<Integer, Void, Void> {
             }
         } catch (IOException e) {
             if (activity != null) {
-                activity.processFinish(e);
+                activity.scanFinish(e);
             }
 
         } finally {
             executor.shutdown();
             if (activity != null) {
-                activity.processFinish(true);
+                activity.scanFinish();
             }
 
             try {

@@ -51,7 +51,7 @@ public class ScanHostsRunnable implements Runnable {
 
 //                IpScannerResult activity = delegate.get();
 //                if (activity != null) {
-//                    activity.processFinish(1);
+//                    activity.scanFinish(1);
 //                }
             }
         }

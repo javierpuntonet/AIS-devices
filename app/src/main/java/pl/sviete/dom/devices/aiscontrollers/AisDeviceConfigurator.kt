@@ -101,14 +101,18 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
             } catch (e: Exception) {
                 Log.e(TAG, "onConnected", e)
             } finally {
-                reconnect()
-                listener.onAddDeviceFinished(
-                    AddDeviceArgs(
-                        result,
-                        ErrorCode.OK,
-                        deviceStatus
+                try {
+                    reconnect()
+                    listener.onAddDeviceFinished(
+                        AddDeviceArgs(
+                            result,
+                            ErrorCode.OK,
+                            deviceStatus
+                        )
                     )
-                )
+                }catch (ex: Exception){
+                    Log.e(TAG, "onConnected in finally", ex)
+                }
             }
         }
     }
