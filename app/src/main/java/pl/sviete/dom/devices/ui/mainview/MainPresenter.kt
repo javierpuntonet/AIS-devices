@@ -84,11 +84,11 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     }
 
     override fun resumeView() {
-        mScanner.runBonjourDeviceScanner()
+
     }
 
     override fun pauseView() {
-        mScanner.stopBonjourDeviceScanner()
+
     }
 
     override fun areaSelected(area: AreaViewModel){
@@ -159,8 +159,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
 
     override fun clearCache() {
         mScanner.devices.clear()
-        mScanner.stopBonjourDeviceScanner()
-        mScanner.runBonjourDeviceScanner()
+        mScanner.runIpScanner()
     }
 
     override fun checkPermissions() {

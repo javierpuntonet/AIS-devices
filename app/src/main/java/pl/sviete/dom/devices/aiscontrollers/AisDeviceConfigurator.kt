@@ -116,20 +116,20 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
     private suspend fun connectAndConfigureDevice(): Pair<Boolean, Status?> {
         // check if we have correct connection if not then exit
         val networkId = mWiFiScanner.getCurrentNetworkId()
-        var bindedToWiFiNet = false;
+        var bindedToWiFiNet : Boolean
         if (networkId != mDeviceNetworkId) {
             Log.e(TAG, "Connected to wrong network")
         }
         else {
             try {
                 bindedToWiFiNet = mWiFiScanner.bindToWifiNetwork()//Issue#2
-                Log.d(TAG, "bindedToNet: ${bindedToWiFiNet.toString()}")
+                Log.d(TAG, "bindedToNet: $bindedToWiFiNet")
                 var deviceStatus = AisDeviceRestController.getStatus(AisDeviceRestController.AP_IP)
                 //try again
                 if (deviceStatus == null) {
                     if (!bindedToWiFiNet) {
                         mWiFiScanner.bindToWifiNetwork()//Issue#2
-                        Log.d(TAG, "bindedToNet: ${bindedToWiFiNet.toString()}")
+                        Log.d(TAG, "bindedToNet: $bindedToWiFiNet")
                     }
                     deviceStatus = AisDeviceRestController.getStatus(AisDeviceRestController.AP_IP)
                 }
@@ -140,7 +140,7 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
                 }
                 if (!bindedToWiFiNet) {
                     bindedToWiFiNet = mWiFiScanner.bindToWifiNetwork()//Issue#2
-                    Log.d(TAG, "bindToWifiNetwork: ${bindedToWiFiNet.toString()}")
+                    Log.d(TAG, "bindToWifiNetwork: $bindedToWiFiNet")
                 }
                 val result = AisDeviceRestController.setupNew(mFriendlyName!!, mAPName!!, mAPPassword!!)
                 if (result){
@@ -154,7 +154,7 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
             }
             finally {
                 bindedToWiFiNet = mWiFiScanner.unBindFromNetwork()
-                Log.d(TAG, "unBindFromNetwork: ${bindedToWiFiNet.toString()}")
+                Log.d(TAG, "unBindFromNetwork: $bindedToWiFiNet")
             }
         }
         return Pair(false, null)

@@ -27,7 +27,6 @@ class ConnectDevicePresenter(private val fragment: Fragment, override var view: 
 
     override fun onStop() {
         mAisCtrl?.cancelPair()
-        mScanner?.stopBonjourDeviceScanner()
     }
 
     override fun pairDevice(deviceSsid: String, apName: String, apPassword: String, deviceName: String) {
@@ -39,7 +38,6 @@ class ConnectDevicePresenter(private val fragment: Fragment, override var view: 
             mScanner?.devices?.getFoundedDevices()?.forEach {
                 if (it.mac == mNewDeviceMAC){
                     mTimer.cancel()
-                    mScanner?.stopBonjourDeviceScanner()
                     mScanner!!.devices.liveData.removeObservers(fragment.activity!!)
                     mListener!!.onConnectDeviceSuccess(mNewDeviceType, mNewDeviceMAC!!)
                 }
@@ -85,8 +83,6 @@ class ConnectDevicePresenter(private val fragment: Fragment, override var view: 
                     mListener!!.onConnectDeviceFaild()
                 }
             }
-
-            mScanner!!.runBonjourDeviceScanner()
         }
         else{
             view.onPairError(result.errorCode)

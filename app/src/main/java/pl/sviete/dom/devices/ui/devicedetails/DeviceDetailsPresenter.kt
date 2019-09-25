@@ -28,7 +28,7 @@ class DeviceDetailsPresenter(val activity: AppCompatActivity, override var view:
             if (device != null) {
                 mModel = device
                 loadView()
-                mAisDeviceViewModel.getById(id).removeObservers(activity as AppCompatActivity)
+                mAisDeviceViewModel.getById(id).removeObservers(activity)
             }
         })
         val areaVM = ViewModelProviders.of(activity).get(AreasViewModel::class.java)
@@ -40,7 +40,7 @@ class DeviceDetailsPresenter(val activity: AppCompatActivity, override var view:
                     mAreas!!.add(AreaViewModel(a.uid!!, a.name))
                 }
                 loadView()
-                areaVM.getAll().removeObservers(activity as AppCompatActivity)
+                areaVM.getAll().removeObservers(activity)
             }
         })
     }
