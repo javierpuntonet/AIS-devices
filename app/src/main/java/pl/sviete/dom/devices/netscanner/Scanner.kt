@@ -1,6 +1,7 @@
 package pl.sviete.dom.devices.netscanner
 
 import android.content.Context
+import android.util.Log
 import com.github.druk.rx2dnssd.BonjourService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -18,7 +19,7 @@ import pl.sviete.dom.devices.net.ipscanner.Wireless
 import java.util.concurrent.atomic.AtomicInteger
 
 class Scanner (val context: Context, private val delegate: IScannerResult): IpScannerResult, IBonjourResult {
-
+    val TAG = "Scanner"
     private val mWifi = Wireless(context)
     private var mBonjour: BonjourScanner? = null
 
@@ -26,10 +27,11 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
     val boxes : FoundBoxRepository get() = FoundBoxRepository.getInstance()
 
     fun runBonjourDeviceScanner(){
-        if (mBonjour == null)
-            mBonjour = BonjourScanner(context, this)
-        mBonjour!!.startDiscoveryDevice()
-        mBonjour!!.startDiscoveryGate()
+        Log.d(TAG, "runBonjourDeviceScanner")
+//        if (mBonjour == null)
+//            mBonjour = BonjourScanner(context, this)
+//        mBonjour!!.startDiscoveryDevice()
+//        mBonjour!!.startDiscoveryGate()
     }
 
     fun stopBonjourDeviceScanner(){
