@@ -47,7 +47,7 @@ class ConnectDevicePresenter(private val fragment: Fragment, override var view: 
                 }
             }
             catch (ex: Exception){
-                Log.e(TAG, "pairDevice", ex)
+                Log.e(TAG, "pairDevice: $ex")
             }
         })
 
@@ -71,16 +71,16 @@ class ConnectDevicePresenter(private val fragment: Fragment, override var view: 
                 view.onStep(ConnectStep.Waiting)
                 view.setIconForDevice(AisDeviceHelper.getResourceForType(mNewDeviceType))
 
-                Log.d(TAG, "NetworkScan 1")
                 //view.onStep(ConnectStep.NetworkScan1)
                 Thread.sleep(2000)
+                Log.d(TAG, "NetworkScan 1")
                 mScanner!!.runIpScanner()
             } else {
                 view.onPairError(result.errorCode)
                 mListener!!.onConnectDeviceFaild()
             }
         }catch (ex: Exception){
-            Log.e(TAG, "onAddDeviceFinished", ex)
+            Log.e(TAG, "onAddDeviceFinished: $ex")
             mListener!!.onConnectDeviceFaild()
         }
     }
@@ -118,7 +118,7 @@ class ConnectDevicePresenter(private val fragment: Fragment, override var view: 
                 mListener!!.onConnectDeviceFaild()
             }
         }catch (ex: Exception){
-            Log.e(TAG, "ipScanFinished", ex)
+            Log.e(TAG, "ipScanFinished: $ex")
         }
     }
 }

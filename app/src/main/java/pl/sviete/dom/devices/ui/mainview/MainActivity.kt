@@ -38,6 +38,9 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         super.onCreate(savedInstanceState)
         Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler())
         setContentView(R.layout.activity_main)
+        // set app version info
+        //findViewById<TextView>(R.id.app_version_name).setText("TODO version info")
+
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 

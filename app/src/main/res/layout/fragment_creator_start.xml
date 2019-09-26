@@ -14,12 +14,26 @@
             tools:layout_constraintTop_creator="1"
             tools:layout_constraintLeft_creator="1"
             android:text="@string/creator_welcome_text"
-            android:layout_marginTop="144dp"
+            android:layout_marginTop="44dp"
             app:layout_constraintTop_toTopOf="parent" android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintVertical_bias="0.0"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/press_button"
+        app:layout_constraintBottom_toTopOf="@+id/section_label"
+        app:layout_constraintDimensionRatio="h,16:9"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/section_label"
+        app:layout_constraintVertical_chainStyle="spread_inside" />
+
     <Button
             android:text="@string/creator_start_button"
             android:layout_width="wrap_content"

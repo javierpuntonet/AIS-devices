@@ -51,7 +51,7 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
                     devices.setNonAisDevice(ip)
                 }
             } catch (ex: Exception){
-                Log.e(TAG, "refreshDeviceStatus", ex)
+                Log.e(TAG, "refreshDeviceStatus: $ex")
             }
         }
     }
@@ -68,7 +68,7 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
                     boxes.add(info.Hostname, info.GateId, ip, true)
                 }
             } catch (ex: Exception) {
-                Log.e(TAG, "getBoxInfo", ex)
+                Log.e(TAG, "getBoxInfo: $ex")
             }
         }
     }

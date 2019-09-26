@@ -172,7 +172,7 @@ class WiFiScanner (context: Context) {
                     }
                 }
                 catch (ex: Exception){
-                    Log.e(TAG, "onAvailable", ex)
+                    Log.e(TAG, "onAvailable: $ex")
                 }
             }
         }

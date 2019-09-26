@@ -111,7 +111,7 @@ class AisDeviceConfigurator(context: Context, val listener: OnConfigurationProgr
                         )
                     )
                 }catch (ex: Exception){
-                    Log.e(TAG, "onConnected in finally", ex)
+                    Log.e(TAG, "onConnected in finally: $ex")
                 }
             }
         }

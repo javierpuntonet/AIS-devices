@@ -89,7 +89,7 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
             mAPList = apList
         }
         catch (ex: Exception){
-            Log.e(TAG,"onScanResults", ex)
+            Log.e(TAG,"onScanResults: $ex")
         }
         finally {
             mProgressBarManager!!.hideProgressBar()
@@ -113,7 +113,7 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
             mWifi!!.startScan(this)
         }
         catch (ex: Exception){
-            Log.e(TAG, "refreshAPList", ex)
+            Log.e(TAG, "refreshAPList: $ex")
             mProgressBarManager!!.hideProgressBar()
         }
     }
