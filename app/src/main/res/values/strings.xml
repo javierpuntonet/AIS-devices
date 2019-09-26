@@ -59,7 +59,7 @@
     <string name="connect">Connect</string>
     <string name="back">Back</string>
     <string name="unknown_error">Unfortunately something went wrong</string>
-    <string name="welcome_add_new_device">Add your first device</string>
+    <string name="welcome_add_new_device">Add your new device</string>
     <string name="next">Next</string>
     <string name="name">Name</string>
     <string name="password">Password</string>
