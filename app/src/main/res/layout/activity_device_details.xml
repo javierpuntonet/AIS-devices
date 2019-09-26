@@ -85,6 +85,7 @@
 
     <Spinner
         android:id="@+id/spinner_device_area"
+        style="@android:style/Widget.Material.Spinner.Underlined"
         android:layout_width="0dp"
         android:layout_height="47dp"
         android:layout_marginStart="8dp"
