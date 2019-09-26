@@ -2,17 +2,17 @@
 
 ## Discovery, manage and control all of your local devices!
 
-This app is a part of AI-Speaker.com project. It works with esp8266 devices on Tasmota firmware.
+This app is a part of [AI-Speaker.com](https://ai-speaker.com) project. It works with Espressif ESP8266 devices on [Tasmota firmware](https://github.com/arendst/Sonoff-Tasmota) or our fork [AIS-Tasmota](https://github.com/sviete/AIS-Tasmota).
 
 The main features are:
 
-1. Scan WiFi networks and add the new device
+1. Add new device to WiFi network and to list in app
 https://youtu.be/d7uW1mUzRlU
 
-2. Discover the MQTT gate service (if it’s advertising via mDNS). Allow to set the mqtt broker for the device:
+2. Discover the MQTT gate service. Allow to set the mqtt broker for the device:
 https://youtu.be/gMUoayJpOOY
 
-3. Scan network to discover devices in network mDNS + add them to app
+3. Scan network to discover devices in network mDNS + IP scanner and add them to app
 https://youtu.be/AQnpPhmJD2M
 
 
