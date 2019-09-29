@@ -13,10 +13,12 @@ import pl.sviete.dom.devices.mvp.BasePresenter
 import pl.sviete.dom.devices.netscanner.FoundDeviceRepository
 import pl.sviete.dom.devices.ui.areas.AreaViewModel
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 
 class DeviceDetailsPresenter(val activity: AppCompatActivity, override var view: DeviceDetailsView.View)
     : BasePresenter<DeviceDetailsView.View, DeviceDetailsView.Presenter>(), DeviceDetailsView.Presenter {
 
+    private val TAG = DeviceDetailsPresenter::class.java.simpleName
     private lateinit var mAisDeviceViewModel: AisDeviceViewModel
     private var mModel: AisDeviceEntity? = null
     private var mAreas: MutableList<AreaViewModel>? = null
@@ -65,14 +67,18 @@ class DeviceDetailsPresenter(val activity: AppCompatActivity, override var view:
             }
             if (save) {
                 GlobalScope.launch(Dispatchers.Main) {
-                    if (saveName) {
-                        save = AisDeviceRestController.setName(ip, name)
-                    }
-                    if (save) {
-                        mAisDeviceViewModel.update(it)
-                        activity.finish()
-                    } else {
-                        view.showSaveErrorInfo()
+                    try {
+                        if (saveName) {
+                            save = AisDeviceRestController.setName(ip, name)
+                        }
+                        if (save) {
+                            mAisDeviceViewModel.update(it)
+                            activity.finish()
+                        } else {
+                            view.showSaveErrorInfo()
+                        }
+                    }catch (ex: Exception){
+                        Log.e(TAG, "saveView,save: $ex")
                     }
                 }
                 return true
@@ -103,8 +109,13 @@ class DeviceDetailsPresenter(val activity: AppCompatActivity, override var view:
 
     override fun pairWithBox(boxId: String) {
         GlobalScope.launch(Dispatchers.Main) {
-            val success = AisDeviceRestController.pairWithBox(mModel!!.ip!!, boxId)
-            view.showPairStatus(success)
+            try {
+                val success = AisDeviceRestController.pairWithBox(mModel!!.ip!!, boxId)
+                view.showPairStatus(success)
+            }
+            catch (ex: java.lang.Exception){
+                Log.e(TAG, "pairWithBox: $ex")
+            }
         }
     }
 

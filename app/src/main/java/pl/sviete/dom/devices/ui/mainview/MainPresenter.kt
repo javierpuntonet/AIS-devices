@@ -8,6 +8,7 @@ import android.net.Uri
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -24,6 +25,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     , MainView.Presenter
     , IScannerResult {
 
+    private val TAG = MainPresenter::class.java.simpleName
     private val PERMISSIONS_REQUEST_LOCATION: Int = 111
     private lateinit var mAisDeviceViewModel: AisDeviceViewModel
     private var mAisList = ArrayList<DeviceViewModel>()
@@ -103,8 +105,8 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     }
 
     override fun scanNetwork() {
-        view.showProgress()
-        mScanner.runIpScanner()
+        if (mScanner.runIpScanner())
+            view.showProgress()
     }
 
     override fun checkPermissionsGranted(requestCode: Int, grantResults: IntArray){
@@ -148,9 +150,13 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
             }
             else {
                 GlobalScope.launch(Dispatchers.Main) {
-                    val status = AisDeviceRestController.toggleStatus(device.ip)
-                    if (status != null) {
-                        mScanner.devices.setStatus(device.mac, status)
+                    try {
+                        val status = AisDeviceRestController.toggleStatus(device.ip)
+                        if (status != null) {
+                            mScanner.devices.setStatus(device.mac, status)
+                        }
+                    }catch (ex: Exception){
+                        Log.e(TAG, "deviceClick,toggleStatus: $ex")
                     }
                 }
             }

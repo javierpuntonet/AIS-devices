@@ -3,6 +3,7 @@ package pl.sviete.dom.devices.ui.boxdetails
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import kotlinx.coroutines.*
 import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.db.*
@@ -12,6 +13,7 @@ import pl.sviete.dom.devices.netscanner.FoundDeviceRepository
 class BoxDetailsPresenter(val activity: AppCompatActivity, override var view: BoxDetailsView.View)
     : BasePresenter<BoxDetailsView.View, BoxDetailsView.Presenter>(), BoxDetailsView.Presenter {
 
+    private val TAG = BoxDetailsPresenter::class.java.simpleName
     private lateinit var mAisDeviceViewModel: AisDeviceViewModel
     private var mModel: AisDeviceEntity? = null
 
@@ -36,9 +38,13 @@ class BoxDetailsPresenter(val activity: AppCompatActivity, override var view: Bo
 
             if (save) {
                 GlobalScope.launch(Dispatchers.Main) {
-                    if (save) {
-                        mAisDeviceViewModel.update(it)
-                        activity.finish()
+                    try {
+                        if (save) {
+                            mAisDeviceViewModel.update(it)
+                            activity.finish()
+                        }
+                    }catch (ex: Exception){
+                        Log.e(TAG, "saveView,save $ex")
                     }
                 }
                 return true

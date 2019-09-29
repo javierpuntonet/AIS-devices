@@ -28,9 +28,15 @@ class Scanner (val context: Context, private val delegate: IScannerResult): IpSc
         refreshDeviceStatus(ip)
     }
 
-    fun runIpScanner() {
-        val ip = mWifi.internalWifiIpAddress
-        ScanHostsAsyncTask(this).execute(ip, mWifi.internalWifiSubnet, 150)
+    fun runIpScanner() :Boolean {
+        try {
+            val ip = mWifi.internalWifiIpAddress
+            ScanHostsAsyncTask(this).execute(ip, mWifi.internalWifiSubnet, 150)
+            return true
+        }catch (ex: Exception){
+            Log.e(TAG, "runIpScanner $ex")
+        }
+        return false
     }
 
     private fun refreshDeviceStatus(ip: String){
