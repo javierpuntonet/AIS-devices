@@ -127,6 +127,8 @@ public class Wireless {
     public <T> T getInternalWifiIpAddress(Class<T> type) throws UnknownHostException, NoWifiManagerException {
         int ip = getWifiInfo().getIpAddress();
 
+        if (ip == 0)
+            return type.cast(0);
         //Endianness can be a potential issue on some hardware
         if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
             ip = Integer.reverseBytes(ip);
@@ -134,13 +136,11 @@ public class Wireless {
 
         byte[] ipByteArray = BigInteger.valueOf(ip).toByteArray();
 
-
         if (type.isInstance("")) {
             return type.cast(InetAddress.getByAddress(ipByteArray).getHostAddress());
         } else {
             return type.cast(new BigInteger(InetAddress.getByAddress(ipByteArray).getAddress()).intValue());
         }
-
     }
 
     /**
