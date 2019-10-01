@@ -84,7 +84,7 @@
     <string name="network_scan_2">Skanowanie sieci w poszukiwaniu urządzenia..</string>
     <string name="network_scan_3">Skanowanie sieci w poszukiwaniu urządzenia...</string>
     <string name="areas">Obszary</string>
-    <string name="menu_manage_areas">Zarządzaj obszarami</string>
+    <string name="menu_manage_areas">Rejestr obszarów</string>
     <string name="area">Obszar</string>
     <string name="delete_area_question">Usunąć obszar?</string>
     <string name="Congratulations">Gratulacje!</string>

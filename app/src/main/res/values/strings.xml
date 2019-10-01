@@ -91,7 +91,7 @@
     <string name="network_scan_2">Scanning the network for a device..</string>
     <string name="network_scan_3">Scanning the network for a device...</string>
     <string name="areas">Areas</string>
-    <string name="menu_manage_areas">Manage areas</string>
+    <string name="menu_manage_areas">Area registry</string>
     <string name="area">Area</string>
     <string name="delete_area_question">Delete area?</string>
     <string name="Congratulations">Congratulations!</string>
