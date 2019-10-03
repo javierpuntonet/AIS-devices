@@ -24,6 +24,7 @@ import kotlin.concurrent.withLock
 import android.widget.TextView
 import pl.sviete.dom.devices.*
 import pl.sviete.dom.devices.ui.details.DetailsFabric
+import pl.sviete.dom.devices.BuildConfig
 
 class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNavigationItemSelectedListener {
 
@@ -39,7 +40,7 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler())
         setContentView(R.layout.activity_main)
         // set app version info
-        //findViewById<TextView>(R.id.app_version_name).setText("TODO version info")
+        nav_view.getHeaderView(0).findViewById<TextView>(R.id.app_version_name).text = BuildConfig.VERSION_NAME
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)

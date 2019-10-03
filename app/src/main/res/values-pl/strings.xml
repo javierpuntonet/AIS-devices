@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">AIS-Devices</string>
-    <string name="app_version_name">beta v1.0.4</string>
     <string name="settings">Ustawienia</string>
     <string name="navigation_drawer_open">Otwórz panel nawigacji</string>
     <string name="navigation_drawer_close">Zamknij panel nawigacji</string>

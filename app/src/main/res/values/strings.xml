@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">AIS-Devices</string>
-    <string name="app_version_name">beta v1.0.4</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="settings">Settings</string>

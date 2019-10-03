@@ -42,7 +42,6 @@
             android:layout_below="@id/app_name"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:text="@string/app_version_name"
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
     </RelativeLayout>
 </LinearLayout>
