@@ -12,6 +12,7 @@ import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.aiscontrollers.AisDeviceRestController
 import pl.sviete.dom.devices.aiscontrollers.models.PowerStatus
 import pl.sviete.dom.devices.db.*
@@ -73,7 +74,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
             val areasViewModel = ViewModelProviders.of(activity).get(AreasViewModel::class.java)
             areasViewModel.getAll().observe(activity, Observer {
                 val areas = mutableListOf<AreaViewModel>()
-                areas.add(AreaViewModel(AreaViewModel.EMPTY, "      -      "))
+                areas.add(AreaViewModel(AreaViewModel.EMPTY, activity.resources.getString(R.string.None)))
                 it?.forEach { a ->
                     areas.add(AreaViewModel(a.uid!!, a.name))
                 }

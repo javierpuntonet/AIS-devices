@@ -99,5 +99,6 @@
     <string name="pair_error">Nie można sparować urządzenia, spróbuj ponownie później</string>
     <string name="creator_start_button">ZACZYNAMY</string>
     <string name="select_new_device_from_list_text">Wybierz z listy swoje nowe urządzenie AIS</string>
+    <string name="None">Brak</string>
 </resources>
 
