@@ -9,8 +9,7 @@ import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.net.models.AccessPointInfo
 import pl.sviete.dom.devices.ui.adddevicecreator.apdata.ApDataCreatorFragment
-import pl.sviete.dom.devices.ui.adddevicecreator.aplist.AccessPointViewModel
-import pl.sviete.dom.devices.ui.adddevicecreator.aplist.AplistCreatorFragment
+import pl.sviete.dom.devices.ui.adddevicecreator.aplist.*
 import pl.sviete.dom.devices.ui.adddevicecreator.area.CreatorAreaView
 import pl.sviete.dom.devices.ui.adddevicecreator.connectdevice.ConnectDeviceView
 import pl.sviete.dom.devices.ui.adddevicecreator.namecreator.NameCreatorFragment
@@ -18,7 +17,7 @@ import pl.sviete.dom.devices.ui.adddevicecreator.startcreator.StartCreatorFragme
 
 class MainCreatorActivity : AppCompatActivity(), MainCreatorView.View
                             , MainCreatorView.ProgressBarManager
-    , StartCreatorFragment.OnNextStepListener, AplistCreatorFragment.OnAPSelectedListener
+    , StartCreatorFragment.OnNextStepListener, ApListView.OnAPSelectedListener
     , ApDataCreatorFragment.OnAPDataAcceptListener, NameCreatorFragment.OnNameAcceptListener
     , ConnectDeviceView.OnConnectDevice, CreatorAreaView.OnFinishCreatorArea{
     override val presenter: MainCreatorView.Presenter= MainCreatorPresenter(this, this)

@@ -16,12 +16,12 @@ import pl.sviete.dom.devices.net.models.AccessPointInfo
 import pl.sviete.dom.devices.ui.adddevicecreator.MainCreatorView
 import java.util.*
 
-class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
+class AplistCreatorFragment : Fragment(), ApListView.View {
+    override val presenter: ApListView.Presenter = ApListPresenter(this, this)
 
     private val TAG = AplistCreatorFragment::class.java.simpleName
-    private var mApSelectedListener: OnAPSelectedListener? = null
+
     private var mProgressBarManager: MainCreatorView.ProgressBarManager? = null
-    private var mWifi: WiFiScanner? = null
     private var mAisAdapter: APAdapter? = null
     private val mAisList = ArrayList<AccessPointViewModel>()
     private var mAPList: List<AccessPointViewModel> = mutableListOf()
@@ -40,16 +40,13 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        mWifi = WiFiScanner(context!!)
-
         rv_ap_list.layoutManager = LinearLayoutManager(context)
         mAisAdapter = APAdapter(
             mAisList,
             context!!,
             object : APAdapter.OnItemClickListener {
                 override fun onItemClick(item: AccessPointViewModel) {
-                    mWifi?.stopScan()
-                    mApSelectedListener?.onAPSelected(item, mAPList)
+                    presenter.onApSelected(item, mAPList)
                 }
             })
         rv_ap_list.adapter = mAisAdapter
@@ -58,6 +55,8 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
             refreshAPList()
             ap_swipe.isRefreshing = false
         }
+
+        presenter.loadView()
     }
 
     override fun onStart() {
@@ -67,50 +66,35 @@ class AplistCreatorFragment : Fragment(), WiFiScanner.OnScanResultsListener {
 
     override fun onStop() {
         super.onStop()
-        mWifi!!.stopScan()
+        presenter.onStop()
         mProgressBarManager!!.hideProgressBar()
     }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is OnAPSelectedListener)
-            mApSelectedListener = context
+        presenter.onAttach()
         if (context is MainCreatorView.ProgressBarManager)
             mProgressBarManager = context
     }
 
-    override fun onScanResults(scanResult: List<AccessPointInfo>) {
+    override fun setData(list: List<AccessPointViewModel>){
         try {
-            val apList = mutableListOf<AccessPointViewModel>()
-            scanResult.forEach {
-                apList.add(AccessPointViewModel(it.ssid, AisDeviceHelper.apIsAisDevice(it.isOpen, it.mac)))
-            }
-            setData(apList)
-            mAPList = apList
-        }
-        catch (ex: Exception){
-            Log.e(TAG,"onScanResults: $ex")
+            mAisList.clear()
+            mAisList.addAll(list)
+            mAisList.sort()
+            mAisAdapter!!.notifyDataSetChanged()
+
+            mAPList = list
         }
         finally {
             mProgressBarManager!!.hideProgressBar()
         }
     }
 
-    private fun setData(list: List<AccessPointViewModel>){
-        mAisList.clear()
-        mAisList.addAll(list)
-        mAisList.sort()
-        mAisAdapter!!.notifyDataSetChanged()
-    }
-
-    interface OnAPSelectedListener{
-        fun onAPSelected(selectedAP: AccessPointViewModel, accessibleAP: List<AccessPointViewModel>)
-    }
-
     private fun refreshAPList() {
         try {
             mProgressBarManager!!.showProgressBar()
-            mWifi!!.startScan(this)
+            presenter.refreshApList()
         }
         catch (ex: Exception){
             Log.e(TAG, "refreshAPList: $ex")
