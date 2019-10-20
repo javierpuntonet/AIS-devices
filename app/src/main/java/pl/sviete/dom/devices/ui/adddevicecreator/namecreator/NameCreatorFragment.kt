@@ -25,14 +25,14 @@ class NameCreatorFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val apName = arguments!!.getString("APname")
-        txt_name_text.setText(getString(R.string.text_name_fragment, apName))
+        txt_name_text.text = getString(R.string.text_name_fragment, apName)
         val defName = arguments!!.getString("defDeviceName")
         if (defName != null)
             txt_device_name.setText(defName)
 
         btn_accept_name.setOnClickListener{
             val name = txt_device_name.text.toString()
-            if (!name.isNullOrEmpty())
+            if (name.isNotEmpty())
                 listener?.onNameAccept(name)
         }
         btn_cancel_name.setOnClickListener{

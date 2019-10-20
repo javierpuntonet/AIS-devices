@@ -20,9 +20,9 @@ class ApListPresenter(private val fragment: Fragment, override var view: ApListV
         mWifi = WiFiScanner(fragment.context!!)
     }
 
-    override fun onApSelected(ap: AccessPointViewModel, apList: List<AccessPointViewModel>){
+    override fun onApSelected(ap: AccessPointViewModel){
         mWifi?.stopScan()
-        mApSelectedListener?.onAPSelected(ap, apList)
+        mApSelectedListener?.onAPSelected(ap)
     }
 
     override fun refreshApList() {

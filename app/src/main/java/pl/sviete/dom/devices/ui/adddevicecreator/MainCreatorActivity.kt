@@ -7,8 +7,7 @@ import kotlinx.android.synthetic.main.activity_main_creator.*
 import pl.sviete.dom.devices.ExceptionHandler
 import pl.sviete.dom.devices.R
 import pl.sviete.dom.devices.models.AisDeviceType
-import pl.sviete.dom.devices.net.models.AccessPointInfo
-import pl.sviete.dom.devices.ui.adddevicecreator.apdata.ApDataCreatorFragment
+import pl.sviete.dom.devices.ui.adddevicecreator.apdata.ApDataView
 import pl.sviete.dom.devices.ui.adddevicecreator.aplist.*
 import pl.sviete.dom.devices.ui.adddevicecreator.area.CreatorAreaView
 import pl.sviete.dom.devices.ui.adddevicecreator.connectdevice.ConnectDeviceView
@@ -18,7 +17,7 @@ import pl.sviete.dom.devices.ui.adddevicecreator.startcreator.StartCreatorFragme
 class MainCreatorActivity : AppCompatActivity(), MainCreatorView.View
                             , MainCreatorView.ProgressBarManager
     , StartCreatorFragment.OnNextStepListener, ApListView.OnAPSelectedListener
-    , ApDataCreatorFragment.OnAPDataAcceptListener, NameCreatorFragment.OnNameAcceptListener
+    , ApDataView.OnAPDataAcceptListener, NameCreatorFragment.OnNameAcceptListener
     , ConnectDeviceView.OnConnectDevice, CreatorAreaView.OnFinishCreatorArea{
     override val presenter: MainCreatorView.Presenter= MainCreatorPresenter(this, this)
 
@@ -49,8 +48,8 @@ class MainCreatorActivity : AppCompatActivity(), MainCreatorView.View
         changeFragment(POS_AP_LIST)
     }
 
-    override fun onAPSelected(selectedAP : AccessPointViewModel, accessibleAP: List<AccessPointViewModel>){
-        presenter.storeAP(selectedAP, accessibleAP)
+    override fun onAPSelected(selectedAP : AccessPointViewModel){
+        presenter.storeAP(selectedAP)
         changeFragment(POS_NAME, true)
     }
 

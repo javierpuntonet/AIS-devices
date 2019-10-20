@@ -10,14 +10,14 @@ interface ApListView {
 
     interface Presenter : IPresenter<View> {
         fun loadView()
-        fun onApSelected(ap: AccessPointViewModel, apList: List<AccessPointViewModel>)
+        fun onApSelected(ap: AccessPointViewModel)
         fun refreshApList()
         fun onStop()
         fun onAttach()
     }
 
     interface OnAPSelectedListener{
-        fun onAPSelected(selectedAP: AccessPointViewModel, accessibleAP: List<AccessPointViewModel>)
+        fun onAPSelected(selectedAP: AccessPointViewModel)
     }
 }
 

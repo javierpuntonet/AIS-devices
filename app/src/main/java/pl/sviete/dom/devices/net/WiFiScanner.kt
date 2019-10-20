@@ -22,9 +22,9 @@ class WiFiScanner (context: Context) {
     fun startScan(listener: OnScanResultsListener) {
         if (mWifiScanReceiver == null) {
             mWifiScanReceiver = object : BroadcastReceiver() {
-
                 override fun onReceive(context: Context, intent: Intent) {
                     listener.onScanResults(getScanResult())
+                    stopScan()
                 }
             }
 
