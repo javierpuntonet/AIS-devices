@@ -166,7 +166,6 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
 
     override fun clearCache() {
         mScanner.devices.clear()
-        mScanner.runIpScanner()
     }
 
     override fun checkPermissions() {

@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         main_swipe.setOnRefreshListener {
             presenter.clearCache()
             presenter.loadView()
+            presenter.scanNetwork()
             main_swipe.isRefreshing = false
         }
 
