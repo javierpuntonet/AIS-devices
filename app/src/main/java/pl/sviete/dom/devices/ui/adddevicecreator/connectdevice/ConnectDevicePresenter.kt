@@ -41,7 +41,7 @@ class ConnectDevicePresenter(private val fragment: Fragment, override var view: 
                     if (it.mac == mNewDeviceMAC) {
                         Log.d(TAG, "pairDevice found on IP: ${it.ip}")
                         mScanFinished = true
-                        mScanner!!.devices?.liveData.removeObservers(fragment.activity!!)
+                        mScanner!!.devices.liveData.removeObservers(fragment.activity!!)
                         mListener!!.onConnectDeviceSuccess(mNewDeviceType, mNewDeviceMAC!!)
                     }
                 }

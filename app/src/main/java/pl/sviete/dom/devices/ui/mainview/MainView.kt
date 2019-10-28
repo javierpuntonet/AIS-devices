@@ -10,7 +10,6 @@ interface MainView {
         fun showDetail(id: Long, type: AisDeviceType?)
         fun showProgress()
         fun hideProgress()
-        fun refreshAreas(areas: List<AreaViewModel>)
     }
 
     interface Presenter : IPresenter<View> {
@@ -23,6 +22,8 @@ interface MainView {
         fun scanNetwork()
         fun resumeView()
         fun pauseView()
-        fun areaSelected(area: AreaViewModel)
+        fun areaSelect(area: AreaViewModel)
+        fun getAreas():List<AreaViewModel>
+        fun getSelectedArea(): AreaViewModel?
     }
 }

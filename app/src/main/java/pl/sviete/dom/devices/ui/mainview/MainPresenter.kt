@@ -33,6 +33,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     private val mScanner = Scanner(activity, this)
     private var mEntities = emptyList<AisDeviceEntity>()
     private var mSelectedArea: AreaViewModel? = null
+    private val mAreas = mutableListOf<AreaViewModel>()
 
     override fun loadView() {
         view.showProgress()
@@ -73,12 +74,10 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
 
             val areasViewModel = ViewModelProviders.of(activity).get(AreasViewModel::class.java)
             areasViewModel.getAll().observe(activity, Observer {
-                val areas = mutableListOf<AreaViewModel>()
-                areas.add(AreaViewModel(AreaViewModel.EMPTY, activity.resources.getString(R.string.None)))
+                mAreas.clear()
                 it?.forEach { a ->
-                    areas.add(AreaViewModel(a.uid!!, a.name))
+                    mAreas.add(AreaViewModel(a.uid!!, a.name))
                 }
-                view.refreshAreas(areas)
             })
         }
         finally {
@@ -94,7 +93,15 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
 
     }
 
-    override fun areaSelected(area: AreaViewModel){
+    override fun getAreas(): List<AreaViewModel> {
+        return mAreas
+    }
+
+    override fun getSelectedArea(): AreaViewModel? {
+        return mSelectedArea
+    }
+
+    override fun areaSelect(area: AreaViewModel){
         if (!area.isEmpty)
             mSelectedArea = area
         else

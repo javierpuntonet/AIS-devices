@@ -108,4 +108,6 @@
     <string name="select_new_device_from_list_text">Select your new device from the list</string>
     <string name="None">None</string>
     <string name="select_network">Select network</string>
+    <string name="all_devices">All devices</string>
+    <string name="select_area">Select area</string>
 </resources>
