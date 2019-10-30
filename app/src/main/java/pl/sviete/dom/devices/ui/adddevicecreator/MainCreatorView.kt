@@ -24,7 +24,7 @@ interface MainCreatorView {
     interface Presenter : IPresenter<View> {
         fun getFragment(position: Int): Fragment?
 
-        fun storeAP(selected: AccessPointViewModel, accessibleAPs: List<AccessPointViewModel>)
+        fun storeAP(selected: AccessPointViewModel)
         fun storeName(name: String)
         fun storeAPData(apSsid: String, password: String)
         fun saveNewDevice(deviceType: AisDeviceType?, deviceMAC: String)

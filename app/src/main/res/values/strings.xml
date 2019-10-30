@@ -65,7 +65,7 @@
     <string name="name">Name</string>
     <string name="password">Password</string>
     <string name="ap_data_info">Enter the data of your WiFi network to which you want to connect the new device</string>
-    <string name="connecting_info">Select \ "Connect \" to start the process of connecting the device to your local network WiFi. During this process it is necessary to disconnect this device from the WiFi network, it will only take a moment.</string>
+    <string name="connecting_info">Select  \"Connect\" to start the process of connecting the device to your local network WiFi. During this process it is necessary to disconnect this device from the WiFi network, it will only take a moment.</string>
     <string name="save_password">Save password</string>
     <string name="connect_ap_timeout">Failed to connect to the selected device.</string>
     <string name="details">Details</string>
@@ -104,7 +104,10 @@
     <string name="no_boxes_to_pair">No pairing MQTT gates available</string>
     <string name="pair_success">Paired successfully</string>
     <string name="pair_error">Unable to pair your device, please try again later</string>
-    <string name="creator_start_button">  Let\'s start!</string>
+    <string name="creator_start_button">Let\'s start!</string>
     <string name="select_new_device_from_list_text">Select your new device from the list</string>
     <string name="None">None</string>
+    <string name="select_network">Select network</string>
+    <string name="all_devices">All devices</string>
+    <string name="select_area">Select area</string>
 </resources>

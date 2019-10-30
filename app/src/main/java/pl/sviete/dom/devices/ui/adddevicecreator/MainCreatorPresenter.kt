@@ -9,7 +9,6 @@ import pl.sviete.dom.devices.db.AisDeviceEntity
 import pl.sviete.dom.devices.db.AisDeviceViewModel
 import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.mvp.BasePresenter
-import pl.sviete.dom.devices.net.models.AccessPointInfo
 import pl.sviete.dom.devices.ui.adddevicecreator.apdata.ApDataCreatorFragment
 import pl.sviete.dom.devices.ui.adddevicecreator.aplist.AccessPointViewModel
 import pl.sviete.dom.devices.ui.adddevicecreator.aplist.AplistCreatorFragment
@@ -23,8 +22,7 @@ class MainCreatorPresenter(val activity: FragmentActivity, override var view: Ma
     : BasePresenter<MainCreatorView.View, MainCreatorView.Presenter>()
     , MainCreatorView.Presenter {
 
-    private var mDeviceInfo: AccessPointViewModel? = null
-    private var mAccessibleDevices: List<AccessPointViewModel>? = null
+    private var mDeviceToAdd: AccessPointViewModel? = null
     private var mNewDeviceName: String? = null
     private var mAPName: String? = null
     private var mAPPassword: String? = null
@@ -32,9 +30,8 @@ class MainCreatorPresenter(val activity: FragmentActivity, override var view: Ma
     private var mNewDeviceType: AisDeviceType? = null
     private var mNewDeviceId: Long? = null
 
-    override fun storeAP(selected: AccessPointViewModel, accessibleAPs: List<AccessPointViewModel>){
-        mDeviceInfo = selected
-        mAccessibleDevices = accessibleAPs
+    override fun storeAP(selected: AccessPointViewModel){
+        mDeviceToAdd = selected
     }
 
     override fun storeName(name: String) {
@@ -65,24 +62,14 @@ class MainCreatorPresenter(val activity: FragmentActivity, override var view: Ma
             POS_AP_LIST -> return AplistCreatorFragment.newInstance()
             POS_NAME -> {
                 val bundle = Bundle()
-                bundle.putString("APname", mDeviceInfo?.ssid)
+                bundle.putString("APname", mDeviceToAdd?.ssid)
                 bundle.putString("defDeviceName", mNewDeviceName)
                 val nameFragment = NameCreatorFragment.newInstance()
                 nameFragment.arguments = bundle
                 return nameFragment
             }
-            POS_AP_DATA ->{
-                val aps = mAccessibleDevices!!.filter { x -> x != mDeviceInfo }.map { x -> x.ssid }.toTypedArray()
-                if (aps.isEmpty()) return null
-                val bundle = Bundle()
-                bundle.putStringArray("accessibleAP", aps)
-                val fragment = ApDataCreatorFragment.newInstance()
-                fragment.arguments = bundle
-                return fragment
-            }
-            POS_CONNECT -> {
-                return ConnectDeviceFragment.newInstance(mNewDeviceName!!, mDeviceInfo!!.ssid, mAPName!!, mAPPassword!!)
-            }
+            POS_AP_DATA -> return ApDataCreatorFragment.newInstance(mDeviceToAdd!!.ssid)
+            POS_CONNECT -> return ConnectDeviceFragment.newInstance(mNewDeviceName!!, mDeviceToAdd!!.ssid, mAPName!!, mAPPassword!!)
             POS_AREA -> return CreatorAreaFragment.newInstance(mNewDeviceId!!, mNewDeviceName!!, mNewDeviceType)
         }
         throw Exception("Not implemented")

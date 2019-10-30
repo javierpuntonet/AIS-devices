@@ -24,7 +24,6 @@ class AplistCreatorFragment : Fragment(), ApListView.View {
     private var mProgressBarManager: MainCreatorView.ProgressBarManager? = null
     private var mAisAdapter: APAdapter? = null
     private val mAisList = ArrayList<AccessPointViewModel>()
-    private var mAPList: List<AccessPointViewModel> = mutableListOf()
 
     companion object {
         fun newInstance() = AplistCreatorFragment()
@@ -46,7 +45,7 @@ class AplistCreatorFragment : Fragment(), ApListView.View {
             context!!,
             object : APAdapter.OnItemClickListener {
                 override fun onItemClick(item: AccessPointViewModel) {
-                    presenter.onApSelected(item, mAPList)
+                    presenter.onApSelected(item)
                 }
             })
         rv_ap_list.adapter = mAisAdapter
@@ -83,8 +82,6 @@ class AplistCreatorFragment : Fragment(), ApListView.View {
             mAisList.addAll(list)
             mAisList.sort()
             mAisAdapter!!.notifyDataSetChanged()
-
-            mAPList = list
         }
         finally {
             mProgressBarManager!!.hideProgressBar()

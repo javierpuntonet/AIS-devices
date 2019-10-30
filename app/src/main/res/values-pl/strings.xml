@@ -100,5 +100,8 @@
     <string name="creator_start_button">ZACZYNAMY</string>
     <string name="select_new_device_from_list_text">Wybierz z listy swoje nowe urządzenie AIS</string>
     <string name="None">Brak</string>
+    <string name="select_network">Wybierz sieć</string>
+    <string name="all_devices">Wszystkie urządzenia</string>
+    <string name="select_area">Wybierz obszar</string>
 </resources>
 

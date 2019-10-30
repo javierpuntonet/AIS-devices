@@ -1,5 +1,6 @@
 package pl.sviete.dom.devices.ui.mainview
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -10,6 +11,7 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Intent
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.view.View
 import android.widget.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -25,9 +27,13 @@ import android.widget.TextView
 import pl.sviete.dom.devices.*
 import pl.sviete.dom.devices.ui.details.DetailsFabric
 import pl.sviete.dom.devices.BuildConfig
+import pl.sviete.dom.devices.ui.areas.AreaViewModel.Companion.EMPTY
+import java.lang.Exception
+
 
 class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNavigationItemSelectedListener {
 
+    private val TAG = MainActivity::class.java.simpleName
     private lateinit var mAisAdapter: MainGridAdapter
     private var mAisList = ArrayList<DeviceViewModel>()
     private val mLock = ReentrantLock()
@@ -69,19 +75,12 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         main_swipe.setOnRefreshListener {
             presenter.clearCache()
             presenter.loadView()
+            presenter.scanNetwork()
             main_swipe.isRefreshing = false
         }
 
-        spinner_main_areas.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                (view as TextView).setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
-                val area = spinner_main_areas.selectedItem as AreaViewModel?
-                if (area != null)
-                    presenter.areaSelected(area)
-            }
+        btn_select_area.setOnClickListener {
+            showAreaSelector()
         }
     }
 
@@ -146,11 +145,6 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         showAddWelcomeButton()
     }
 
-    override fun refreshAreas(areas: List<AreaViewModel>){
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, areas)
-        spinner_main_areas.adapter = adapter
-    }
-
     override fun showDetail(id: Long, type: AisDeviceType?) {
         DetailsFabric.openDetialsView(this, id, type)
     }
@@ -196,6 +190,36 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         {
             welcome_text.visibility = View.VISIBLE
             ais_device_list.visibility = View.GONE
+        }
+    }
+
+    private fun showAreaSelector(){
+        try {
+            val areas = mutableListOf<AreaViewModel>()
+            var selectedAreaIdx = 0
+            areas.add(AreaViewModel(EMPTY, resources.getString(R.string.all_devices)))
+            areas.addAll(presenter.getAreas())
+            var area = presenter.getSelectedArea()
+            if (area != null)
+                selectedAreaIdx = areas.indexOf(area)
+            val alert = AlertDialog.Builder(this)
+            alert.setTitle(R.string.select_area)
+            alert.setSingleChoiceItems(
+                areas.map { x -> x.name }.toTypedArray(),
+                selectedAreaIdx
+            ) { dialog, item ->
+                area = areas[item]
+                if (area != null) {
+                    btn_select_area.text = area!!.name
+                    presenter.areaSelect(area!!)
+                }
+                dialog.dismiss()
+            }
+            alert
+                .create()
+                .show()
+        }catch (ex: Exception){
+            Log.e(TAG, "showAreaSelector", ex)
         }
     }
 }
