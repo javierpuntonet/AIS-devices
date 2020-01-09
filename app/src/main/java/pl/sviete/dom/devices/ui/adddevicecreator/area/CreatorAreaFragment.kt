@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter
 import pl.sviete.dom.devices.ui.areas.AreaViewModel
 import android.view.KeyEvent.KEYCODE_BACK
 import android.view.*
+import pl.sviete.dom.devices.ui.areas.AreaDialog
 
 private const val ARG_NAME = "NAME"
 private const val ARG_TYPE = "TYPE"
@@ -91,19 +92,7 @@ class CreatorAreaFragment : Fragment(), CreatorAreaView.View {
     }
 
     private fun addArea(){
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle(R.string.name_new_area)
-        val input = EditText(context)
-        input.inputType = InputType.TYPE_CLASS_TEXT
-        builder.setView(input)
-        builder.setPositiveButton(R.string.add) { _, _ ->
-            run {
-                val areaName = input.text.toString()
-                if (areaName.isNotEmpty())
-                    presenter.addArea(areaName)
-            }}
-        builder.setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
-        builder.show()
+        AreaDialog.showAddNewArea(context!!, presenter::addArea)
     }
 
     companion object {

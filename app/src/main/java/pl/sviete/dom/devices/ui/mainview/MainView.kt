@@ -22,8 +22,11 @@ interface MainView {
         fun scanNetwork()
         fun resumeView()
         fun pauseView()
-        fun areaSelect(area: AreaViewModel)
+
+        fun areaSelect(areaId: Long?)
         fun getAreas():List<AreaViewModel>
         fun getSelectedArea(): AreaViewModel?
+        fun addArea(areaName: String)
+
     }
 }

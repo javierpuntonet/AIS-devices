@@ -56,4 +56,16 @@
             android:stretchMode="columnWidth" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <ImageButton
+        android:id="@+id/btn_main_add_area"
+        style="@style/Widget.AppCompat.ImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_select_area"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_select_area"
+        app:layout_constraintTop_toTopOf="@+id/btn_select_area"
+        app:srcCompat="@mipmap/area_new" />
+
 </android.support.constraint.ConstraintLayout>

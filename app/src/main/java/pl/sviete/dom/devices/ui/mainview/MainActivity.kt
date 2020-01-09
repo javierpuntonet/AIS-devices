@@ -10,7 +10,6 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Intent
-import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -18,8 +17,6 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import pl.sviete.dom.devices.models.AisDeviceType
 import pl.sviete.dom.devices.ui.adddevicecreator.MainCreatorActivity
-import pl.sviete.dom.devices.ui.areas.AreaViewModel
-import pl.sviete.dom.devices.ui.areas.AreasActivity
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
@@ -27,6 +24,7 @@ import android.widget.TextView
 import pl.sviete.dom.devices.*
 import pl.sviete.dom.devices.ui.details.DetailsFabric
 import pl.sviete.dom.devices.BuildConfig
+import pl.sviete.dom.devices.ui.areas.*
 import pl.sviete.dom.devices.ui.areas.AreaViewModel.Companion.EMPTY
 import java.lang.Exception
 
@@ -82,6 +80,10 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         btn_select_area.setOnClickListener {
             showAreaSelector()
         }
+
+        btn_main_add_area.setOnClickListener {
+            AreaDialog.showAddNewArea(this, ::addNewArea)
+        }
     }
 
     override fun onResume() {
@@ -108,12 +110,12 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.main_net_scan -> {
                 presenter.scanNetwork()
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -198,7 +200,7 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
             val areas = mutableListOf<AreaViewModel>()
             var selectedAreaIdx = 0
             areas.add(AreaViewModel(EMPTY, resources.getString(R.string.all_devices)))
-            areas.addAll(presenter.getAreas())
+            areas.addAll(presenter.getAreas().sorted())
             var area = presenter.getSelectedArea()
             if (area != null)
                 selectedAreaIdx = areas.indexOf(area)
@@ -211,7 +213,10 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
                 area = areas[item]
                 if (area != null) {
                     btn_select_area.text = area!!.name
-                    presenter.areaSelect(area!!)
+                    if (area!!.id == EMPTY)
+                        presenter.areaSelect(null)
+                    else
+                        presenter.areaSelect(area!!.id)
                 }
                 dialog.dismiss()
             }
@@ -221,5 +226,10 @@ class MainActivity : AppCompatActivity(), MainView.View, NavigationView.OnNaviga
         }catch (ex: Exception){
             Log.e(TAG, "showAreaSelector", ex)
         }
+    }
+
+    private fun addNewArea(areaName: String){
+        presenter.addArea(areaName)
+        btn_select_area.text = areaName
     }
 }

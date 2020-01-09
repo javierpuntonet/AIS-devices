@@ -29,10 +29,11 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     private val TAG = MainPresenter::class.java.simpleName
     private val PERMISSIONS_REQUEST_LOCATION: Int = 111
     private lateinit var mAisDeviceViewModel: AisDeviceViewModel
+    private lateinit var mAreasViewModel: AreasViewModel
     private var mAisList = ArrayList<DeviceViewModel>()
     private val mScanner = Scanner(activity, this)
     private var mEntities = emptyList<AisDeviceEntity>()
-    private var mSelectedArea: AreaViewModel? = null
+    private var mSelectedAreaId: Long? = null
     private val mAreas = mutableListOf<AreaViewModel>()
 
     override fun loadView() {
@@ -72,11 +73,17 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
                 }
             })
 
-            val areasViewModel = ViewModelProviders.of(activity).get(AreasViewModel::class.java)
-            areasViewModel.getAll().observe(activity, Observer {
+            mAreasViewModel = ViewModelProviders.of(activity).get(AreasViewModel::class.java)
+            mAreasViewModel.getAll().observe(activity, Observer {
                 mAreas.clear()
                 it?.forEach { a ->
                     mAreas.add(AreaViewModel(a.uid!!, a.name))
+                }
+            })
+            mAreasViewModel.insertionId.observe(activity, Observer {
+                if (it != null) {
+                    mSelectedAreaId = it
+                    areaSelect(mSelectedAreaId)
                 }
             })
         }
@@ -98,18 +105,19 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
     }
 
     override fun getSelectedArea(): AreaViewModel? {
-        return mSelectedArea
+        return mAreas.firstOrNull{ x-> x.id == mSelectedAreaId }
     }
 
-    override fun areaSelect(area: AreaViewModel){
-        if (!area.isEmpty)
-            mSelectedArea = area
-        else
-            mSelectedArea = null
+    override fun areaSelect(areaId: Long?){
+        mSelectedAreaId = areaId
 
         refreshFromDB(mEntities)
         refreshStatuses()
         view.refreshData(mAisList)
+    }
+
+    override fun addArea(areaName: String) {
+        mAreasViewModel.insert(AreaEntity(null, areaName))
     }
 
     override fun scanNetwork() {
@@ -194,7 +202,7 @@ class MainPresenter(val activity: FragmentActivity, override var view: MainView.
         mAisList.removeAll(toRemove)
         //add again to list
         entities.forEach {
-            if (it.areaId == mSelectedArea?.id) {
+            if (mSelectedAreaId == null || it.areaId == mSelectedAreaId) {
                 val device = DeviceViewModel(it.uid!!, it.name, it.ip, it.mac)
                 if (it.type != null)
                     device.type = AisDeviceType.fromInt(it.type!!)
